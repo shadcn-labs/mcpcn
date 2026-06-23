@@ -1,0 +1,62 @@
+---
+title: "Event Confirmation"
+description: "A composition-first event confirmation block for MCP Apps."
+---
+
+<ComponentPreview
+  name="event-confirmation"
+  src="examples/event-confirmation-demo.tsx"
+/>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add mcpcn/event-confirmation
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  name="event-confirmation"
+  title="components/ui/event-confirmation.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { EventConfirmation } from "@/components/ui/event-confirmation";
+```
+
+```tsx
+<EventConfirmation>
+  <EventConfirmation.Header>Custom header</EventConfirmation.Header>
+</EventConfirmation>
+```

@@ -1,0 +1,56 @@
+---
+title: "Email Input"
+description: "A composition-first email input block for MCP Apps."
+---
+
+<ComponentPreview name="email-input" src="examples/email-input-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add mcpcn/email-input
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="email-input" title="components/ui/email-input.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { EmailInput } from "@/components/ui/email-input";
+```
+
+```tsx
+<EmailInput>
+  <EmailInput.Header>Custom header</EmailInput.Header>
+</EmailInput>
+```

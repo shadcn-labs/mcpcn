@@ -1,0 +1,56 @@
+---
+title: "Pay Confirm"
+description: "A composition-first pay confirm block for MCP Apps."
+---
+
+<ComponentPreview name="pay-confirm" src="examples/pay-confirm-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add mcpcn/pay-confirm
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="pay-confirm" title="components/ui/pay-confirm.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { PayConfirm } from "@/components/ui/pay-confirm";
+```
+
+```tsx
+<PayConfirm>
+  <PayConfirm.Header>Custom header</PayConfirm.Header>
+</PayConfirm>
+```

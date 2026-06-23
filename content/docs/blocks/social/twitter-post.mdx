@@ -1,0 +1,56 @@
+---
+title: "Twitter Post"
+description: "A composition-first Twitter post block for MCP Apps."
+---
+
+<ComponentPreview name="twitter-post" src="examples/twitter-post-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add mcpcn/twitter-post
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="twitter-post" title="components/ui/twitter-post.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { TwitterPost } from "@/components/ui/twitter-post";
+```
+
+```tsx
+<TwitterPost>
+  <TwitterPost.Header>Custom header</TwitterPost.Header>
+</TwitterPost>
+```

@@ -1,0 +1,62 @@
+---
+title: "Delivery Status"
+description: "A composition-first delivery status block for MCP Apps."
+---
+
+<ComponentPreview
+  name="delivery-status"
+  src="examples/delivery-status-demo.tsx"
+/>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add mcpcn/delivery-status
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  name="delivery-status"
+  title="components/ui/delivery-status.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { DeliveryStatus } from "@/components/ui/delivery-status";
+```
+
+```tsx
+<DeliveryStatus>
+  <DeliveryStatus.Header>Custom header</DeliveryStatus.Header>
+</DeliveryStatus>
+```

@@ -1,0 +1,62 @@
+---
+title: "Payment Method Select"
+description: "A composition-first payment method select block for MCP Apps."
+---
+
+<ComponentPreview
+  name="payment-method-select"
+  src="examples/payment-method-select-demo.tsx"
+/>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add mcpcn/payment-method-select
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  name="payment-method-select"
+  title="components/ui/payment-method-select.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { PaymentMethodSelect } from "@/components/ui/payment-method-select";
+```
+
+```tsx
+<PaymentMethodSelect>
+  <PaymentMethodSelect.Header>Custom header</PaymentMethodSelect.Header>
+</PaymentMethodSelect>
+```

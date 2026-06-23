@@ -1,0 +1,62 @@
+---
+title: "Testimonial Card"
+description: "A composition-first testimonial card block for MCP Apps."
+---
+
+<ComponentPreview
+  name="testimonial-card"
+  src="examples/testimonial-card-demo.tsx"
+/>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add mcpcn/testimonial-card
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  name="testimonial-card"
+  title="components/ui/testimonial-card.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { TestimonialCard } from "@/components/ui/testimonial-card";
+```
+
+```tsx
+<TestimonialCard>
+  <TestimonialCard.Header>Custom header</TestimonialCard.Header>
+</TestimonialCard>
+```

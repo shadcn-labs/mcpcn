@@ -1,0 +1,4 @@
+{
+  "title": "Form",
+  "pages": ["index", "email-input", "phone-input", "address-form"]
+}

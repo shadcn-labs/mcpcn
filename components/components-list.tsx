@@ -1,9 +1,8 @@
 import Link from "next/link";
 
-import { ROUTES } from "@/constants/routes";
-import { isComponentsFolder } from "@/lib/docs";
+import { isBlocksFolder, formatTitleFromSlug } from "@/lib/docs";
 import type { PageTreeFolder, PageTreePage } from "@/lib/page-tree";
-import { getAllPagesFromFolder, getPagesFromFolder } from "@/lib/page-tree";
+import { getPagesFromFolder } from "@/lib/page-tree";
 import { source } from "@/lib/source";
 
 const getFolder = (name: string): PageTreeFolder | undefined => {
@@ -14,45 +13,80 @@ const getFolder = (name: string): PageTreeFolder | undefined => {
   }
 };
 
-const ComponentGrid = ({ pages }: { pages: PageTreePage[] }) => (
+const getCategoryFolder = (
+  blocksFolder: PageTreeFolder,
+  category: string
+): PageTreeFolder | undefined => {
+  for (const child of blocksFolder.children) {
+    if (child.type === "folder" && child.name === category) {
+      return child;
+    }
+  }
+};
+
+const BlockGrid = ({ pages }: { pages: PageTreePage[] }) => (
   <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-x-8 lg:gap-x-16 lg:gap-y-6 xl:gap-x-20">
-    {pages.map((component) => (
+    {pages.map((block) => (
       <Link
         className="inline-flex items-center gap-2 text-lg font-medium underline-offset-4 hover:underline md:text-base"
-        href={component.url}
-        key={component.$id}
+        href={block.url}
+        key={block.$id}
         transitionTypes={["nav-forward"]}
       >
-        {component.name}
+        {block.name}
       </Link>
     ))}
   </div>
 );
 
-export const ComponentsList = ({
-  folderName = "Components",
+export const BlocksList = ({
+  folderName = "Blocks",
+  category,
 }: {
   folderName?: string;
+  category?: string;
 }) => {
   const folder = getFolder(folderName);
   if (!folder) {
     return null;
   }
 
-  if (!isComponentsFolder(folder)) {
+  if (!isBlocksFolder(folder)) {
     const pages = getPagesFromFolder(folder);
     if (pages.length === 0) {
       return null;
     }
-    return <ComponentGrid pages={pages} />;
+    return <BlockGrid pages={pages} />;
   }
 
-  const pages = getAllPagesFromFolder(folder).filter(
-    (page) => page.url !== ROUTES.DOCS_COMPONENTS
+  if (category) {
+    const categoryFolder = getCategoryFolder(folder, category);
+    if (!categoryFolder) {
+      return null;
+    }
+    const pages = getPagesFromFolder(categoryFolder);
+    if (pages.length === 0) {
+      return null;
+    }
+    return <BlockGrid pages={pages} />;
+  }
+
+  const categories = folder.children.filter(
+    (child): child is PageTreeFolder => child.type === "folder"
   );
-  if (pages.length === 0) {
-    return null;
-  }
 
-  return <ComponentGrid pages={pages} />;
+  return categories.map((cat) => {
+    const pages = getPagesFromFolder(cat);
+    if (pages.length === 0) {
+      return null;
+    }
+    return (
+      <section key={cat.$id}>
+        <h2 className="mb-4 text-lg font-medium tracking-tight">
+          {formatTitleFromSlug(String(cat.name))}
+        </h2>
+        <BlockGrid pages={pages} />
+      </section>
+    );
+  });
 };

@@ -12,9 +12,21 @@ export const readOptionalFromRoot = async (
   }
 };
 
-export const getRegistryUiSourceCandidates = ({ name }: { name: string }) => [
-  path.join("registry", "new-york", `${name}.tsx`),
+const REGISTRY_CATEGORIES = [
+  "blogging",
+  "events",
+  "form",
+  "list",
+  "miscellaneous",
+  "payment",
+  "social",
+  "status",
 ];
+
+export const getRegistryUiSourceCandidates = ({ name }: { name: string }) =>
+  REGISTRY_CATEGORIES.map((category) =>
+    path.join("registry", category, `${name}.tsx`)
+  );
 
 export const getDemoSource = (name: string): Promise<string | null> =>
   readOptionalFromRoot(path.join("examples", `${name}.tsx`));

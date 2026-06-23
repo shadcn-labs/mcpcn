@@ -1,17 +1,487 @@
 {
-  "name": "shadcn/registry-kit",
-  "homepage": "https://shadcn-registry-kit.vercel.app",
+  "name": "mcpcn",
+  "homepage": "https://mcpcn.dev",
   "items": [
     {
-      "name": "your-component",
+      "name": "order-confirm",
       "type": "registry:ui",
-      "title": "Your Component",
-      "description": "A placeholder component. Replace this with your custom shadcn component.",
+      "title": "Order Confirm",
+      "description": "A composition-first order confirm block for MCP Apps.",
       "files": [
         {
-          "path": "registry/new-york/your-component.tsx",
+          "path": "registry/payment/order-confirm.tsx",
           "type": "registry:ui",
-          "target": "components/ui/your-component.tsx"
+          "target": "components/ui/order-confirm.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/payment/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/payment-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "order-status",
+      "type": "registry:ui",
+      "title": "Order Status",
+      "description": "A composition-first order status block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/payment/order-status.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/order-status.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/payment/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/payment-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "payment-method-select",
+      "type": "registry:ui",
+      "title": "Payment Method Select",
+      "description": "A composition-first payment method select block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/payment/payment-method-select.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/payment-method-select.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/payment/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/payment-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "pay-confirm",
+      "type": "registry:ui",
+      "title": "Pay Confirm",
+      "description": "A composition-first pay confirm block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/payment/pay-confirm.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/pay-confirm.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/payment/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/payment-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "refund-status",
+      "type": "registry:ui",
+      "title": "Refund Status",
+      "description": "A composition-first refund status block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/payment/refund-status.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/refund-status.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/payment/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/payment-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "event-confirmation",
+      "type": "registry:ui",
+      "title": "Event Confirmation",
+      "description": "A composition-first event confirmation block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/events/event-confirmation.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/event-confirmation.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/events/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/events-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "ticket-tier-select",
+      "type": "registry:ui",
+      "title": "Ticket Tier Select",
+      "description": "A composition-first ticket tier select block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/events/ticket-tier-select.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ticket-tier-select.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/events/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/events-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "seat-selector",
+      "type": "registry:ui",
+      "title": "Seat Selector",
+      "description": "A composition-first seat selector block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/events/seat-selector.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/seat-selector.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/events/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/events-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "instagram-post",
+      "type": "registry:ui",
+      "title": "Instagram Post",
+      "description": "A composition-first instagram post block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/social/instagram-post.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/instagram-post.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/social/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/social-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "twitter-post",
+      "type": "registry:ui",
+      "title": "Twitter Post",
+      "description": "A composition-first twitter post block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/social/twitter-post.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/twitter-post.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/social/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/social-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "youtube-embed",
+      "type": "registry:ui",
+      "title": "Youtube Embed",
+      "description": "A composition-first youtube embed block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/social/youtube-embed.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/youtube-embed.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/social/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/social-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "email-input",
+      "type": "registry:ui",
+      "title": "Email Input",
+      "description": "A composition-first email input block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/form/email-input.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/email-input.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/form/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/form-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "phone-input",
+      "type": "registry:ui",
+      "title": "Phone Input",
+      "description": "A composition-first phone input block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/form/phone-input.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/phone-input.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/form/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/form-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "address-form",
+      "type": "registry:ui",
+      "title": "Address Form",
+      "description": "A composition-first address form block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/form/address-form.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/address-form.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/form/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/form-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "article-preview",
+      "type": "registry:ui",
+      "title": "Article Preview",
+      "description": "A composition-first article preview block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/blogging/article-preview.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/article-preview.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/blogging/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/blogging-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "todo-list",
+      "type": "registry:ui",
+      "title": "Todo List",
+      "description": "A composition-first todo list block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/list/todo-list.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/todo-list.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/list/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/list-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "product-list",
+      "type": "registry:ui",
+      "title": "Product List",
+      "description": "A composition-first product list block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/list/product-list.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/product-list.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/list/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/list-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "order-timeline",
+      "type": "registry:ui",
+      "title": "Order Timeline",
+      "description": "A composition-first order timeline block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/status/order-timeline.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/order-timeline.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/status/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/status-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "delivery-status",
+      "type": "registry:ui",
+      "title": "Delivery Status",
+      "description": "A composition-first delivery status block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/status/delivery-status.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/delivery-status.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/status/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/status-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "rating-card",
+      "type": "registry:ui",
+      "title": "Rating Card",
+      "description": "A composition-first rating card block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/miscellaneous/rating-card.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/rating-card.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/miscellaneous/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/miscellaneous-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "testimonial-card",
+      "type": "registry:ui",
+      "title": "Testimonial Card",
+      "description": "A composition-first testimonial card block for MCP Apps.",
+      "files": [
+        {
+          "path": "registry/miscellaneous/testimonial-card.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/testimonial-card.tsx"
+        },
+        {
+          "path": "registry/_lib/compound.tsx",
+          "type": "registry:lib",
+          "target": "components/ui/compound.tsx"
+        },
+        {
+          "path": "registry/miscellaneous/types.ts",
+          "type": "registry:lib",
+          "target": "components/ui/miscellaneous-types.ts"
         }
       ]
     }

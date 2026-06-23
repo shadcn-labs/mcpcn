@@ -14,14 +14,15 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { ROUTES } from "@/constants/routes";
-import { EXCLUDED_SECTIONS, isComponentsFolder } from "@/lib/docs";
-import { getAllPagesFromFolder, getPagesFromFolder } from "@/lib/page-tree";
+import { EXCLUDED_SECTIONS, isBlocksFolder } from "@/lib/docs";
+import { getPagesFromFolder } from "@/lib/page-tree";
+import type { PageTreeFolder } from "@/lib/page-tree";
 import type { source } from "@/lib/source";
 
 const TOP_LEVEL_SECTIONS = [
   { href: ROUTES.DOCS, name: "Introduction" },
   { href: ROUTES.DOCS_INSTALLATION, name: "Installation" },
-  { href: ROUTES.DOCS_COMPONENTS, name: "Components" },
+  { href: ROUTES.DOCS_BLOCKS, name: "Blocks" },
   { href: ROUTES.LLMS, name: "llms.txt" },
 ];
 
@@ -119,11 +120,24 @@ export const DocsSidebar = ({
             return null;
           }
 
-          const pages = isComponentsFolder(item)
-            ? getAllPagesFromFolder(item).filter(
-                (page) => page.url !== ROUTES.DOCS_COMPONENTS
-              )
-            : getPagesFromFolder(item);
+          if (isBlocksFolder(item)) {
+            const categories = item.children.filter(
+              (child): child is PageTreeFolder => child.type === "folder"
+            );
+            return categories.map((category) => {
+              const pages = getPagesFromFolder(category);
+              return (
+                <SidebarPageGroup
+                  key={category.$id}
+                  label={category.name}
+                  pages={pages}
+                  pathname={pathname}
+                />
+              );
+            });
+          }
+
+          const pages = getPagesFromFolder(item);
 
           return (
             <SidebarPageGroup

@@ -1,0 +1,56 @@
+---
+title: "Order Confirm"
+description: "A composition-first order confirm block for MCP Apps."
+---
+
+<ComponentPreview name="order-confirm" src="examples/order-confirm-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add mcpcn/order-confirm
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="order-confirm" title="components/ui/order-confirm.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { OrderConfirm } from "@/components/ui/order-confirm";
+```
+
+```tsx
+<OrderConfirm>
+  <OrderConfirm.Header>Custom header</OrderConfirm.Header>
+</OrderConfirm>
+```

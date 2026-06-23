@@ -1,0 +1,9 @@
+{
+  "title": "Events",
+  "pages": [
+    "index",
+    "event-confirmation",
+    "ticket-tier-select",
+    "seat-selector"
+  ]
+}

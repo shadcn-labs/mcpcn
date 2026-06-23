@@ -1,0 +1,56 @@
+---
+title: "Product List"
+description: "A composition-first product list block for MCP Apps."
+---
+
+<ComponentPreview name="product-list" src="examples/product-list-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add mcpcn/product-list
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="product-list" title="components/ui/product-list.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ProductList } from "@/components/ui/product-list";
+```
+
+```tsx
+<ProductList>
+  <ProductList.Header>Custom header</ProductList.Header>
+</ProductList>
+```
