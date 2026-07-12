@@ -1,0 +1,109 @@
+---
+title: "Event List"
+description: "Display events in grid, list, or carousel layouts. Fullscreen mode shows interactive split-screen map with Leaflet and animated filter panel."
+base: base
+component: true
+---
+
+<ComponentPreview name="event-list" src="examples/event-list-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/event-list.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react react-leaflet leaflet
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource name="event-list" title="components/ui/event-list.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { EventList } from "@/components/ui/event-list";
+```
+
+```tsx
+<EventList />
+```
+
+## Composition
+
+Use the following composition to build an `EventList`:
+
+```text
+EventList
+└── EventList.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="event-list"
+  src="examples/event-list-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `EventList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { EventList } from "@/components/ui/event-list";
+
+const OpenUIEventList = defineComponent({
+  name: "EventList",
+  description:
+    "Display events in grid, list, or carousel layouts. Fullscreen mode shows interactive split-screen map with Leaflet and animated filter panel.",
+  props: z.object({}),
+  component: () => <EventList />,
+});
+
+export const event_listLibrary = createLibrary({
+  root: "EventList",
+  components: [OpenUIEventList],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

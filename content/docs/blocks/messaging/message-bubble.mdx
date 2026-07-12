@@ -1,0 +1,115 @@
+---
+title: "Message Bubble"
+description: "Chat message bubbles with text, image, voice, and reaction variants."
+base: base
+component: true
+---
+
+<ComponentPreview
+  name="message-bubble"
+  src="examples/message-bubble-demo.tsx"
+/>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/message-bubble.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource
+  name="message-bubble"
+  title="components/ui/message-bubble.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { MessageBubble } from "@/components/ui/message-bubble";
+```
+
+```tsx
+<MessageBubble />
+```
+
+## Composition
+
+Use the following composition to build an `MessageBubble`:
+
+```text
+MessageBubble
+└── MessageBubble.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="message-bubble"
+  src="examples/message-bubble-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `MessageBubble` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { MessageBubble } from "@/components/ui/message-bubble";
+
+const OpenUIMessageBubble = defineComponent({
+  name: "MessageBubble",
+  description:
+    "Chat message bubbles with text, image, voice, and reaction variants.",
+  props: z.object({}),
+  component: () => <MessageBubble />,
+});
+
+export const message_bubbleLibrary = createLibrary({
+  root: "MessageBubble",
+  components: [OpenUIMessageBubble],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

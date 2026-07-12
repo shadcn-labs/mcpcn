@@ -1,0 +1,108 @@
+---
+title: "X Post"
+description: "X (Twitter) post card with engagement metrics."
+base: base
+component: true
+---
+
+<ComponentPreview name="x-post" src="examples/x-post-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/x-post.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource name="x-post" title="components/ui/x-post.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { XPost } from "@/components/ui/x-post";
+```
+
+```tsx
+<XPost />
+```
+
+## Composition
+
+Use the following composition to build an `XPost`:
+
+```text
+XPost
+└── XPost.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="x-post"
+  src="examples/x-post-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `XPost` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { XPost } from "@/components/ui/x-post";
+
+const OpenUIXPost = defineComponent({
+  name: "XPost",
+  description: "X (Twitter) post card with engagement metrics.",
+  props: z.object({}),
+  component: () => <XPost />,
+});
+
+export const x_postLibrary = createLibrary({
+  root: "XPost",
+  components: [OpenUIXPost],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

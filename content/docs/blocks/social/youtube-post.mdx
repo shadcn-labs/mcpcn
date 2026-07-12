@@ -1,0 +1,108 @@
+---
+title: "YouTube Post"
+description: "YouTube video card with playable embed."
+base: base
+component: true
+---
+
+<ComponentPreview name="youtube-post" src="examples/youtube-post-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/youtube-post.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource name="youtube-post" title="components/ui/youtube-post.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { YouTubePost } from "@/components/ui/youtube-post";
+```
+
+```tsx
+<YouTubePost />
+```
+
+## Composition
+
+Use the following composition to build an `YouTubePost`:
+
+```text
+YouTubePost
+└── YouTubePost.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="youtube-post"
+  src="examples/youtube-post-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `YouTubePost` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { YouTubePost } from "@/components/ui/youtube-post";
+
+const OpenUIYouTubePost = defineComponent({
+  name: "YouTubePost",
+  description: "YouTube video card with playable embed.",
+  props: z.object({}),
+  component: () => <YouTubePost />,
+});
+
+export const youtube_postLibrary = createLibrary({
+  root: "YouTubePost",
+  components: [OpenUIYouTubePost],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

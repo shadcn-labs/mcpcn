@@ -1,193 +1,188 @@
+/* oxlint-disable complexity */
 "use client";
 
-import { Heart, MessageCircle, Send } from "lucide-react";
-import type { ComponentPropsWithoutRef } from "react";
+import {
+  Heart,
+  MessageCircle,
+  Send,
+  Bookmark,
+  MoreHorizontal,
+  Flag,
+  UserMinus,
+  Link,
+  Code,
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {
+  createManifestCompound,
+  RegistryImage,
+} from "@/components/ui/compound";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-import { createCompoundContext } from "../_lib/compound";
+import { demoInstagramPost } from "./demo/social";
 
-interface InstagramContextValue {
-  onComment?: () => void;
-  onLike?: () => void;
-  onShare?: () => void;
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * InstagramPostProps
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * Props for the InstagramPost component, which displays an Instagram-style
+ * post with image, caption, and engagement actions.
+ */
+export interface InstagramPostProps {
+  data?: {
+    /** Author's Instagram username. */
+    author?: string;
+    /** Avatar letter fallback or image URL for the profile picture. */
+    avatar?: string;
+    /** URL of the post image to display. */
+    image?: string;
+    /** Formatted like count (e.g., "2,847"). */
+    likes?: string;
+    /** Post caption text content. */
+    caption?: string;
+    /** Time since posted (e.g., "2 hours ago"). */
+    time?: string;
+    /** Whether the author has a verified badge. */
+    verified?: boolean;
+  };
 }
 
-const { Provider, useCompoundContext } =
-  createCompoundContext<InstagramContextValue>("InstagramPost");
+const InstagramPostView = ({ data }: InstagramPostProps) => {
+  const resolved: NonNullable<InstagramPostProps["data"]> =
+    data ?? demoInstagramPost;
+  const author = resolved?.author;
+  const avatar = resolved?.avatar;
+  const image = resolved?.image;
+  const likes = resolved?.likes;
+  const caption = resolved?.caption;
+  const time = resolved?.time;
+  const verified = resolved?.verified;
 
-export interface InstagramPostProps extends ComponentPropsWithoutRef<"article"> {
-  onComment?: () => void;
-  onLike?: () => void;
-  onShare?: () => void;
-}
+  if (!author && !image && !caption) {
+    return null;
+  }
 
-interface HeaderProps extends ComponentPropsWithoutRef<"div"> {
-  avatar?: string;
-  handle?: string;
-  name?: string;
-}
-function Header({
-  avatar,
-  handle = "@manifestui",
-  name = "Manifest UI",
-  className,
-  children,
-  ...props
-}: HeaderProps) {
-  useCompoundContext();
   return (
-    <div className={cn("flex items-center gap-3", className)} {...props}>
-      {avatar ? (
-        <img
-          src={avatar}
-          alt=""
-          className="h-10 w-10 rounded-full object-cover"
-        />
-      ) : (
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted font-semibold">
-          {name.charAt(0)}
+    <div className="rounded-xl border bg-card overflow-hidden">
+      {author ||
+        (avatar && (
+          <div className="flex items-center justify-between p-3">
+            <div className="flex items-center gap-2">
+              {avatar && (
+                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] p-0.5">
+                  <div className="h-full w-full rounded-full bg-card flex items-center justify-center text-xs font-semibold">
+                    {avatar}
+                  </div>
+                </div>
+              )}
+              <div className="flex items-center gap-1">
+                {author && (
+                  <span className="font-semibold text-sm">{author}</span>
+                )}
+                {verified && (
+                  <svg
+                    className="h-3.5 w-3.5 text-blue-500"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484z" />
+                  </svg>
+                )}
+              </div>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="text-foreground hover:text-muted-foreground transition-colors cursor-pointer">
+                  <MoreHorizontal className="h-5 w-5" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <Flag className="mr-2 h-4 w-4" />
+                  Report
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <UserMinus className="mr-2 h-4 w-4" />
+                  Unfollow
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link className="mr-2 h-4 w-4" />
+                  Copy link
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Code className="mr-2 h-4 w-4" />
+                  Embed
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ))}
+      {image && (
+        <div className="aspect-square bg-muted">
+          <RegistryImage
+            src={image}
+            alt={author ? `Instagram post by ${author}` : "Instagram post"}
+            className="w-full h-full object-cover"
+          />
         </div>
       )}
-      <div className="min-w-0">
-        <p className="truncate text-sm font-semibold">{name}</p>
-        <p className="text-xs text-muted-foreground">{handle}</p>
-      </div>
-      {children}
-    </div>
-  );
-}
-
-interface ImageProps extends ComponentPropsWithoutRef<"div"> {
-  alt?: string;
-  src?: string;
-}
-function Image({
-  alt = "Post image",
-  src,
-  className,
-  children,
-  ...props
-}: ImageProps) {
-  useCompoundContext();
-  return (
-    <div
-      className={cn("overflow-hidden rounded-lg bg-muted", className)}
-      {...props}
-    >
-      {children ??
-        (src ? (
-          <img
-            src={src}
-            alt={alt}
-            className="aspect-square w-full object-cover"
-          />
-        ) : (
-          <div className="flex aspect-square items-center justify-center text-sm text-muted-foreground">
-            Post image
+      {likes ||
+        caption ||
+        (time && (
+          <div className="p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <button
+                  aria-label="Like"
+                  className="hover:text-muted-foreground transition-colors cursor-pointer"
+                >
+                  <Heart className="h-6 w-6" />
+                </button>
+                <button
+                  aria-label="Comment"
+                  className="hover:text-muted-foreground transition-colors cursor-pointer"
+                >
+                  <MessageCircle className="h-6 w-6" />
+                </button>
+                <button
+                  aria-label="Share"
+                  className="hover:text-muted-foreground transition-colors cursor-pointer"
+                >
+                  <Send className="h-6 w-6" />
+                </button>
+              </div>
+              <button
+                aria-label="Save"
+                className="hover:text-muted-foreground transition-colors cursor-pointer"
+              >
+                <Bookmark className="h-6 w-6" />
+              </button>
+            </div>
+            {likes && <p className="font-semibold text-sm">{likes} likes</p>}
+            {author ||
+              (caption && (
+                <p className="text-sm">
+                  {author && <span className="font-semibold">{author}</span>}
+                  {author && caption && " "}
+                  {caption}
+                </p>
+              ))}
+            {time && <p className="text-xs text-muted-foreground">{time}</p>}
           </div>
         ))}
     </div>
   );
-}
+};
 
-interface CaptionProps extends ComponentPropsWithoutRef<"p"> {
-  handle?: string;
-  text?: string;
-}
-function Caption({
-  handle = "manifestui",
-  text = "Building interfaces that agents and people can understand.",
-  className,
-  children,
-  ...props
-}: CaptionProps) {
-  useCompoundContext();
-  return (
-    <p className={cn("text-sm", className)} {...props}>
-      {children ?? (
-        <>
-          <span className="font-semibold">{handle}</span> {text}
-        </>
-      )}
-    </p>
-  );
-}
-
-function Actions({
-  className,
-  children,
-  ...props
-}: ComponentPropsWithoutRef<"div">) {
-  const { onComment, onLike, onShare } = useCompoundContext();
-  return (
-    <div className={cn("flex items-center gap-1", className)} {...props}>
-      {children ?? (
-        <>
-          <Button
-            size="icon"
-            variant="ghost"
-            aria-label="Like"
-            onClick={onLike}
-          >
-            <Heart />
-          </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            aria-label="Comment"
-            onClick={onComment}
-          >
-            <MessageCircle />
-          </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            aria-label="Share"
-            onClick={onShare}
-          >
-            <Send />
-          </Button>
-        </>
-      )}
-    </div>
-  );
-}
-
-function InstagramPostRoot({
-  onComment,
-  onLike,
-  onShare,
-  className,
-  children,
-  ...props
-}: InstagramPostProps) {
-  return (
-    <Provider value={{ onComment, onLike, onShare }}>
-      <article
-        className={cn(
-          "w-full space-y-4 rounded-xl border bg-card p-4 sm:p-6",
-          className
-        )}
-        {...props}
-      >
-        {children ?? (
-          <>
-            <Header />
-            <Image />
-            <Actions />
-            <Caption />
-          </>
-        )}
-      </article>
-    </Provider>
-  );
-}
-
-export const InstagramPost = Object.assign(InstagramPostRoot, {
-  Actions,
-  Caption,
-  Header,
-  Image,
-});
+export const InstagramPost = createManifestCompound(
+  InstagramPostView,
+  "InstagramPost"
+);

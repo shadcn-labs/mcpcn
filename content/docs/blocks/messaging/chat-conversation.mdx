@@ -1,0 +1,114 @@
+---
+title: "Chat Conversation"
+description: "Full chat conversation component with multiple message types."
+base: base
+component: true
+---
+
+<ComponentPreview
+  name="chat-conversation"
+  src="examples/chat-conversation-demo.tsx"
+/>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/chat-conversation.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource
+  name="chat-conversation"
+  title="components/ui/chat-conversation.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ChatConversation } from "@/components/ui/chat-conversation";
+```
+
+```tsx
+<ChatConversation />
+```
+
+## Composition
+
+Use the following composition to build an `ChatConversation`:
+
+```text
+ChatConversation
+└── ChatConversation.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="chat-conversation"
+  src="examples/chat-conversation-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `ChatConversation` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { ChatConversation } from "@/components/ui/chat-conversation";
+
+const OpenUIChatConversation = defineComponent({
+  name: "ChatConversation",
+  description: "Full chat conversation component with multiple message types.",
+  props: z.object({}),
+  component: () => <ChatConversation />,
+});
+
+export const chat_conversationLibrary = createLibrary({
+  root: "ChatConversation",
+  components: [OpenUIChatConversation],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

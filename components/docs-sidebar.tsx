@@ -125,7 +125,9 @@ export const DocsSidebar = ({
               (child): child is PageTreeFolder => child.type === "folder"
             );
             return categories.map((category) => {
-              const pages = getPagesFromFolder(category);
+              const pages = getPagesFromFolder(category).filter(
+                (page) => String(page.name) !== String(category.name)
+              );
               return (
                 <SidebarPageGroup
                   key={category.$id}

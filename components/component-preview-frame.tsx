@@ -1,8 +1,9 @@
 "use client";
 
-import { Maximize2, MessageSquare, PictureInPicture2 } from "lucide-react";
-import { useState } from "react";
+import { Maximize2, MessageSquare, PictureInPicture2, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
@@ -24,6 +25,24 @@ export const ComponentPreviewFrame = ({
   children: ReactNode;
 }) => {
   const [mode, setMode] = useState<PreviewMode>("inline");
+  const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
+  const [isPipOpen, setIsPipOpen] = useState(false);
+
+  useEffect(() => {
+    if (!(isFullscreenOpen || isPipOpen)) {
+      return;
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsFullscreenOpen(false);
+        setIsPipOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [isFullscreenOpen, isPipOpen]);
 
   return (
     <div className="not-prose my-6">
@@ -51,19 +70,77 @@ export const ComponentPreviewFrame = ({
         ))}
       </div>
 
-      <div className="min-h-[360px] overflow-hidden rounded-xl border bg-background p-4 sm:p-8">
-        <div
-          className={cn(
-            "mx-auto flex min-h-[294px] w-full items-center transition-[max-width,padding] duration-200",
-            mode === "inline" && "max-w-3xl",
-            mode === "pip" &&
-              "ml-auto mr-0 max-w-sm rounded-xl bg-muted/30 p-3 shadow-lg",
-            mode === "full-width" && "max-w-none"
-          )}
-        >
-          <div className="w-full">{children}</div>
-        </div>
+      <div className="flex min-h-[360px] items-center justify-center overflow-hidden rounded-xl border bg-background p-4 sm:p-8">
+        {mode === "inline" ? (
+          <div className="mx-auto w-full max-w-3xl">{children}</div>
+        ) : (
+          <button
+            className="inline-flex h-9 items-center justify-center rounded-md border bg-background px-4 text-sm font-medium shadow-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onClick={() => {
+              if (mode === "pip") {
+                setIsPipOpen(true);
+              } else {
+                setIsFullscreenOpen(true);
+              }
+            }}
+            type="button"
+          >
+            {mode === "pip" ? "Open PiP" : "Open full-width"}
+          </button>
+        )}
       </div>
+
+      {isPipOpen
+        ? createPortal(
+            <section
+              aria-label="Picture in picture preview"
+              className="fixed right-4 bottom-4 z-100 w-[min(420px,calc(100vw-2rem))] overflow-hidden rounded-xl border bg-background shadow-2xl"
+            >
+              <header className="flex h-11 items-center justify-between border-b px-3">
+                <span className="text-sm font-medium">Component preview</span>
+                <button
+                  aria-label="Close picture in picture"
+                  className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                  onClick={() => setIsPipOpen(false)}
+                  type="button"
+                >
+                  <X className="size-4" />
+                </button>
+              </header>
+              <div className="max-h-[min(70vh,640px)] overflow-auto p-4">
+                {children}
+              </div>
+            </section>,
+            document.body
+          )
+        : null}
+
+      {isFullscreenOpen
+        ? createPortal(
+            <section
+              aria-label="Full-width preview"
+              aria-modal="true"
+              className="fixed inset-0 z-100 flex flex-col bg-background"
+              role="dialog"
+            >
+              <header className="flex h-14 shrink-0 items-center justify-between border-b px-4 sm:px-6">
+                <span className="font-medium">Component preview</span>
+                <button
+                  aria-label="Close full-width preview"
+                  className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                  onClick={() => setIsFullscreenOpen(false)}
+                  type="button"
+                >
+                  <X className="size-4" />
+                </button>
+              </header>
+              <div className="flex min-h-0 flex-1 items-center overflow-auto p-4 sm:p-8">
+                <div className="w-full">{children}</div>
+              </div>
+            </section>,
+            document.body
+          )
+        : null}
     </div>
   );
 };

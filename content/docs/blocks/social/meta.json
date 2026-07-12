@@ -1,4 +1,10 @@
 {
   "title": "Social",
-  "pages": ["index", "instagram-post", "twitter-post", "youtube-embed"]
+  "pages": [
+    "index",
+    "x-post",
+    "instagram-post",
+    "linkedin-post",
+    "youtube-post"
+  ]
 }

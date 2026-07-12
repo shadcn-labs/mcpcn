@@ -1,258 +1,215 @@
 "use client";
 
-import { CheckCircle, AtSign, Mail, MessageCircle, Share2 } from "lucide-react";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { CheckCircle, Mail, MessageCircle } from "lucide-react";
+import type { SVGProps } from "react";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {
+  createManifestCompound,
+  RegistryImage,
+} from "@/components/ui/compound";
 
-import { createCompoundContext } from "../_lib/compound";
-import type { SharePlatform } from "./types";
+import { demoEventConfirmation } from "./demo/events";
 
-interface EventConfirmationContextValue {
-  onViewTickets?: () => void;
-  onFollowOrganizer?: () => void;
-  onShare?: (platform: SharePlatform) => void;
+const Facebook = (props: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M13.5 22v-9h3l.5-3h-3.5V8.1c0-.9.3-1.6 1.7-1.6H17V3.8c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V10H7v3h3v9h3.5Z" />
+  </svg>
+);
+
+const Twitter = (props: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M18.9 2H22l-6.8 7.8L23.2 22H17l-4.9-6.4L6.5 22H3.4l7.2-8.3L2.9 2h6.3l4.4 5.8L18.9 2Zm-1.1 17.9h1.7L8.3 4H6.5l11.3 15.9Z" />
+  </svg>
+);
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * EventConfirmationProps
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * Props for the EventConfirmation component. Displays booking success message,
+ * ticket delivery info, organizer follow card, and social sharing options.
+ */
+export interface EventConfirmationProps {
+  data?: {
+    /** Order/confirmation number. */
+    orderNumber?: string;
+    /** Event title. */
+    eventTitle?: string;
+    /** Number of tickets purchased. */
+    ticketCount?: number;
+    /** Email address where tickets were sent. */
+    recipientEmail?: string;
+    /** Event date and time string. */
+    eventDate?: string;
+    /** Event location. */
+    eventLocation?: string;
+    /** Event organizer information. */
+    organizer?: {
+      name: string;
+      image?: string;
+    };
+  };
+  actions?: {
+    /** Called when "Take me to my tickets" button is clicked. */
+    onViewTickets?: () => void;
+    /** Called when "Follow" organizer button is clicked. */
+    onFollowOrganizer?: () => void;
+    /** Called when a social share button is clicked. */
+    onShare?: (
+      platform: "facebook" | "twitter" | "messenger" | "email"
+    ) => void;
+  };
 }
 
-const { Provider, useCompoundContext } =
-  createCompoundContext<EventConfirmationContextValue>("EventConfirmation");
-
-export interface EventConfirmationProps extends ComponentPropsWithoutRef<"div"> {
-  onViewTickets?: () => void;
-  onFollowOrganizer?: () => void;
-  onShare?: (platform: SharePlatform) => void;
-}
-
-interface HeaderProps extends ComponentPropsWithoutRef<"div"> {
-  orderNumber?: string;
-  heading?: string;
-}
-
-function Header({
-  orderNumber,
-  heading = "Thanks for your order!",
-  className,
-  children,
-  ...props
-}: HeaderProps) {
-  const { onViewTickets } = useCompoundContext();
+const EventConfirmationView = ({ data, actions }: EventConfirmationProps) => {
+  const resolved: NonNullable<EventConfirmationProps["data"]> =
+    data ?? demoEventConfirmation;
+  const orderNumber = resolved?.orderNumber;
+  const eventTitle = resolved?.eventTitle;
+  const ticketCount = resolved?.ticketCount;
+  const recipientEmail = resolved?.recipientEmail;
+  const eventDate = resolved?.eventDate;
+  const eventLocation = resolved?.eventLocation;
+  const organizer = resolved?.organizer;
+  const { onViewTickets, onFollowOrganizer, onShare } = actions ?? {};
 
   return (
-    <div
-      className={cn(
-        "mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center",
-        className
-      )}
-      {...props}
-    >
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-950">
-          <CheckCircle className="h-6 w-6 text-green-600" />
-        </div>
-        <div>
-          <h2 className="text-xl font-semibold">{heading}</h2>
-          {orderNumber ? (
-            <p className="text-sm text-muted-foreground">{orderNumber}</p>
-          ) : null}
-          {children}
-        </div>
-      </div>
-      <Button onClick={onViewTickets} size="lg">
-        Take me to my tickets
-      </Button>
-    </div>
-  );
-}
-
-interface DetailsProps extends ComponentPropsWithoutRef<"div"> {
-  eventTitle?: string;
-  ticketCount?: number;
-  recipientEmail?: string;
-  eventDate?: string;
-  eventLocation?: string;
-}
-
-function Details({
-  eventTitle,
-  ticketCount = 1,
-  recipientEmail,
-  eventDate,
-  eventLocation,
-  className,
-  children,
-  ...props
-}: DetailsProps) {
-  useCompoundContext();
-
-  return (
-    <div className={cn("mb-8", className)} {...props}>
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        You&apos;re going to
-      </p>
-      {eventTitle ? (
-        <h3 className="mb-6 text-2xl font-bold leading-tight">{eventTitle}</h3>
-      ) : null}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-        {recipientEmail ? (
-          <div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {ticketCount} {ticketCount === 1 ? "ticket" : "tickets"} sent to
-            </p>
-            <p className="text-sm">{recipientEmail}</p>
+    <div className="rounded-xl border bg-card p-6 ">
+      {/* Success header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+            <CheckCircle className="h-6 w-6 text-green-600" />
           </div>
-        ) : null}
-        {eventDate ? (
           <div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Date
-            </p>
-            <p className="text-sm">{eventDate}</p>
-          </div>
-        ) : null}
-        {eventLocation ? (
-          <div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Location
-            </p>
-            <p className="text-sm">{eventLocation}</p>
-          </div>
-        ) : null}
-        {children}
-      </div>
-    </div>
-  );
-}
-
-interface OrganizerProps extends ComponentPropsWithoutRef<"div"> {
-  name: string;
-  image?: string;
-}
-
-function Organizer({
-  name,
-  image,
-  className,
-  children,
-  ...props
-}: OrganizerProps) {
-  const { onFollowOrganizer } = useCompoundContext();
-
-  return (
-    <div
-      className={cn("mb-8 rounded-lg border bg-muted/30 p-4", className)}
-      {...props}
-    >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-3">
-          {image ? (
-            <img
-              src={image}
-              alt={name}
-              className="h-12 w-12 rounded-full object-cover"
-            />
-          ) : (
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-950">
-              <span className="text-lg font-semibold text-orange-600">
-                {name.charAt(0)}
-              </span>
-            </div>
-          )}
-          <div className="min-w-0">
-            <p className="text-sm text-muted-foreground">
-              Don&apos;t miss out on events from
-            </p>
-            <div className="flex items-center gap-1.5">
-              <p className="truncate font-semibold">{name}</p>
-              {children}
-            </div>
-            <p className="text-xs text-muted-foreground">Created this event</p>
+            <h1 className="text-xl font-semibold">Thanks for your order!</h1>
+            {orderNumber && (
+              <p className="text-sm text-muted-foreground">{orderNumber}</p>
+            )}
           </div>
         </div>
-        <Button variant="outline" onClick={onFollowOrganizer}>
-          Follow
+        <Button onClick={onViewTickets} size="lg">
+          Take me to my tickets
         </Button>
       </div>
-    </div>
-  );
-}
 
-const shareOptions: {
-  label: string;
-  platform: SharePlatform;
-  icon: ReactNode;
-}[] = [
-  { icon: <Share2 />, label: "Share on Facebook", platform: "facebook" },
-  {
-    icon: <MessageCircle />,
-    label: "Share on Messenger",
-    platform: "messenger",
-  },
-  { icon: <AtSign />, label: "Share on Twitter", platform: "twitter" },
-  { icon: <Mail />, label: "Share via email", platform: "email" },
-];
-
-function Share({
-  className,
-  children,
-  ...props
-}: ComponentPropsWithoutRef<"div">) {
-  const { onShare } = useCompoundContext();
-
-  return (
-    <div className={cn("flex items-center gap-4", className)} {...props}>
-      {children ??
-        shareOptions.map(({ label, platform, icon }) => (
-          <button
-            key={platform}
-            type="button"
-            onClick={() => onShare?.(platform)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border transition-colors hover:bg-muted [&_svg]:h-5 [&_svg]:w-5"
-            aria-label={label}
-          >
-            {icon}
-          </button>
-        ))}
-    </div>
-  );
-}
-
-function EventConfirmationRoot({
-  onViewTickets,
-  onFollowOrganizer,
-  onShare,
-  className,
-  children,
-  ...props
-}: EventConfirmationProps) {
-  return (
-    <Provider value={{ onFollowOrganizer, onShare, onViewTickets }}>
-      <div
-        className={cn("rounded-xl border bg-card p-6", className)}
-        {...props}
-      >
-        {children ?? (
-          <>
-            <Header orderNumber="#14040333743" />
-            <Details
-              eventTitle="A night under the stars"
-              ticketCount={2}
-              recipientEmail="hello@example.com"
-              eventDate="Friday, Feb 6 · 8pm"
-              eventLocation="Los Angeles, CA"
-            />
-            <Organizer name="Manifest Events" />
-            <Share />
-          </>
+      {/* Event details */}
+      <div className="mb-8">
+        <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase mb-2">
+          You're going to
+        </p>
+        {eventTitle && (
+          <h2 className="text-2xl font-bold leading-tight mb-6">
+            {eventTitle}
+          </h2>
         )}
-      </div>
-    </Provider>
-  );
-}
 
-export const EventConfirmation = Object.assign(EventConfirmationRoot, {
-  Details,
-  Header,
-  Organizer,
-  Share,
-});
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {/* Ticket sent to */}
+          {recipientEmail && (
+            <div>
+              <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase mb-1">
+                {ticketCount ?? 1} Ticket sent to
+              </p>
+              <p className="text-sm">{recipientEmail}</p>
+            </div>
+          )}
+
+          {/* Date */}
+          {eventDate && (
+            <div>
+              <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase mb-1">
+                Date
+              </p>
+              <p className="text-sm">{eventDate}</p>
+            </div>
+          )}
+
+          {/* Location */}
+          {eventLocation && (
+            <div>
+              <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase mb-1">
+                Location
+              </p>
+              <p className="text-sm">{eventLocation}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Organizer follow section */}
+      {organizer && (
+        <div className="rounded-lg border bg-muted/30 p-4 mb-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {organizer.image ? (
+                <RegistryImage
+                  src={organizer.image}
+                  alt={organizer.name}
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-100">
+                  <span className="text-lg font-semibold text-orange-600">
+                    {organizer.name.charAt(0)}
+                  </span>
+                </div>
+              )}
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  Don't miss out on events from
+                </p>
+                <p className="font-semibold">{organizer.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  Created this event
+                </p>
+              </div>
+            </div>
+            <Button variant="outline" onClick={onFollowOrganizer}>
+              Follow
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Social sharing */}
+      <div className="flex items-center gap-4">
+        <button
+          onClick={() => onShare?.("facebook")}
+          className="flex h-10 w-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
+          aria-label="Share on Facebook"
+        >
+          <Facebook className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => onShare?.("messenger")}
+          className="flex h-10 w-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
+          aria-label="Share on Messenger"
+        >
+          <MessageCircle className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => onShare?.("twitter")}
+          className="flex h-10 w-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
+          aria-label="Share on Twitter"
+        >
+          <Twitter className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => onShare?.("email")}
+          className="flex h-10 w-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
+          aria-label="Share via Email"
+        >
+          <Mail className="h-5 w-5" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export const EventConfirmation = createManifestCompound(
+  EventConfirmationView,
+  "EventConfirmation"
+);

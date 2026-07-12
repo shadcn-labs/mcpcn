@@ -1,21 +1,13 @@
-import type { TimelineStep } from "../_lib/compound";
+// Shared types for Payment category components
 
+/**
+ * Represents an item in an order.
+ * @interface OrderItem
+ */
 export interface OrderItem {
-  image?: string;
-  name: string;
-  price: number;
+  id: string;
+  name?: string;
   quantity?: number;
-  sku?: string;
-  variant?: string;
-}
-
-export interface PaymentMethod {
-  description?: string;
-  label: string;
-  value: string;
-}
-
-export interface RefundDetails {
-  amount: number;
-  steps: TimelineStep[];
+  price?: number;
+  image?: string;
 }

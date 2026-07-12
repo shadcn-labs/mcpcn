@@ -1,4 +1,4 @@
 {
   "title": "Status",
-  "pages": ["index", "order-timeline", "delivery-status"]
+  "pages": ["index", "progress-steps", "status-badge"]
 }

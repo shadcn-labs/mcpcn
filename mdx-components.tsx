@@ -110,9 +110,12 @@ export const mdxComponents = {
       {children}
     </h3>
   ),
-  Steps: ({ ...props }) => (
+  Steps: ({ className, ...props }: React.ComponentProps<"div">) => (
     <div
-      className="steps [counter-reset:step] md:ml-4 md:border-l md:pl-8 [&>h3]:step"
+      className={cn(
+        "steps [counter-reset:step] md:ml-4 md:border-l md:pl-8 [&>h3]:step",
+        className
+      )}
       {...props}
     />
   ),
@@ -153,7 +156,7 @@ export const mdxComponents = {
     <TabsTrigger
       sound="tabSwitch"
       className={cn(
-        "text-muted-foreground data-[state=active]:text-foreground data-[state=active]:border-primary dark:data-[state=active]:border-primary hover:text-primary rounded-none border-0 border-b-2 border-transparent bg-transparent px-0 pb-3 text-base data-[state=active]:bg-transparent data-[state=active]:shadow-none dark:data-[state=active]:bg-transparent",
+        "rounded-none border-0 border-b-2 border-transparent bg-transparent px-0 pb-3 text-base text-muted-foreground hover:text-primary data-active:border-primary data-active:bg-transparent data-active:text-foreground data-active:shadow-none dark:data-active:border-primary dark:data-active:bg-transparent",
         className
       )}
       {...props}

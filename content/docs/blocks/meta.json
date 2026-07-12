@@ -2,13 +2,16 @@
   "title": "Blocks",
   "pages": [
     "index",
-    "payment",
-    "status",
-    "events",
-    "social",
     "form",
-    "blogging",
+    "payment",
     "list",
-    "miscellaneous"
+    "selection",
+    "status",
+    "miscellaneous",
+    "blogging",
+    "messaging",
+    "social",
+    "map",
+    "events"
   ]
 }

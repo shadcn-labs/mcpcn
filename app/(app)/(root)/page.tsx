@@ -32,7 +32,9 @@ export default function IndexPage() {
 
         <section className="container-wrapper pb-8 lg:pb-12">
           <div className="container flex flex-col items-center gap-6">
-            <EventConfirmation className="w-full max-w-2xl" />
+            <div className="w-full max-w-2xl">
+              <EventConfirmation />
+            </div>
           </div>
         </section>
       </PageTransition>

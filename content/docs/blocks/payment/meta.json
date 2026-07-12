@@ -1,11 +1,4 @@
 {
   "title": "Payment",
-  "pages": [
-    "index",
-    "order-confirm",
-    "order-status",
-    "payment-method-select",
-    "pay-confirm",
-    "refund-status"
-  ]
+  "pages": ["index", "order-confirm", "payment-confirmed", "amount-input"]
 }

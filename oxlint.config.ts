@@ -16,12 +16,4 @@ export default defineConfig({
     "audio/**",
     "components/ui/**",
   ],
-  overrides: [
-    {
-      files: ["registry/**/*.tsx"],
-      rules: {
-        "func-style": "off",
-      },
-    },
-  ],
 });

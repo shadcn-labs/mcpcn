@@ -2,8 +2,10 @@
   "title": "Events",
   "pages": [
     "index",
-    "event-confirmation",
+    "event-card",
+    "event-list",
+    "event-detail",
     "ticket-tier-select",
-    "seat-selector"
+    "event-confirmation"
   ]
 }

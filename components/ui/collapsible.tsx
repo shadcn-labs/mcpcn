@@ -18,6 +18,7 @@ function CollapsibleTrigger({
   return (
     <CollapsiblePrimitive.Trigger
       data-slot="collapsible-trigger"
+      nativeButton={!asChild}
       render={asChild ? (children as ReactElement) : undefined}
       {...props}
     >

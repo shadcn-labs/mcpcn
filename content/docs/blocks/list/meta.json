@@ -1,4 +1,4 @@
 {
   "title": "List",
-  "pages": ["index", "todo-list", "product-list"]
+  "pages": ["index", "product-list", "table"]
 }

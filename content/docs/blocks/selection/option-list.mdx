@@ -1,0 +1,109 @@
+---
+title: "Option List"
+description: "Tag-style option selector with single or multiple selection modes."
+base: base
+component: true
+---
+
+<ComponentPreview name="option-list" src="examples/option-list-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/option-list.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource name="option-list" title="components/ui/option-list.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { OptionList } from "@/components/ui/option-list";
+```
+
+```tsx
+<OptionList />
+```
+
+## Composition
+
+Use the following composition to build an `OptionList`:
+
+```text
+OptionList
+└── OptionList.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="option-list"
+  src="examples/option-list-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `OptionList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { OptionList } from "@/components/ui/option-list";
+
+const OpenUIOptionList = defineComponent({
+  name: "OptionList",
+  description:
+    "Tag-style option selector with single or multiple selection modes.",
+  props: z.object({}),
+  component: () => <OptionList />,
+});
+
+export const option_listLibrary = createLibrary({
+  root: "OptionList",
+  components: [OpenUIOptionList],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

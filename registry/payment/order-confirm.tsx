@@ -1,258 +1,179 @@
+/* oxlint-disable complexity */
 "use client";
 
-import { ArrowRight, Calendar, MapPin, ShoppingBag } from "lucide-react";
-import type { ComponentPropsWithoutRef } from "react";
+import { ArrowRight, Calendar, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {
+  createManifestCompound,
+  RegistryImage,
+} from "@/components/ui/compound";
 
-import { createCompoundContext, formatPrice } from "../_lib/compound";
+import { demoOrderConfirm } from "./demo/payment";
 
-interface OrderConfirmContextValue {
-  currency: string;
-  formatPrice: (value: number) => string;
-  isLoading: boolean;
-  onConfirm?: () => void;
-  orderNumber?: string;
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * OrderConfirmProps
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * Props for an order confirmation component with product image, delivery info,
+ * and confirm action. Displays responsive layouts for mobile and desktop.
+ */
+export interface OrderConfirmProps {
+  data?: {
+    /** Name of the product being ordered. */
+    productName?: string;
+    /** Product variant such as color or size. */
+    productVariant?: string;
+    /** URL to the product image. */
+    productImage?: string;
+    /**
+     * Quantity of items being ordered.
+     * @default 1
+     */
+    quantity?: number;
+    /** Total price for the order. */
+    price?: number;
+    /** Expected delivery date string (e.g., "Tue. Dec 10"). */
+    deliveryDate?: string;
+    /** Delivery address for the order. */
+    deliveryAddress?: string;
+    /**
+     * Whether shipping is free for this order.
+     * @default true
+     */
+    freeShipping?: boolean;
+  };
+  actions?: {
+    /** Called when the user confirms the order. */
+    onConfirm?: () => void;
+  };
+  appearance?: {
+    /**
+     * Currency code for formatting the price.
+     * @default "USD"
+     */
+    currency?: string;
+  };
+  control?: {
+    /**
+     * Shows loading state on the confirm button.
+     * @default false
+     */
+    isLoading?: boolean;
+  };
 }
 
-const { Provider, useCompoundContext } =
-  createCompoundContext<OrderConfirmContextValue>("OrderConfirm");
+const OrderConfirmView = ({
+  data,
+  actions,
+  appearance,
+  control,
+}: OrderConfirmProps) => {
+  const resolved: NonNullable<OrderConfirmProps["data"]> =
+    data ?? demoOrderConfirm;
+  const productName = resolved?.productName;
+  const productVariant = resolved?.productVariant;
+  const productImage = resolved?.productImage;
+  const quantity = resolved?.quantity ?? 1;
+  const price = resolved?.price;
+  const deliveryDate = resolved?.deliveryDate;
+  const deliveryAddress = resolved?.deliveryAddress;
+  const freeShipping = resolved?.freeShipping ?? true;
+  const { onConfirm } = actions ?? {};
+  const { currency = "USD" } = appearance ?? {};
+  const { isLoading = false } = control ?? {};
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("en-US", {
+      currency,
+      style: "currency",
+    }).format(value);
 
-export interface OrderConfirmProps extends ComponentPropsWithoutRef<"div"> {
-  currency?: string;
-  isLoading?: boolean;
-  onConfirm?: () => void;
-  orderNumber?: string;
-}
-
-function Header({
-  className,
-  children,
-  ...props
-}: ComponentPropsWithoutRef<"div">) {
-  const { orderNumber } = useCompoundContext();
   return (
-    <div
-      className={cn(
-        "flex items-center gap-3 px-3 pt-3 sm:px-2 sm:pt-2",
-        className
-      )}
-      {...props}
-    >
-      <ShoppingBag className="h-5 w-5" />
-      <div>
-        {children ?? <p className="font-semibold">Review your order</p>}
-        {orderNumber ? (
-          <p className="text-xs text-muted-foreground">{orderNumber}</p>
-        ) : null}
+    <div className="w-full rounded-md sm:rounded-lg bg-card">
+      {/* Product info */}
+      <div className="flex items-start gap-3 p-3 sm:gap-4 sm:p-2">
+        {productImage && (
+          <RegistryImage
+            src={productImage}
+            alt={productName ?? "Product image"}
+            className="h-12 w-12 sm:h-16 sm:w-16 rounded-sm sm:rounded-md object-contain bg-muted/30"
+          />
+        )}
+        <div className="flex-1 min-w-0">
+          {/* Mobile: stacked layout */}
+          {productName && (
+            <h3 className="text-sm sm:text-base font-medium truncate">
+              {productName}
+            </h3>
+          )}
+          {productVariant ||
+            (quantity && (
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                {productVariant}
+                {productVariant && quantity ? " • " : ""}
+                Qty: {quantity}
+              </p>
+            ))}
+          {/* Mobile: price below product info */}
+          <div className="mt-1 sm:hidden">
+            {price !== undefined && (
+              <p className="text-sm font-semibold">{formatCurrency(price)}</p>
+            )}
+            {freeShipping && (
+              <p className="text-xs text-green-600">Free shipping</p>
+            )}
+          </div>
+        </div>
+        {/* Desktop: price on the right */}
+        <div className="hidden sm:block text-right">
+          {price !== undefined && (
+            <p className="font-semibold">{formatCurrency(price)}</p>
+          )}
+          {freeShipping && (
+            <p className="text-sm text-green-600">Free shipping</p>
+          )}
+        </div>
       </div>
-    </div>
-  );
-}
 
-interface ItemRowProps extends ComponentPropsWithoutRef<"div"> {
-  image?: string;
-  name?: string;
-  price?: number;
-  quantity?: number;
-  sku?: string;
-  variant?: string;
-}
+      <div className="border-t" />
 
-function ItemRow({
-  image,
-  name = "Item",
-  price = 0,
-  quantity = 1,
-  sku,
-  variant,
-  className,
-  children,
-  ...props
-}: ItemRowProps) {
-  const { formatPrice: format } = useCompoundContext();
-  return (
-    <div
-      className={cn("flex items-start gap-3 p-3 sm:gap-4 sm:p-2", className)}
-      {...props}
-    >
-      {image ? (
-        <img
-          src={image}
-          alt={name}
-          className="h-12 w-12 rounded-sm bg-muted/30 object-contain sm:h-16 sm:w-16 sm:rounded-md"
-        />
-      ) : null}
-      <div className="min-w-0 flex-1">
-        <h3 className="truncate text-sm font-medium sm:text-base">{name}</h3>
-        <p className="text-xs text-muted-foreground sm:text-sm">
-          {[variant, sku, `Qty: ${quantity}`].filter(Boolean).join(" • ")}
-        </p>
-        {children}
-      </div>
-      <p className="font-semibold">{format(price * quantity)}</p>
-    </div>
-  );
-}
+      {/* Delivery info & button */}
+      <div className="p-3 space-y-3 sm:py-2 sm:pr-2 sm:pl-4 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
+        {/* Mobile: stacked, Desktop: inline */}
+        <div className="space-y-1.5 sm:space-y-0 sm:flex sm:flex-wrap sm:items-center sm:gap-2 text-xs sm:text-sm text-muted-foreground">
+          {deliveryDate && (
+            <div className="flex items-center gap-1.5">
+              <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
+              <span>{deliveryDate}</span>
+            </div>
+          )}
+          {deliveryDate && deliveryAddress && (
+            <span className="hidden sm:inline">•</span>
+          )}
+          {deliveryAddress && (
+            <div className="flex items-center gap-1.5">
+              <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
+              <span className="truncate">{deliveryAddress}</span>
+            </div>
+          )}
+        </div>
 
-function PriceBreakdown({
-  className,
-  children,
-  ...props
-}: ComponentPropsWithoutRef<"div">) {
-  useCompoundContext();
-  return (
-    <div
-      className={cn("space-y-2 border-t p-3 text-sm sm:p-4", className)}
-      {...props}
-    >
-      {children ?? (
-        <>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Shipping</span>
-            <span className="text-green-600">Free</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Tax</span>
-            <span>Calculated at checkout</span>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-interface TotalProps extends ComponentPropsWithoutRef<"div"> {
-  value?: number;
-}
-
-function Total({ value = 149.99, className, children, ...props }: TotalProps) {
-  const { formatPrice: format } = useCompoundContext();
-  return (
-    <div
-      className={cn(
-        "flex items-center justify-between border-t px-3 py-3 font-semibold sm:px-4",
-        className
-      )}
-      {...props}
-    >
-      {children ?? (
-        <>
-          <span>Total</span>
-          <span>{format(value)}</span>
-        </>
-      )}
-    </div>
-  );
-}
-
-interface ActionProps extends ComponentPropsWithoutRef<"div"> {
-  deliveryAddress?: string;
-  deliveryDate?: string;
-}
-
-function Action({
-  deliveryAddress,
-  deliveryDate,
-  className,
-  children,
-  ...props
-}: ActionProps) {
-  const { isLoading, onConfirm } = useCompoundContext();
-  return (
-    <div
-      className={cn(
-        "space-y-3 border-t p-3 sm:flex sm:items-center sm:justify-between sm:space-y-0 sm:px-4",
-        className
-      )}
-      {...props}
-    >
-      <div className="space-y-1.5 text-xs text-muted-foreground sm:flex sm:items-center sm:gap-2 sm:space-y-0 sm:text-sm">
-        {deliveryDate ? (
-          <div className="flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5" />
-            <span>{deliveryDate}</span>
-          </div>
-        ) : null}
-        {deliveryDate && deliveryAddress ? (
-          <span className="hidden sm:inline">•</span>
-        ) : null}
-        {deliveryAddress ? (
-          <div className="flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5" />
-            <span>{deliveryAddress}</span>
-          </div>
-        ) : null}
-      </div>
-      {children ?? (
         <Button
-          className="w-full sm:w-auto"
           size="sm"
+          className="w-full sm:w-auto"
           onClick={onConfirm}
           disabled={isLoading}
         >
-          {isLoading ? "Confirming…" : "Confirm order"}
-          <ArrowRight className="ml-1.5 h-4 w-4" />
+          {isLoading ? "Confirming..." : "Confirm order"}
+          <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </Button>
-      )}
+      </div>
     </div>
   );
-}
+};
 
-function OrderConfirmRoot({
-  currency = "USD",
-  isLoading = false,
-  onConfirm,
-  orderNumber,
-  className,
-  children,
-  ...props
-}: OrderConfirmProps) {
-  return (
-    <Provider
-      value={{
-        currency,
-        formatPrice: (value) => formatPrice(value, currency),
-        isLoading,
-        onConfirm,
-        orderNumber,
-      }}
-    >
-      <div
-        className={cn(
-          "w-full overflow-hidden rounded-md border bg-card sm:rounded-lg",
-          className
-        )}
-        {...props}
-      >
-        {children ?? (
-          <>
-            <Header />
-            <ItemRow
-              name="Wireless earbuds"
-              variant="White"
-              sku="EAR-01"
-              quantity={1}
-              price={149.99}
-            />
-            <PriceBreakdown />
-            <Total />
-            <Action
-              deliveryDate="Fri, Jan 20"
-              deliveryAddress="123 Main St, New York"
-            />
-          </>
-        )}
-      </div>
-    </Provider>
-  );
-}
-
-export const OrderConfirm = Object.assign(OrderConfirmRoot, {
-  Action,
-  Header,
-  ItemRow,
-  PriceBreakdown,
-  Total,
-});
+export const OrderConfirm = createManifestCompound(
+  OrderConfirmView,
+  "OrderConfirm"
+);

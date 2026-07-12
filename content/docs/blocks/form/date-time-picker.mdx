@@ -1,0 +1,115 @@
+---
+title: "Date & Time Picker"
+description: "A Calendly-style date and time picker with calendar, available time slots, and timezone display."
+base: base
+component: true
+---
+
+<ComponentPreview
+  name="date-time-picker"
+  src="examples/date-time-picker-demo.tsx"
+/>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/date-time-picker.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource
+  name="date-time-picker"
+  title="components/ui/date-time-picker.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { DateTimePicker } from "@/components/ui/date-time-picker";
+```
+
+```tsx
+<DateTimePicker />
+```
+
+## Composition
+
+Use the following composition to build an `DateTimePicker`:
+
+```text
+DateTimePicker
+└── DateTimePicker.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="date-time-picker"
+  src="examples/date-time-picker-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `DateTimePicker` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { DateTimePicker } from "@/components/ui/date-time-picker";
+
+const OpenUIDateTimePicker = defineComponent({
+  name: "DateTimePicker",
+  description:
+    "A Calendly-style date and time picker with calendar, available time slots, and timezone display.",
+  props: z.object({}),
+  component: () => <DateTimePicker />,
+});
+
+export const date_time_pickerLibrary = createLibrary({
+  root: "DateTimePicker",
+  components: [OpenUIDateTimePicker],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

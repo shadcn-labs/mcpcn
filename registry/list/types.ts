@@ -1,13 +1,16 @@
-export interface TodoItem {
-  completed?: boolean;
-  id: string;
-  text: string;
-}
+// Shared types for List category components
 
+/**
+ * Represents a product with pricing and display information.
+ * @interface Product
+ */
 export interface Product {
-  id: string;
+  name?: string;
+  description?: string;
+  price?: number;
+  originalPrice?: number;
   image?: string;
-  name: string;
-  price: number;
   rating?: number;
+  badge?: string;
+  inStock?: boolean;
 }

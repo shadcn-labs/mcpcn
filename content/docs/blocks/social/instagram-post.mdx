@@ -1,6 +1,6 @@
 ---
 title: "Instagram Post"
-description: "A composition-first instagram post block for MCP Apps."
+description: "Instagram post card with image and engagement."
 base: base
 component: true
 ---
@@ -34,7 +34,7 @@ npx shadcn@latest add https://mcpcn.dev/r/instagram-post.json
 <Step>Install the component dependencies:</Step>
 
 ```bash
-npm install @base-ui/react lucide-react
+npm install lucide-react
 ```
 
 <Step>Copy and paste the component into your project.</Step>
@@ -54,29 +54,39 @@ npm install @base-ui/react lucide-react
 
 ## Usage
 
-```tsx showLineNumbers
+```tsx
 import { InstagramPost } from "@/components/ui/instagram-post";
 ```
 
-```tsx showLineNumbers
+```tsx
 <InstagramPost />
 ```
 
 ## Composition
 
-Use the following compound-component composition to customize `InstagramPost`:
+Use the following composition to build an `InstagramPost`:
 
 ```text
 InstagramPost
-├── InstagramPost.Header
-├── InstagramPost.Image
-├── InstagramPost.Caption
-└── InstagramPost.Actions
+└── InstagramPost.Content
 ```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="instagram-post"
+  src="examples/instagram-post-demo.tsx"
+  variant="composed"
+  showCode
+/>
 
 ## Integrate with OpenUI
 
-Register `InstagramPost` with `defineComponent`, describe its model-generated props with Zod, and include it in a library. Keep the schema flat so OpenUI Lang can generate and stream it reliably.
+Register `InstagramPost` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
 import { createLibrary, defineComponent } from "@openuidev/react-lang";
@@ -86,14 +96,12 @@ import { InstagramPost } from "@/components/ui/instagram-post";
 
 const OpenUIInstagramPost = defineComponent({
   name: "InstagramPost",
-  description: "Instagram Post for an MCP-powered interface.",
-  props: z.object({
-    // Add flat, serializable props that the model should generate.
-  }),
-  component: ({ props }) => <InstagramPost />,
+  description: "Instagram post card with image and engagement.",
+  props: z.object({}),
+  component: () => <InstagramPost />,
 });
 
-export const instagrampostLibrary = createLibrary({
+export const instagram_postLibrary = createLibrary({
   root: "InstagramPost",
   components: [OpenUIInstagramPost],
 });
@@ -101,17 +109,6 @@ export const instagrampostLibrary = createLibrary({
 
 For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
 
-## Examples
-
-### Default and composed
-
-The preview includes the ready-to-use default and a custom composition. Use the controls above the border to inspect inline, picture-in-picture, and full-width layouts.
-
-<ComponentPreview
-  name="instagram-post"
-  src="examples/instagram-post-demo.tsx"
-/>
-
 ## API Reference
 
-The component is built on the Base UI foundation and ships as editable source. See the [registry item](/r/instagram-post.json) for its files and dependencies.
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

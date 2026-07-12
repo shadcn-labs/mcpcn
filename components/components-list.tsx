@@ -18,7 +18,11 @@ const getCategoryFolder = (
   category: string
 ): PageTreeFolder | undefined => {
   for (const child of blocksFolder.children) {
-    if (child.type === "folder" && child.name === category) {
+    if (
+      child.type === "folder" &&
+      (child.$id === category ||
+        String(child.name).toLocaleLowerCase() === category.toLocaleLowerCase())
+    ) {
       return child;
     }
   }
@@ -64,7 +68,9 @@ export const BlocksList = ({
     if (!categoryFolder) {
       return null;
     }
-    const pages = getPagesFromFolder(categoryFolder);
+    const pages = getPagesFromFolder(categoryFolder).filter(
+      (page) => String(page.name) !== String(categoryFolder.name)
+    );
     if (pages.length === 0) {
       return null;
     }
@@ -76,7 +82,9 @@ export const BlocksList = ({
   );
 
   return categories.map((cat) => {
-    const pages = getPagesFromFolder(cat);
+    const pages = getPagesFromFolder(cat).filter(
+      (page) => String(page.name) !== String(cat.name)
+    );
     if (pages.length === 0) {
       return null;
     }

@@ -1,4 +1,4 @@
 {
   "title": "Blogging",
-  "pages": ["index", "article-preview"]
+  "pages": ["index", "post-card", "post-list", "post-detail"]
 }

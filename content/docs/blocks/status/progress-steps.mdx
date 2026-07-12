@@ -1,0 +1,115 @@
+---
+title: "Progress Steps"
+description: "Progress indicator with horizontal or vertical layout and step statuses."
+base: base
+component: true
+---
+
+<ComponentPreview
+  name="progress-steps"
+  src="examples/progress-steps-demo.tsx"
+/>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/progress-steps.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource
+  name="progress-steps"
+  title="components/ui/progress-steps.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ProgressSteps } from "@/components/ui/progress-steps";
+```
+
+```tsx
+<ProgressSteps />
+```
+
+## Composition
+
+Use the following composition to build an `ProgressSteps`:
+
+```text
+ProgressSteps
+└── ProgressSteps.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="progress-steps"
+  src="examples/progress-steps-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `ProgressSteps` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { ProgressSteps } from "@/components/ui/progress-steps";
+
+const OpenUIProgressSteps = defineComponent({
+  name: "ProgressSteps",
+  description:
+    "Progress indicator with horizontal or vertical layout and step statuses.",
+  props: z.object({}),
+  component: () => <ProgressSteps />,
+});
+
+export const progress_stepsLibrary = createLibrary({
+  root: "ProgressSteps",
+  components: [OpenUIProgressSteps],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

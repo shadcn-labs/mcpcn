@@ -1,0 +1,109 @@
+---
+title: "Status Badge"
+description: "Status badge with multiple states (success, pending, processing, error, shipped, delivered)."
+base: base
+component: true
+---
+
+<ComponentPreview name="status-badge" src="examples/status-badge-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/status-badge.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource name="status-badge" title="components/ui/status-badge.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { StatusBadge } from "@/components/ui/status-badge";
+```
+
+```tsx
+<StatusBadge />
+```
+
+## Composition
+
+Use the following composition to build an `StatusBadge`:
+
+```text
+StatusBadge
+└── StatusBadge.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="status-badge"
+  src="examples/status-badge-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `StatusBadge` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { StatusBadge } from "@/components/ui/status-badge";
+
+const OpenUIStatusBadge = defineComponent({
+  name: "StatusBadge",
+  description:
+    "Status badge with multiple states (success, pending, processing, error, shipped, delivered).",
+  props: z.object({}),
+  component: () => <StatusBadge />,
+});
+
+export const status_badgeLibrary = createLibrary({
+  root: "StatusBadge",
+  components: [OpenUIStatusBadge],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

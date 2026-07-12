@@ -1,0 +1,109 @@
+---
+title: "Contact Form"
+description: "A complete contact form with name fields, phone with country selector, email, message textarea, and file attachment."
+base: base
+component: true
+---
+
+<ComponentPreview name="contact-form" src="examples/contact-form-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/contact-form.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource name="contact-form" title="components/ui/contact-form.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ContactForm } from "@/components/ui/contact-form";
+```
+
+```tsx
+<ContactForm />
+```
+
+## Composition
+
+Use the following composition to build an `ContactForm`:
+
+```text
+ContactForm
+└── ContactForm.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="contact-form"
+  src="examples/contact-form-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `ContactForm` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { ContactForm } from "@/components/ui/contact-form";
+
+const OpenUIContactForm = defineComponent({
+  name: "ContactForm",
+  description:
+    "A complete contact form with name fields, phone with country selector, email, message textarea, and file attachment.",
+  props: z.object({}),
+  component: () => <ContactForm />,
+});
+
+export const contact_formLibrary = createLibrary({
+  root: "ContactForm",
+  components: [OpenUIContactForm],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

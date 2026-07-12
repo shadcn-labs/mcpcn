@@ -1,0 +1,109 @@
+---
+title: "Event Detail"
+description: "Full event detail view with organizer info, interactive map, policies, and ticket purchase. Fullwidth mode only."
+base: base
+component: true
+---
+
+<ComponentPreview name="event-detail" src="examples/event-detail-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/event-detail.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react react-leaflet leaflet
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource name="event-detail" title="components/ui/event-detail.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { EventDetail } from "@/components/ui/event-detail";
+```
+
+```tsx
+<EventDetail />
+```
+
+## Composition
+
+Use the following composition to build an `EventDetail`:
+
+```text
+EventDetail
+└── EventDetail.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="event-detail"
+  src="examples/event-detail-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `EventDetail` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { EventDetail } from "@/components/ui/event-detail";
+
+const OpenUIEventDetail = defineComponent({
+  name: "EventDetail",
+  description:
+    "Full event detail view with organizer info, interactive map, policies, and ticket purchase. Fullwidth mode only.",
+  props: z.object({}),
+  component: () => <EventDetail />,
+});
+
+export const event_detailLibrary = createLibrary({
+  root: "EventDetail",
+  components: [OpenUIEventDetail],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.

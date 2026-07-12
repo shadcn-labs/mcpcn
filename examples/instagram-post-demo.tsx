@@ -7,21 +7,10 @@ export default function InstagramPostDemo() {
     <div className="grid gap-6 lg:grid-cols-2">
       <InstagramPost />
       <InstagramPost>
-        <InstagramPost.Header name="mcpcn" handle="@compound_components">
-          <span className="ml-auto rounded-full bg-muted px-2 py-1 text-xs">
-            Following
-          </span>
-        </InstagramPost.Header>
-        <InstagramPost.Image>
-          <div className="flex aspect-square items-center justify-center bg-gradient-to-br from-violet-500 to-orange-400 text-2xl font-bold text-white">
-            Compose everything.
-          </div>
-        </InstagramPost.Image>
-        <InstagramPost.Actions />
-        <InstagramPost.Caption
-          handle="mcpcn"
-          text="No prop can predict every interface."
-        />
+        <div className="space-y-3">
+          <p className="font-medium text-sm">Custom heading</p>
+          <InstagramPost.Content />
+        </div>
       </InstagramPost>
     </div>
   );

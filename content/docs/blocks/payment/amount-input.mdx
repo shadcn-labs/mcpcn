@@ -1,0 +1,109 @@
+---
+title: "Amount Input"
+description: "Amount input with increment/decrement buttons and preset values."
+base: base
+component: true
+---
+
+<ComponentPreview name="amount-input" src="examples/amount-input-demo.tsx" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/amount-input.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the component dependencies:</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Copy and paste the component into your project.</Step>
+
+<ComponentSource name="amount-input" title="components/ui/amount-input.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { AmountInput } from "@/components/ui/amount-input";
+```
+
+```tsx
+<AmountInput />
+```
+
+## Composition
+
+Use the following composition to build an `AmountInput`:
+
+```text
+AmountInput
+└── AmountInput.Content
+```
+
+## Examples
+
+### With a custom heading
+
+This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original Manifest UI view needs no repeated props.
+
+<ComponentPreview
+  name="amount-input"
+  src="examples/amount-input-demo.tsx"
+  variant="composed"
+  showCode
+/>
+
+## Integrate with OpenUI
+
+Register `AmountInput` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { AmountInput } from "@/components/ui/amount-input";
+
+const OpenUIAmountInput = defineComponent({
+  name: "AmountInput",
+  description:
+    "Amount input with increment/decrement buttons and preset values.",
+  props: z.object({}),
+  component: () => <AmountInput />,
+});
+
+export const amount_inputLibrary = createLibrary({
+  root: "AmountInput",
+  components: [OpenUIAmountInput],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## API Reference
+
+See the [Base UI](https://base-ui.com/react/overview/quick-start) documentation for more information.
