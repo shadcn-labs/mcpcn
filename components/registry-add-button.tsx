@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 
 import { CodeBlockCommand } from "@/components/code-block-command";
 import { Button } from "@/components/ui/button";
+import type { ButtonProps } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -79,7 +80,7 @@ export const RegistryAddButton = ({
     [registryName]
   );
 
-  const handleTriggerClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleTriggerClick: NonNullable<ButtonProps["onClick"]> = (e) => {
     trackEvent({
       name: "click_registry_add_button",
       properties: {

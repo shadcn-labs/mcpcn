@@ -1,6 +1,8 @@
 ---
 title: "Payment Method Select"
 description: "A composition-first payment method select block for MCP Apps."
+base: base
+component: true
 ---
 
 <ComponentPreview
@@ -16,25 +18,26 @@ description: "A composition-first payment method select block for MCP Apps."
   <TabsTrigger value="cli">Command</TabsTrigger>
   <TabsTrigger value="manual">Manual</TabsTrigger>
 </TabsList>
+
 <TabsContent value="cli">
 
 ```bash
-npx shadcn@latest add mcpcn/payment-method-select
+npx shadcn@latest add https://mcpcn.dev/r/payment-method-select.json
 ```
 
 </TabsContent>
 
 <TabsContent value="manual">
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
-<Step>Install the following dependencies:</Step>
+<Step>Install the component dependencies:</Step>
 
 ```bash
-npm install lucide-react
+npm install @base-ui/react lucide-react
 ```
 
-<Step>Copy and paste the following code into your project.</Step>
+<Step>Copy and paste the component into your project.</Step>
 
 <ComponentSource
   name="payment-method-select"
@@ -51,12 +54,63 @@ npm install lucide-react
 
 ## Usage
 
-```tsx
+```tsx showLineNumbers
 import { PaymentMethodSelect } from "@/components/ui/payment-method-select";
 ```
 
-```tsx
-<PaymentMethodSelect>
-  <PaymentMethodSelect.Header>Custom header</PaymentMethodSelect.Header>
-</PaymentMethodSelect>
+```tsx showLineNumbers
+<PaymentMethodSelect />
 ```
+
+## Composition
+
+Use the following compound-component composition to customize `PaymentMethodSelect`:
+
+```text
+PaymentMethodSelect
+├── PaymentMethodSelect.Option
+└── PaymentMethodSelect.TermsCheckbox
+```
+
+## Integrate with OpenUI
+
+Register `PaymentMethodSelect` with `defineComponent`, describe its model-generated props with Zod, and include it in a library. Keep the schema flat so OpenUI Lang can generate and stream it reliably.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { PaymentMethodSelect } from "@/components/ui/payment-method-select";
+
+const OpenUIPaymentMethodSelect = defineComponent({
+  name: "PaymentMethodSelect",
+  description: "Payment Method Select for an MCP-powered interface.",
+  props: z.object({
+    name: z.string().default("payment-method"),
+    selectedMethod: z.string().optional(),
+  }),
+  component: ({ props }) => <PaymentMethodSelect {...props} />,
+});
+
+export const paymentmethodselectLibrary = createLibrary({
+  root: "PaymentMethodSelect",
+  components: [OpenUIPaymentMethodSelect],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## Examples
+
+### Default and composed
+
+The preview includes the ready-to-use default and a custom composition. Use the controls above the border to inspect inline, picture-in-picture, and full-width layouts.
+
+<ComponentPreview
+  name="payment-method-select"
+  src="examples/payment-method-select-demo.tsx"
+/>
+
+## API Reference
+
+The component is built on the Base UI foundation and ships as editable source. See the [registry item](/r/payment-method-select.json) for its files and dependencies.

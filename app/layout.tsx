@@ -7,9 +7,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { META_THEME_COLORS } from "@/constants/site";
 import { fontVariables } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
-import { JsonLdScripts } from "@/seo/json-ld";
 
 import "@/styles/globals.css";
+import { JsonLdScripts } from "@/seo/json-ld";
 import { baseMetadata } from "@/seo/metadata";
 
 export const metadata: Metadata = baseMetadata;
@@ -37,7 +37,7 @@ const RootLayout = ({
     </head>
     <body
       className={cn(
-        "text-foreground group/body overscroll-none font-sans antialiased [--footer-height:--spacing(14)] [--header-height:--spacing(14)] xl:[--footer-height:--spacing(24)]",
+        "text-foreground group/body relative isolate overscroll-none font-sans antialiased [--footer-height:--spacing(14)] [--header-height:--spacing(14)] xl:[--footer-height:--spacing(24)]",
         fontVariables
       )}
     >

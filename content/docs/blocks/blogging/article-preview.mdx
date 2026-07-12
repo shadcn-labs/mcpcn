@@ -1,6 +1,8 @@
 ---
 title: "Article Preview"
 description: "A composition-first article preview block for MCP Apps."
+base: base
+component: true
 ---
 
 <ComponentPreview
@@ -16,25 +18,26 @@ description: "A composition-first article preview block for MCP Apps."
   <TabsTrigger value="cli">Command</TabsTrigger>
   <TabsTrigger value="manual">Manual</TabsTrigger>
 </TabsList>
+
 <TabsContent value="cli">
 
 ```bash
-npx shadcn@latest add mcpcn/article-preview
+npx shadcn@latest add https://mcpcn.dev/r/article-preview.json
 ```
 
 </TabsContent>
 
 <TabsContent value="manual">
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
-<Step>Install the following dependencies:</Step>
+<Step>Install the component dependencies:</Step>
 
 ```bash
-npm install lucide-react
+npm install @base-ui/react lucide-react
 ```
 
-<Step>Copy and paste the following code into your project.</Step>
+<Step>Copy and paste the component into your project.</Step>
 
 <ComponentSource
   name="article-preview"
@@ -51,12 +54,64 @@ npm install lucide-react
 
 ## Usage
 
-```tsx
+```tsx showLineNumbers
 import { ArticlePreview } from "@/components/ui/article-preview";
 ```
 
-```tsx
-<ArticlePreview>
-  <ArticlePreview.Header>Custom header</ArticlePreview.Header>
-</ArticlePreview>
+```tsx showLineNumbers
+<ArticlePreview />
 ```
+
+## Composition
+
+Use the following compound-component composition to customize `ArticlePreview`:
+
+```text
+ArticlePreview
+├── ArticlePreview.Header
+├── ArticlePreview.Excerpt
+├── ArticlePreview.Tags
+└── ArticlePreview.CTA
+```
+
+## Integrate with OpenUI
+
+Register `ArticlePreview` with `defineComponent`, describe its model-generated props with Zod, and include it in a library. Keep the schema flat so OpenUI Lang can generate and stream it reliably.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { ArticlePreview } from "@/components/ui/article-preview";
+
+const OpenUIArticlePreview = defineComponent({
+  name: "ArticlePreview",
+  description: "Article Preview for an MCP-powered interface.",
+  props: z.object({
+    // Add flat, serializable props that the model should generate.
+  }),
+  component: ({ props }) => <ArticlePreview />,
+});
+
+export const articlepreviewLibrary = createLibrary({
+  root: "ArticlePreview",
+  components: [OpenUIArticlePreview],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## Examples
+
+### Default and composed
+
+The preview includes the ready-to-use default and a custom composition. Use the controls above the border to inspect inline, picture-in-picture, and full-width layouts.
+
+<ComponentPreview
+  name="article-preview"
+  src="examples/article-preview-demo.tsx"
+/>
+
+## API Reference
+
+The component is built on the Base UI foundation and ships as editable source. See the [registry item](/r/article-preview.json) for its files and dependencies.

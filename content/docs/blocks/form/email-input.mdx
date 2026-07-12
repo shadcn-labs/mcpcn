@@ -1,6 +1,8 @@
 ---
 title: "Email Input"
 description: "A composition-first email input block for MCP Apps."
+base: base
+component: true
 ---
 
 <ComponentPreview name="email-input" src="examples/email-input-demo.tsx" />
@@ -13,25 +15,26 @@ description: "A composition-first email input block for MCP Apps."
   <TabsTrigger value="cli">Command</TabsTrigger>
   <TabsTrigger value="manual">Manual</TabsTrigger>
 </TabsList>
+
 <TabsContent value="cli">
 
 ```bash
-npx shadcn@latest add mcpcn/email-input
+npx shadcn@latest add https://mcpcn.dev/r/email-input.json
 ```
 
 </TabsContent>
 
 <TabsContent value="manual">
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
-<Step>Install the following dependencies:</Step>
+<Step>Install the component dependencies:</Step>
 
 ```bash
-npm install lucide-react
+npm install @base-ui/react lucide-react
 ```
 
-<Step>Copy and paste the following code into your project.</Step>
+<Step>Copy and paste the component into your project.</Step>
 
 <ComponentSource name="email-input" title="components/ui/email-input.tsx" />
 
@@ -45,12 +48,61 @@ npm install lucide-react
 
 ## Usage
 
-```tsx
+```tsx showLineNumbers
 import { EmailInput } from "@/components/ui/email-input";
 ```
 
-```tsx
-<EmailInput>
-  <EmailInput.Header>Custom header</EmailInput.Header>
-</EmailInput>
+```tsx showLineNumbers
+<EmailInput />
 ```
+
+## Composition
+
+Use the following compound-component composition to customize `EmailInput`:
+
+```text
+EmailInput
+├── EmailInput.Input
+├── EmailInput.HelpText
+└── EmailInput.ErrorMessage
+```
+
+## Integrate with OpenUI
+
+Register `EmailInput` with `defineComponent`, describe its model-generated props with Zod, and include it in a library. Keep the schema flat so OpenUI Lang can generate and stream it reliably.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { EmailInput } from "@/components/ui/email-input";
+
+const OpenUIEmailInput = defineComponent({
+  name: "EmailInput",
+  description: "Email Input for an MCP-powered interface.",
+  props: z.object({
+    defaultValue: z.string().default(""),
+    invalidMessage: z.string().default("Enter a valid email address."),
+  }),
+  component: ({ props }) => <EmailInput {...props} />,
+});
+
+export const emailinputLibrary = createLibrary({
+  root: "EmailInput",
+  components: [OpenUIEmailInput],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## Examples
+
+### Default and composed
+
+The preview includes the ready-to-use default and a custom composition. Use the controls above the border to inspect inline, picture-in-picture, and full-width layouts.
+
+<ComponentPreview name="email-input" src="examples/email-input-demo.tsx" />
+
+## API Reference
+
+The component is built on the Base UI foundation and ships as editable source. See the [registry item](/r/email-input.json) for its files and dependencies.

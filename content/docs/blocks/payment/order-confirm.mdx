@@ -1,6 +1,8 @@
 ---
 title: "Order Confirm"
 description: "A composition-first order confirm block for MCP Apps."
+base: base
+component: true
 ---
 
 <ComponentPreview name="order-confirm" src="examples/order-confirm-demo.tsx" />
@@ -13,25 +15,26 @@ description: "A composition-first order confirm block for MCP Apps."
   <TabsTrigger value="cli">Command</TabsTrigger>
   <TabsTrigger value="manual">Manual</TabsTrigger>
 </TabsList>
+
 <TabsContent value="cli">
 
 ```bash
-npx shadcn@latest add mcpcn/order-confirm
+npx shadcn@latest add https://mcpcn.dev/r/order-confirm.json
 ```
 
 </TabsContent>
 
 <TabsContent value="manual">
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
-<Step>Install the following dependencies:</Step>
+<Step>Install the component dependencies:</Step>
 
 ```bash
-npm install lucide-react
+npm install @base-ui/react lucide-react
 ```
 
-<Step>Copy and paste the following code into your project.</Step>
+<Step>Copy and paste the component into your project.</Step>
 
 <ComponentSource name="order-confirm" title="components/ui/order-confirm.tsx" />
 
@@ -45,12 +48,63 @@ npm install lucide-react
 
 ## Usage
 
-```tsx
+```tsx showLineNumbers
 import { OrderConfirm } from "@/components/ui/order-confirm";
 ```
 
-```tsx
-<OrderConfirm>
-  <OrderConfirm.Header>Custom header</OrderConfirm.Header>
-</OrderConfirm>
+```tsx showLineNumbers
+<OrderConfirm />
 ```
+
+## Composition
+
+Use the following compound-component composition to customize `OrderConfirm`:
+
+```text
+OrderConfirm
+├── OrderConfirm.Header
+├── OrderConfirm.ItemRow
+├── OrderConfirm.PriceBreakdown
+├── OrderConfirm.Total
+└── OrderConfirm.Action
+```
+
+## Integrate with OpenUI
+
+Register `OrderConfirm` with `defineComponent`, describe its model-generated props with Zod, and include it in a library. Keep the schema flat so OpenUI Lang can generate and stream it reliably.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { OrderConfirm } from "@/components/ui/order-confirm";
+
+const OpenUIOrderConfirm = defineComponent({
+  name: "OrderConfirm",
+  description: "Order Confirm for an MCP-powered interface.",
+  props: z.object({
+    orderNumber: z.string().optional(),
+    currency: z.string().default("USD"),
+  }),
+  component: ({ props }) => <OrderConfirm {...props} />,
+});
+
+export const orderconfirmLibrary = createLibrary({
+  root: "OrderConfirm",
+  components: [OpenUIOrderConfirm],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## Examples
+
+### Default and composed
+
+The preview includes the ready-to-use default and a custom composition. Use the controls above the border to inspect inline, picture-in-picture, and full-width layouts.
+
+<ComponentPreview name="order-confirm" src="examples/order-confirm-demo.tsx" />
+
+## API Reference
+
+The component is built on the Base UI foundation and ships as editable source. See the [registry item](/r/order-confirm.json) for its files and dependencies.

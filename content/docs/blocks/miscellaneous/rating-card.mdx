@@ -1,6 +1,8 @@
 ---
 title: "Rating Card"
 description: "A composition-first rating card block for MCP Apps."
+base: base
+component: true
 ---
 
 <ComponentPreview name="rating-card" src="examples/rating-card-demo.tsx" />
@@ -13,25 +15,26 @@ description: "A composition-first rating card block for MCP Apps."
   <TabsTrigger value="cli">Command</TabsTrigger>
   <TabsTrigger value="manual">Manual</TabsTrigger>
 </TabsList>
+
 <TabsContent value="cli">
 
 ```bash
-npx shadcn@latest add mcpcn/rating-card
+npx shadcn@latest add https://mcpcn.dev/r/rating-card.json
 ```
 
 </TabsContent>
 
 <TabsContent value="manual">
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
-<Step>Install the following dependencies:</Step>
+<Step>Install the component dependencies:</Step>
 
 ```bash
-npm install lucide-react
+npm install @base-ui/react lucide-react
 ```
 
-<Step>Copy and paste the following code into your project.</Step>
+<Step>Copy and paste the component into your project.</Step>
 
 <ComponentSource name="rating-card" title="components/ui/rating-card.tsx" />
 
@@ -45,12 +48,60 @@ npm install lucide-react
 
 ## Usage
 
-```tsx
+```tsx showLineNumbers
 import { RatingCard } from "@/components/ui/rating-card";
 ```
 
-```tsx
-<RatingCard>
-  <RatingCard.Header>Custom header</RatingCard.Header>
-</RatingCard>
+```tsx showLineNumbers
+<RatingCard />
 ```
+
+## Composition
+
+Use the following compound-component composition to customize `RatingCard`:
+
+```text
+RatingCard
+├── RatingCard.Stars
+├── RatingCard.FeedbackInput
+└── RatingCard.SubmitButton
+```
+
+## Integrate with OpenUI
+
+Register `RatingCard` with `defineComponent`, describe its model-generated props with Zod, and include it in a library. Keep the schema flat so OpenUI Lang can generate and stream it reliably.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { RatingCard } from "@/components/ui/rating-card";
+
+const OpenUIRatingCard = defineComponent({
+  name: "RatingCard",
+  description: "Rating Card for an MCP-powered interface.",
+  props: z.object({
+    defaultRating: z.number().min(0).max(5).default(0),
+  }),
+  component: ({ props }) => <RatingCard {...props} />,
+});
+
+export const ratingcardLibrary = createLibrary({
+  root: "RatingCard",
+  components: [OpenUIRatingCard],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## Examples
+
+### Default and composed
+
+The preview includes the ready-to-use default and a custom composition. Use the controls above the border to inspect inline, picture-in-picture, and full-width layouts.
+
+<ComponentPreview name="rating-card" src="examples/rating-card-demo.tsx" />
+
+## API Reference
+
+The component is built on the Base UI foundation and ships as editable source. See the [registry item](/r/rating-card.json) for its files and dependencies.

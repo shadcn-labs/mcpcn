@@ -1,6 +1,8 @@
 ---
 title: "Seat Selector"
 description: "A composition-first seat selector block for MCP Apps."
+base: base
+component: true
 ---
 
 <ComponentPreview name="seat-selector" src="examples/seat-selector-demo.tsx" />
@@ -13,25 +15,26 @@ description: "A composition-first seat selector block for MCP Apps."
   <TabsTrigger value="cli">Command</TabsTrigger>
   <TabsTrigger value="manual">Manual</TabsTrigger>
 </TabsList>
+
 <TabsContent value="cli">
 
 ```bash
-npx shadcn@latest add mcpcn/seat-selector
+npx shadcn@latest add https://mcpcn.dev/r/seat-selector.json
 ```
 
 </TabsContent>
 
 <TabsContent value="manual">
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
-<Step>Install the following dependencies:</Step>
+<Step>Install the component dependencies:</Step>
 
 ```bash
-npm install lucide-react
+npm install @base-ui/react lucide-react
 ```
 
-<Step>Copy and paste the following code into your project.</Step>
+<Step>Copy and paste the component into your project.</Step>
 
 <ComponentSource name="seat-selector" title="components/ui/seat-selector.tsx" />
 
@@ -45,12 +48,60 @@ npm install lucide-react
 
 ## Usage
 
-```tsx
+```tsx showLineNumbers
 import { SeatSelector } from "@/components/ui/seat-selector";
 ```
 
-```tsx
-<SeatSelector>
-  <SeatSelector.Header>Custom header</SeatSelector.Header>
-</SeatSelector>
+```tsx showLineNumbers
+<SeatSelector />
 ```
+
+## Composition
+
+Use the following compound-component composition to customize `SeatSelector`:
+
+```text
+SeatSelector
+├── SeatSelector.Seat
+├── SeatSelector.Legend
+└── SeatSelector.Summary
+```
+
+## Integrate with OpenUI
+
+Register `SeatSelector` with `defineComponent`, describe its model-generated props with Zod, and include it in a library. Keep the schema flat so OpenUI Lang can generate and stream it reliably.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { SeatSelector } from "@/components/ui/seat-selector";
+
+const OpenUISeatSelector = defineComponent({
+  name: "SeatSelector",
+  description: "Seat Selector for an MCP-powered interface.",
+  props: z.object({
+    selectedSeats: z.array(z.string()).default([]),
+  }),
+  component: ({ props }) => <SeatSelector {...props} />,
+});
+
+export const seatselectorLibrary = createLibrary({
+  root: "SeatSelector",
+  components: [OpenUISeatSelector],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## Examples
+
+### Default and composed
+
+The preview includes the ready-to-use default and a custom composition. Use the controls above the border to inspect inline, picture-in-picture, and full-width layouts.
+
+<ComponentPreview name="seat-selector" src="examples/seat-selector-demo.tsx" />
+
+## API Reference
+
+The component is built on the Base UI foundation and ships as editable source. See the [registry item](/r/seat-selector.json) for its files and dependencies.

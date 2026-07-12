@@ -1,6 +1,8 @@
 ---
 title: "Product List"
 description: "A composition-first product list block for MCP Apps."
+base: base
+component: true
 ---
 
 <ComponentPreview name="product-list" src="examples/product-list-demo.tsx" />
@@ -13,25 +15,26 @@ description: "A composition-first product list block for MCP Apps."
   <TabsTrigger value="cli">Command</TabsTrigger>
   <TabsTrigger value="manual">Manual</TabsTrigger>
 </TabsList>
+
 <TabsContent value="cli">
 
 ```bash
-npx shadcn@latest add mcpcn/product-list
+npx shadcn@latest add https://mcpcn.dev/r/product-list.json
 ```
 
 </TabsContent>
 
 <TabsContent value="manual">
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
-<Step>Install the following dependencies:</Step>
+<Step>Install the component dependencies:</Step>
 
 ```bash
-npm install lucide-react
+npm install @base-ui/react lucide-react
 ```
 
-<Step>Copy and paste the following code into your project.</Step>
+<Step>Copy and paste the component into your project.</Step>
 
 <ComponentSource name="product-list" title="components/ui/product-list.tsx" />
 
@@ -45,12 +48,60 @@ npm install lucide-react
 
 ## Usage
 
-```tsx
+```tsx showLineNumbers
 import { ProductList } from "@/components/ui/product-list";
 ```
 
-```tsx
-<ProductList>
-  <ProductList.Header>Custom header</ProductList.Header>
-</ProductList>
+```tsx showLineNumbers
+<ProductList />
 ```
+
+## Composition
+
+Use the following compound-component composition to customize `ProductList`:
+
+```text
+ProductList
+├── ProductList.FilterBar
+├── ProductList.SortDropdown
+└── ProductList.ProductCard
+```
+
+## Integrate with OpenUI
+
+Register `ProductList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library. Keep the schema flat so OpenUI Lang can generate and stream it reliably.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { ProductList } from "@/components/ui/product-list";
+
+const OpenUIProductList = defineComponent({
+  name: "ProductList",
+  description: "Product List for an MCP-powered interface.",
+  props: z.object({
+    currency: z.string().default("USD"),
+  }),
+  component: ({ props }) => <ProductList {...props} />,
+});
+
+export const productlistLibrary = createLibrary({
+  root: "ProductList",
+  components: [OpenUIProductList],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## Examples
+
+### Default and composed
+
+The preview includes the ready-to-use default and a custom composition. Use the controls above the border to inspect inline, picture-in-picture, and full-width layouts.
+
+<ComponentPreview name="product-list" src="examples/product-list-demo.tsx" />
+
+## API Reference
+
+The component is built on the Base UI foundation and ships as editable source. See the [registry item](/r/product-list.json) for its files and dependencies.

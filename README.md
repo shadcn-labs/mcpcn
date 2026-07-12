@@ -2,6 +2,8 @@
 
 Composition-first React blocks for [MCP Apps](https://modelcontextprotocol.io/), distributed as a shadcn-compatible registry.
 
+The shared UI primitives use [Base UI](https://base-ui.com/) as their accessible, unstyled foundation.
+
 mcpcn starts from the visual language and responsive JSX patterns of [Manifest UI](https://github.com/mnfst/manifest-ui), then turns fixed widgets into compound components. Factual data stays close to the subcomponent that renders it, shared behavior flows through context, and replaceable interface elements are expressed as children.
 
 ## Why compound components?
