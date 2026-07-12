@@ -1,6 +1,6 @@
 "use client";
 
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
 import { demoQuickReplies } from "./demo/selection";
@@ -63,4 +63,4 @@ const QuickReplyView = ({ data, actions }: QuickReplyProps) => {
   );
 };
 
-export const QuickReply = createManifestCompound(QuickReplyView, "QuickReply");
+export const QuickReply = createCompoundComponent(QuickReplyView, "QuickReply");

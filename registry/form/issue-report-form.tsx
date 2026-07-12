@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp, Paperclip, Send, X } from "lucide-react";
 import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -590,7 +590,7 @@ const IssueReportFormView = ({
   );
 };
 
-export const IssueReportForm = createManifestCompound(
+export const IssueReportForm = createCompoundComponent(
   IssueReportFormView,
   "IssueReportForm"
 );

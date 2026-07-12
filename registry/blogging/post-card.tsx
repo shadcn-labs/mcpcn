@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 
@@ -360,4 +360,4 @@ const PostCardView = ({ data, actions, appearance }: PostCardProps) => {
   );
 };
 
-export const PostCard = createManifestCompound(PostCardView, "PostCard");
+export const PostCard = createCompoundComponent(PostCardView, "PostCard");

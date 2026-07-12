@@ -12,7 +12,7 @@ import { useCallback, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
@@ -872,7 +872,7 @@ const ProductListView = ({
   );
 };
 
-export const ProductList = createManifestCompound(
+export const ProductList = createCompoundComponent(
   ProductListView,
   "ProductList"
 );

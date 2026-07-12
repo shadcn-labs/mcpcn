@@ -1,0 +1,49 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "quick-reply",
+  "title": "Quick Reply",
+  "author": "mcpcn",
+  "description": "Quick reply buttons for common chat responses.",
+  "dependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "registry/selection/quick-reply.tsx",
+      "content": "\"use client\";\n\nimport { createCompoundComponent } from \"@/components/ui/compound\";\nimport { cn } from \"@/lib/utils\";\n\nimport { demoQuickReplies } from \"./demo/selection\";\n\n/**\n * Represents a quick reply option.\n * @interface QuickReply\n * @property {string} id - Unique identifier for the reply\n * @property {string} label - Display text for the reply button\n * @property {React.ReactNode} [icon] - Optional icon displayed before the label\n */\nexport interface QuickReply {\n  label?: string;\n  icon?: React.ReactNode;\n}\n\n/**\n * ═══════════════════════════════════════════════════════════════════════════\n * QuickReplyProps\n * ═══════════════════════════════════════════════════════════════════════════\n *\n * Props for the QuickReply component, which displays predefined response\n * options as pill-shaped buttons for chat interfaces.\n */\nexport interface QuickReplyProps {\n  data?: {\n    /** Array of quick reply options to display as buttons. */\n    replies?: QuickReply[];\n  };\n  actions?: {\n    /** Called when a user selects a quick reply option. */\n    onSelectReply?: (reply: QuickReply) => void;\n  };\n}\n\nconst QuickReplyView = ({ data, actions }: QuickReplyProps) => {\n  const resolved: NonNullable<QuickReplyProps[\"data\"]> = data ?? {\n    replies: demoQuickReplies,\n  };\n  const replies = resolved.replies ?? [];\n  const onSelectReply = actions?.onSelectReply;\n  return (\n    <div className=\"w-full bg-card rounded-lg p-4\">\n      <div className=\"flex flex-wrap gap-2\">\n        {replies.map((reply, index) => (\n          <button\n            key={index}\n            onClick={() => onSelectReply?.(reply)}\n            className={cn(\n              \"inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-border bg-background px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm text-foreground transition-colors cursor-pointer\",\n              \"hover:bg-foreground hover:text-background hover:border-foreground\"\n            )}\n          >\n            {reply.icon}\n            {reply.label && <span>{reply.label}</span>}\n          </button>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport const QuickReply = createCompoundComponent(QuickReplyView, \"QuickReply\");\n",
+      "type": "registry:block",
+      "target": "components/ui/quick-reply.tsx"
+    },
+    {
+      "path": "registry/selection/demo/selection.ts",
+      "content": "// Demo data for Selection category components\n// This file contains sample data used for component previews and documentation\n\nimport type { Option } from \"../types\";\n\n// Default options for OptionList\nexport const demoOptions: Option[] = [\n  { description: \"3-5 business days\", label: \"Standard shipping\" },\n  { description: \"1-2 business days\", label: \"Express shipping\" },\n  { description: \"Available in 2h\", label: \"Store pickup\" },\n];\n\n// Quick reply options\nexport const demoQuickReplies = [\n  { label: \"Yes, please\" },\n  { label: \"No, thanks\" },\n  { label: \"Tell me more\" },\n];\n\n// Tag select options\nexport const demoTags: {\n  id: string;\n  label: string;\n  color: \"red\" | \"yellow\" | \"green\";\n}[] = [\n  { color: \"red\", id: \"1\", label: \"Important\" },\n  { color: \"yellow\", id: \"2\", label: \"In Progress\" },\n  { color: \"green\", id: \"3\", label: \"Done\" },\n];\n",
+      "type": "registry:lib",
+      "target": "components/ui/demo/selection.ts"
+    },
+    {
+      "path": "registry/_lib/compound-component.tsx",
+      "content": "\"use client\";\n\nimport { createContext, createElement, useContext } from \"react\";\nimport type { ComponentType, ImgHTMLAttributes, ReactNode } from \"react\";\n\nexport const RegistryImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>\n  createElement(\"img\", props);\n\nexport const createCompoundComponent = <Props extends object>(\n  View: ComponentType<Props>,\n  displayName: string\n) => {\n  const Context = createContext<Props | null>(null);\n\n  const Content = (overrides: Partial<Props>) => {\n    const value = useContext(Context);\n\n    if (!value) {\n      throw new Error(\n        `${displayName}.Content must be used within ${displayName}`\n      );\n    }\n\n    return <View {...value} {...overrides} />;\n  };\n\n  const Root = ({\n    children,\n    ...props\n  }: Props & {\n    children?: ReactNode;\n  }) => (\n    <Context.Provider value={props as Props}>\n      {children ?? <Content />}\n    </Context.Provider>\n  );\n\n  Root.displayName = displayName;\n  Content.displayName = `${displayName}.Content`;\n\n  return Object.assign(Root, { Content });\n};\n",
+      "type": "registry:lib",
+      "target": "components/ui/compound.tsx"
+    }
+  ],
+  "meta": {
+    "preview": "https://mcpcn.dev/previews/quick-reply.png",
+    "version": "3.2.0",
+    "changelog": {
+      "1.0.0": "Initial release with quick reply button options",
+      "2.0.0": "BREAKING: Removed unused value prop from QuickReply interface",
+      "3.0.0": "BREAKING: Removed id from QuickReply interface. Use array index for key.",
+      "3.0.2": "Added comprehensive JSDoc documentation",
+      "3.1.0": "Moved to selection category for better organization",
+      "3.1.1": "Updated Props interface with decorative header and sub-parameter JSDoc documentation",
+      "3.1.2": "Fixed defensive property access to handle empty objects and null values",
+      "3.1.3": "Additional defensive property access improvements",
+      "3.1.4": "Removed default content data - component only renders explicitly provided data",
+      "3.2.0": "Added demo data defaults - component renders demo content when no data prop is provided"
+    }
+  },
+  "categories": [
+    "selection"
+  ],
+  "type": "registry:block"
+}

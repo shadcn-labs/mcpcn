@@ -1,6 +1,6 @@
 "use client";
 
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 
 import { demoMessages } from "./demo/messaging";
 import { ImageMessageBubble, MessageBubble } from "./message-bubble";
@@ -75,7 +75,7 @@ const ChatConversationView = ({ data }: ChatConversationProps) => {
   );
 };
 
-export const ChatConversation = createManifestCompound(
+export const ChatConversation = createCompoundComponent(
   ChatConversationView,
   "ChatConversation"
 );

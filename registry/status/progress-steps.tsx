@@ -2,7 +2,7 @@
 
 import { Check } from "lucide-react";
 
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
 import { demoProgressSteps } from "./demo/status";
@@ -78,7 +78,7 @@ const ProgressStepsView = ({ data }: ProgressStepsProps) => {
   );
 };
 
-export const ProgressSteps = createManifestCompound(
+export const ProgressSteps = createCompoundComponent(
   ProgressStepsView,
   "ProgressSteps"
 );

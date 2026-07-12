@@ -5,7 +5,7 @@ import { Bookmark, MoreHorizontal, Share, EyeOff, Flag } from "lucide-react";
 import { useState } from "react";
 
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 import {
@@ -199,7 +199,7 @@ const YouTubePostView = ({ data }: YouTubePostProps) => {
   );
 };
 
-export const YouTubePost = createManifestCompound(
+export const YouTubePost = createCompoundComponent(
   YouTubePostView,
   "YouTubePost"
 );

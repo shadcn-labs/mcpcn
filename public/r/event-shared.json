@@ -1,0 +1,43 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "event-shared",
+  "title": "Event Shared Utilities",
+  "author": "mcpcn",
+  "description": "Shared utilities for event components (Leaflet map helpers, signal badges).",
+  "dependencies": [
+    "lucide-react",
+    "react-leaflet",
+    "leaflet"
+  ],
+  "devDependencies": [
+    "@types/leaflet"
+  ],
+  "registryDependencies": [
+    "https://mcpcn.dev/r/shared-types.json"
+  ],
+  "files": [
+    {
+      "path": "registry/events/shared.tsx",
+      "content": "\"use client\";\n\nimport type * as Leaflet from \"leaflet\";\nimport { MapPin } from \"lucide-react\";\nimport { lazy } from \"react\";\nimport type { ComponentType } from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nimport type { EventSignal } from \"./types\";\n\n// Internal types for react-leaflet component attributes (not exported component props)\nexport interface LeafletMarkerAttrs {\n  position: [number, number];\n  // eslint-disable-next-line @typescript-eslint/no-explicit-any\n  icon?: any;\n  zIndexOffset?: number;\n  eventHandlers?: {\n    click?: () => void;\n  };\n}\n\n// Props for the lazy-loaded leaflet map component\nexport interface LazyLeafletMapConfig {\n  center: [number, number];\n  zoom: number;\n  style?: React.CSSProperties;\n  scrollWheelZoom?: boolean;\n  tileUrl?: string;\n  tileAttribution?: string;\n  renderMarkers: (ctx: {\n    Marker: ComponentType<LeafletMarkerAttrs>;\n    L: typeof Leaflet;\n  }) => React.ReactNode;\n}\n\n/**\n * Lazy-loaded Leaflet map component using React.lazy.\n * Avoids Invalid hook call errors from dynamic import module boundaries.\n */\nexport const LazyLeafletMap = lazy<ComponentType<LazyLeafletMapConfig>>(\n  async () => {\n    // Guard against SSR - react-leaflet/leaflet require window\n    if (typeof window === \"undefined\") {\n      // eslint-disable-next-line @typescript-eslint/no-explicit-any\n      return { default: (() => null) as any };\n    }\n\n    const { MapContainer, TileLayer, Marker } = await import(\"react-leaflet\");\n    const leafletModule = await import(\"leaflet\");\n    const L = leafletModule.default;\n\n    // Inject Leaflet CSS with deduplication\n    const LEAFLET_CSS_ID = \"leaflet-css-1-9-4\";\n    if (\n      typeof document !== \"undefined\" &&\n      !document.querySelector(`#${LEAFLET_CSS_ID}`)\n    ) {\n      const link = document.createElement(\"link\");\n      link.id = LEAFLET_CSS_ID;\n      link.rel = \"stylesheet\";\n      link.href = \"https://unpkg.com/leaflet@1.9.4/dist/leaflet.css\";\n      document.head.append(link);\n    }\n\n    const LazyLeafletMapComponent = (props: LazyLeafletMapConfig) => {\n      const tileUrl =\n        props.tileUrl ??\n        \"https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png\";\n      const tileAttribution =\n        props.tileAttribution ??\n        '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> &copy; <a href=\"https://carto.com/attributions\">CARTO</a>';\n\n      return (\n        <MapContainer\n          center={props.center}\n          zoom={props.zoom}\n          style={props.style ?? { height: \"100%\", width: \"100%\" }}\n          zoomControl={true}\n          scrollWheelZoom={props.scrollWheelZoom ?? true}\n        >\n          <TileLayer attribution={tileAttribution} url={tileUrl} />\n          {props.renderMarkers({\n            L,\n            Marker: Marker as ComponentType<LeafletMarkerAttrs>,\n          })}\n        </MapContainer>\n      );\n    };\n\n    return { default: LazyLeafletMapComponent };\n  }\n);\n\n// Format number with commas (consistent across server/client)\nexport const formatNumber = (num: number): string =>\n  num.toString().replaceAll(/\\B(?=(\\d{3})+(?!\\d))/g, \",\");\n\n// Map placeholder shown during SSR or when Leaflet isn't loaded\nexport const MapPlaceholder = () => (\n  <div className=\"flex h-full items-center justify-center bg-muted/30\">\n    <div className=\"flex flex-col items-center gap-2 text-muted-foreground\">\n      <MapPin className=\"h-8 w-8\" />\n      <span className=\"text-sm\">Loading map...</span>\n    </div>\n  </div>\n);\n\nexport const EventSignalBadge = ({ signal }: { signal: EventSignal }) => {\n  const config: Record<EventSignal, { label: string; className: string }> = {\n    canceled: { className: \"bg-gray-100 text-gray-700\", label: \"Canceled\" },\n    ended: { className: \"bg-gray-100 text-gray-700\", label: \"Ended\" },\n    \"few-tickets-left\": {\n      className: \"bg-orange-100 text-orange-700\",\n      label: \"Few Tickets Left\",\n    },\n    \"going-fast\": {\n      className: \"bg-orange-100 text-orange-700\",\n      label: \"Going Fast\",\n    },\n    \"just-added\": {\n      className: \"bg-blue-100 text-blue-700\",\n      label: \"Just Added\",\n    },\n    popular: { className: \"bg-pink-100 text-pink-700\", label: \"Popular\" },\n    postponed: {\n      className: \"bg-yellow-100 text-yellow-700\",\n      label: \"Postponed\",\n    },\n    \"sales-end-soon\": {\n      className: \"bg-red-100 text-red-700\",\n      label: \"Sales end soon\",\n    },\n  };\n\n  const { label, className } = config[signal];\n  return (\n    <span\n      className={cn(\n        \"inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium\",\n        className\n      )}\n    >\n      {label}\n    </span>\n  );\n};\n",
+      "type": "registry:lib",
+      "target": "components/ui/shared.tsx"
+    },
+    {
+      "path": "registry/_lib/compound-component.tsx",
+      "content": "\"use client\";\n\nimport { createContext, createElement, useContext } from \"react\";\nimport type { ComponentType, ImgHTMLAttributes, ReactNode } from \"react\";\n\nexport const RegistryImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>\n  createElement(\"img\", props);\n\nexport const createCompoundComponent = <Props extends object>(\n  View: ComponentType<Props>,\n  displayName: string\n) => {\n  const Context = createContext<Props | null>(null);\n\n  const Content = (overrides: Partial<Props>) => {\n    const value = useContext(Context);\n\n    if (!value) {\n      throw new Error(\n        `${displayName}.Content must be used within ${displayName}`\n      );\n    }\n\n    return <View {...value} {...overrides} />;\n  };\n\n  const Root = ({\n    children,\n    ...props\n  }: Props & {\n    children?: ReactNode;\n  }) => (\n    <Context.Provider value={props as Props}>\n      {children ?? <Content />}\n    </Context.Provider>\n  );\n\n  Root.displayName = displayName;\n  Content.displayName = `${displayName}.Content`;\n\n  return Object.assign(Root, { Content });\n};\n",
+      "type": "registry:lib",
+      "target": "components/ui/compound.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.1",
+    "changelog": {
+      "1.0.0": "Extracted shared map utilities and signal badges from event-list and event-detail",
+      "1.0.1": "Replaced useReactLeaflet hook with React.lazy to fix Invalid hook call errors"
+    }
+  },
+  "categories": [
+    "events"
+  ],
+  "type": "registry:lib"
+}

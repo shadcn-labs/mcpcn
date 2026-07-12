@@ -9,7 +9,7 @@ import {
   Truck,
 } from "lucide-react";
 
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
 import { demoStatusBadge } from "./demo/status";
@@ -147,7 +147,7 @@ const StatusBadgeView = ({ data, appearance }: StatusBadgeProps) => {
   );
 };
 
-export const StatusBadge = createManifestCompound(
+export const StatusBadge = createCompoundComponent(
   StatusBadgeView,
   "StatusBadge"
 );

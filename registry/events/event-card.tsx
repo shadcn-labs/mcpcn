@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 
@@ -463,4 +463,4 @@ const EventCardView = ({ data, actions, appearance }: EventCardProps) => {
   );
 };
 
-export const EventCard = createManifestCompound(EventCardView, "EventCard");
+export const EventCard = createCompoundComponent(EventCardView, "EventCard");

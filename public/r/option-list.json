@@ -1,0 +1,57 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "option-list",
+  "title": "Option List",
+  "author": "mcpcn",
+  "description": "Tag-style option selector with single or multiple selection modes.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "button",
+    "https://mcpcn.dev/r/shared-types.json"
+  ],
+  "files": [
+    {
+      "path": "registry/selection/option-list.tsx",
+      "content": "\"use client\";\n\nimport { Check } from \"lucide-react\";\nimport { useEffect, useState } from \"react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { createCompoundComponent } from \"@/components/ui/compound\";\nimport { cn } from \"@/lib/utils\";\n\nimport { demoOptions } from \"./demo/selection\";\n// Import types from shared types file to avoid circular dependencies\nimport type { Option } from \"./types\";\n// Re-export for backward compatibility\nexport type { Option } from \"./types\";\n\n/**\n * ═══════════════════════════════════════════════════════════════════════════\n * OptionListProps\n * ═══════════════════════════════════════════════════════════════════════════\n *\n * Props for the OptionList component, which displays selectable options with\n * support for single or multiple selection modes.\n */\nexport interface OptionListProps {\n  data?: {\n    /** Array of selectable options to display. */\n    options?: Option[];\n  };\n  actions?: {\n    /** Called when the user confirms their selection. Returns selected option(s). */\n    onSubmit?: (selected: Option[]) => void;\n  };\n  appearance?: {\n    /**\n     * Enable multiple selection mode.\n     * @default false\n     */\n    multiple?: boolean;\n  };\n  control?: {\n    /** Controlled selected index for single selection mode. */\n    selectedOptionIndex?: number;\n    /** Controlled selected indexes for multiple selection mode. */\n    selectedOptionIndexes?: number[];\n  };\n}\n\nconst OptionListView = ({\n  data,\n  actions,\n  appearance,\n  control,\n}: OptionListProps) => {\n  const resolved: NonNullable<OptionListProps[\"data\"]> = data ?? {\n    options: demoOptions,\n  };\n  const options = resolved.options ?? [];\n  const onSubmit = actions?.onSubmit;\n  const multiple = appearance?.multiple ?? false;\n  const selectedOptionIndex = control?.selectedOptionIndex;\n  const selectedOptionIndexes = control?.selectedOptionIndexes;\n  const [selected, setSelected] = useState<number | number[]>(\n    multiple ? (selectedOptionIndexes ?? []) : (selectedOptionIndex ?? -1)\n  );\n\n  // Sync internal state when controlled props change\n  useEffect(() => {\n    if (multiple) {\n      setSelected(selectedOptionIndexes ?? []);\n    } else if (selectedOptionIndex !== undefined) {\n      setSelected(selectedOptionIndex);\n    }\n  }, [multiple, selectedOptionIndex, selectedOptionIndexes]);\n\n  const handleSelect = (option: Option, index: number) => {\n    if (option.disabled) {\n      return;\n    }\n\n    if (multiple) {\n      const currentSelected = selected as number[];\n      const newSelected = currentSelected.includes(index)\n        ? currentSelected.filter((i) => i !== index)\n        : [...currentSelected, index];\n      setSelected(newSelected);\n    } else {\n      setSelected(index);\n    }\n  };\n\n  const handleSubmit = () => {\n    if (multiple) {\n      const selectedIndexes = selected as number[];\n      onSubmit?.(options.filter((_, i) => selectedIndexes.includes(i)));\n    } else {\n      const selectedIndex = selected as number;\n      if (selectedIndex >= 0) {\n        onSubmit?.([options[selectedIndex]]);\n      }\n    }\n  };\n\n  const isSelected = (index: number) => {\n    if (multiple) {\n      return (selected as number[]).includes(index);\n    }\n    return selected === index;\n  };\n\n  const hasSelection = multiple\n    ? (selected as number[]).length > 0\n    : (selected as number) >= 0;\n\n  return (\n    <div className=\"w-full bg-card rounded-lg p-4 space-y-3\">\n      <div className=\"flex flex-wrap gap-2\">\n        {options.map((option, index) => (\n          <button\n            key={option.label || index}\n            onClick={() => handleSelect(option, index)}\n            disabled={option.disabled}\n            className={cn(\n              \"inline-flex items-center gap-1.5 sm:gap-2 rounded-full border px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm transition-colors cursor-pointer\",\n              isSelected(index)\n                ? \"border-foreground bg-foreground text-background\"\n                : \"border-border bg-background hover:bg-muted\",\n              option.disabled && \"opacity-50 !cursor-not-allowed\"\n            )}\n          >\n            {option.icon}\n            {option.label && <span>{option.label}</span>}\n            {option.description && (\n              <span\n                className={cn(\n                  \"text-[10px] sm:text-xs\",\n                  isSelected(index)\n                    ? \"text-background/70\"\n                    : \"text-muted-foreground\"\n                )}\n              >\n                · {option.description}\n              </span>\n            )}\n            {isSelected(index) && multiple && (\n              <Check className=\"h-3 w-3 sm:h-3.5 sm:w-3.5\" />\n            )}\n          </button>\n        ))}\n      </div>\n      {onSubmit && (\n        <div className=\"flex justify-end\">\n          <Button size=\"sm\" onClick={handleSubmit} disabled={!hasSelection}>\n            Confirm\n          </Button>\n        </div>\n      )}\n    </div>\n  );\n};\n\nexport const OptionList = createCompoundComponent(OptionListView, \"OptionList\");\n",
+      "type": "registry:block",
+      "target": "components/ui/option-list.tsx"
+    },
+    {
+      "path": "registry/selection/demo/selection.ts",
+      "content": "// Demo data for Selection category components\n// This file contains sample data used for component previews and documentation\n\nimport type { Option } from \"../types\";\n\n// Default options for OptionList\nexport const demoOptions: Option[] = [\n  { description: \"3-5 business days\", label: \"Standard shipping\" },\n  { description: \"1-2 business days\", label: \"Express shipping\" },\n  { description: \"Available in 2h\", label: \"Store pickup\" },\n];\n\n// Quick reply options\nexport const demoQuickReplies = [\n  { label: \"Yes, please\" },\n  { label: \"No, thanks\" },\n  { label: \"Tell me more\" },\n];\n\n// Tag select options\nexport const demoTags: {\n  id: string;\n  label: string;\n  color: \"red\" | \"yellow\" | \"green\";\n}[] = [\n  { color: \"red\", id: \"1\", label: \"Important\" },\n  { color: \"yellow\", id: \"2\", label: \"In Progress\" },\n  { color: \"green\", id: \"3\", label: \"Done\" },\n];\n",
+      "type": "registry:lib",
+      "target": "components/ui/demo/selection.ts"
+    },
+    {
+      "path": "registry/_lib/compound-component.tsx",
+      "content": "\"use client\";\n\nimport { createContext, createElement, useContext } from \"react\";\nimport type { ComponentType, ImgHTMLAttributes, ReactNode } from \"react\";\n\nexport const RegistryImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>\n  createElement(\"img\", props);\n\nexport const createCompoundComponent = <Props extends object>(\n  View: ComponentType<Props>,\n  displayName: string\n) => {\n  const Context = createContext<Props | null>(null);\n\n  const Content = (overrides: Partial<Props>) => {\n    const value = useContext(Context);\n\n    if (!value) {\n      throw new Error(\n        `${displayName}.Content must be used within ${displayName}`\n      );\n    }\n\n    return <View {...value} {...overrides} />;\n  };\n\n  const Root = ({\n    children,\n    ...props\n  }: Props & {\n    children?: ReactNode;\n  }) => (\n    <Context.Provider value={props as Props}>\n      {children ?? <Content />}\n    </Context.Provider>\n  );\n\n  Root.displayName = displayName;\n  Content.displayName = `${displayName}.Content`;\n\n  return Object.assign(Root, { Content });\n};\n",
+      "type": "registry:lib",
+      "target": "components/ui/compound.tsx"
+    }
+  ],
+  "meta": {
+    "preview": "https://mcpcn.dev/previews/option-list.png",
+    "version": "3.1.0",
+    "changelog": {
+      "1.0.0": "Initial release with single and multiple selection modes",
+      "2.0.0": "BREAKING: Removed id from Option interface. Use array index for selection tracking.",
+      "2.0.1": "Moved demo data to separate file for cleaner component code",
+      "2.0.2": "Added comprehensive JSDoc documentation",
+      "2.1.0": "Moved to selection category for better organization",
+      "2.1.1": "Updated Props interface with decorative header and sub-parameter JSDoc documentation",
+      "2.1.2": "Fixed defensive property access to handle empty objects and null values",
+      "2.1.3": "Fixed circular dependency by adding types.ts and demo/data.ts to registry",
+      "3.0.0": "BREAKING: Replaced onSelectOption and onSelectOptions with single onSubmit action. Added confirm button.",
+      "3.0.1": "Removed default content data - component only renders explicitly provided data",
+      "3.0.2": "Fixed stale controlled state and improved list item keys",
+      "3.0.3": "Fixed infinite re-render loop when control prop is not provided",
+      "3.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
+    }
+  },
+  "categories": [
+    "selection"
+  ],
+  "type": "registry:block"
+}

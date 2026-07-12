@@ -1,4 +1,4 @@
 export {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
-} from "@/registry/_lib/manifest-compound";
+} from "@/registry/_lib/compound-component";

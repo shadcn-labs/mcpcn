@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 
@@ -243,4 +243,4 @@ const HeroView = ({ data, actions }: HeroProps) => {
   );
 };
 
-export const Hero = createManifestCompound(HeroView, "Hero");
+export const Hero = createCompoundComponent(HeroView, "Hero");

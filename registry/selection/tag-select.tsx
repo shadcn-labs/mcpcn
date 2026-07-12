@@ -4,7 +4,7 @@ import { Check, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
 import { demoTags } from "./demo/selection";
@@ -171,4 +171,4 @@ const TagSelectView = ({
   );
 };
 
-export const TagSelect = createManifestCompound(TagSelectView, "TagSelect");
+export const TagSelect = createCompoundComponent(TagSelectView, "TagSelect");

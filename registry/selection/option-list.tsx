@@ -4,7 +4,7 @@ import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
 import { demoOptions } from "./demo/selection";
@@ -158,4 +158,4 @@ const OptionListView = ({
   );
 };
 
-export const OptionList = createManifestCompound(OptionListView, "OptionList");
+export const OptionList = createCompoundComponent(OptionListView, "OptionList");

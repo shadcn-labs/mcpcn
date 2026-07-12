@@ -5,7 +5,7 @@ import { ArrowRight, Calendar, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 
@@ -173,7 +173,7 @@ const OrderConfirmView = ({
   );
 };
 
-export const OrderConfirm = createManifestCompound(
+export const OrderConfirm = createCompoundComponent(
   OrderConfirmView,
   "OrderConfirm"
 );

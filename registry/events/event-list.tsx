@@ -12,7 +12,7 @@ import { Suspense, useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
@@ -941,4 +941,4 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
   );
 };
 
-export const EventList = createManifestCompound(EventListView, "EventList");
+export const EventList = createCompoundComponent(EventListView, "EventList");

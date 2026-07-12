@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
 import { demoPosts } from "./demo/blogging";
@@ -302,4 +302,4 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
   );
 };
 
-export const PostList = createManifestCompound(PostListView, "PostList");
+export const PostList = createCompoundComponent(PostListView, "PostList");

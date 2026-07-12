@@ -1,5 +1,5 @@
-// Shared type definitions for Manifest UI components
-// This file is installed as components/ui/types.ts via the manifest-types registry item.
+// Shared type definitions for mcpcn components
+// This file is installed as components/ui/types.ts via the shared-types registry item.
 // All category-specific types are unified here to prevent collisions when
 // installing multiple components via shadcn CLI.
 

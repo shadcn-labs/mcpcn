@@ -105,7 +105,7 @@ export const demoPosts: Post[] = [
     publishedAt: "2024-01-12",
     readTime: "8 min read",
     tags: ["Design", "UX"],
-    title: "Designing for Conversational Interfaces with Manifest UI",
+    title: "Designing for Conversational MCP Interfaces",
   },
   {
     author: {

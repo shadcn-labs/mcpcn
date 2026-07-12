@@ -5,7 +5,7 @@ import { Check, CheckCheck, Smile } from "lucide-react";
 import { useRef, useState } from "react";
 
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 import {
@@ -147,7 +147,7 @@ const MessageBubbleView = ({
   );
 };
 
-export const MessageBubble = createManifestCompound(
+export const MessageBubble = createCompoundComponent(
   MessageBubbleView,
   "MessageBubble"
 );

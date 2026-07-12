@@ -6,7 +6,7 @@ import { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 import {
@@ -518,4 +518,4 @@ const PostDetailView = ({ data, actions, appearance }: PostDetailProps) => {
   );
 };
 
-export const PostDetail = createManifestCompound(PostDetailView, "PostDetail");
+export const PostDetail = createCompoundComponent(PostDetailView, "PostDetail");

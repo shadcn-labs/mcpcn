@@ -4,7 +4,7 @@ import { Minus, Plus } from "lucide-react";
 import { useState, useRef, useEffect, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
 import { demoAmountPresets } from "./demo/payment";
@@ -217,7 +217,7 @@ const AmountInputView = ({
   );
 };
 
-export const AmountInput = createManifestCompound(
+export const AmountInput = createCompoundComponent(
   AmountInputView,
   "AmountInput"
 );

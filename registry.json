@@ -8,10 +8,10 @@
       "type": "registry:block",
       "title": "Contact Form",
       "description": "A complete contact form with name fields, phone with country selector, email, message textarea, and file attachment.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["form"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/contact-form.png",
+        "preview": "https://mcpcn.dev/previews/contact-form.png",
         "version": "1.2.9",
         "changelog": {
           "1.0.0": "Initial release with name, phone, email, message and file attachment fields",
@@ -46,23 +46,23 @@
           "target": "components/ui/demo/form.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "form",
-      "preview": "https://ui.manifest.build/previews/contact-form.png"
+      "preview": "https://mcpcn.dev/previews/contact-form.png"
     },
     {
       "name": "date-time-picker",
       "type": "registry:block",
       "title": "Date & Time Picker",
       "description": "A Calendly-style date and time picker with calendar, available time slots, and timezone display.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["form"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/date-time-picker.png",
+        "preview": "https://mcpcn.dev/previews/date-time-picker.png",
         "version": "2.1.1",
         "changelog": {
           "1.0.0": "Initial release with calendar and time slot selection",
@@ -91,23 +91,23 @@
           "target": "components/ui/demo/form.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "form",
-      "preview": "https://ui.manifest.build/previews/date-time-picker.png"
+      "preview": "https://mcpcn.dev/previews/date-time-picker.png"
     },
     {
       "name": "issue-report-form",
       "type": "registry:block",
       "title": "Issue Report Form",
       "description": "A compact issue reporting form for team members with categories, impact/urgency levels, and file attachments.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["form"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/issue-report-form.png",
+        "preview": "https://mcpcn.dev/previews/issue-report-form.png",
         "version": "1.0.7",
         "changelog": {
           "1.0.0": "Initial release with categories, impact levels and file attachments",
@@ -133,23 +133,23 @@
           "target": "components/ui/demo/form.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "form",
-      "preview": "https://ui.manifest.build/previews/issue-report-form.png"
+      "preview": "https://mcpcn.dev/previews/issue-report-form.png"
     },
     {
       "name": "order-confirm",
       "type": "registry:block",
       "title": "Order Confirm",
       "description": "Order confirmation with product image, delivery info, and confirm action.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["payment"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/order-confirm.png",
+        "preview": "https://mcpcn.dev/previews/order-confirm.png",
         "version": "1.1.0",
         "changelog": {
           "1.0.0": "Initial release with product image and delivery info",
@@ -162,7 +162,7 @@
       "dependencies": ["lucide-react"],
       "registryDependencies": [
         "button",
-        "https://ui.manifest.build/r/manifest-types.json"
+        "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
         {
@@ -176,23 +176,23 @@
           "target": "components/ui/demo/payment.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "payment",
-      "preview": "https://ui.manifest.build/previews/order-confirm.png"
+      "preview": "https://mcpcn.dev/previews/order-confirm.png"
     },
     {
       "name": "payment-confirmed",
       "type": "registry:block",
       "title": "Payment Confirmed",
       "description": "Payment confirmation card with product image, price, delivery info, and tracking button. Supports default and compressed variants.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["payment"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/payment-confirmed.png",
+        "preview": "https://mcpcn.dev/previews/payment-confirmed.png",
         "version": "2.1.0",
         "changelog": {
           "1.0.0": "Initial release with product image and tracking button",
@@ -207,7 +207,7 @@
       "dependencies": ["lucide-react"],
       "registryDependencies": [
         "button",
-        "https://ui.manifest.build/r/manifest-types.json"
+        "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
         {
@@ -221,23 +221,23 @@
           "target": "components/ui/demo/payment.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "payment",
-      "preview": "https://ui.manifest.build/previews/payment-confirmed.png"
+      "preview": "https://mcpcn.dev/previews/payment-confirmed.png"
     },
     {
       "name": "product-list",
       "type": "registry:block",
       "title": "Product List",
       "description": "Product list with list, grid, carousel, and picker variants.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["list"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/product-list.png",
+        "preview": "https://mcpcn.dev/previews/product-list.png",
         "version": "2.1.0",
         "changelog": {
           "1.0.0": "Initial release with list, grid, carousel and picker variants",
@@ -255,7 +255,7 @@
       "dependencies": ["lucide-react"],
       "registryDependencies": [
         "button",
-        "https://ui.manifest.build/r/manifest-types.json"
+        "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
         {
@@ -269,23 +269,23 @@
           "target": "components/ui/demo/list.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "list",
-      "preview": "https://ui.manifest.build/previews/product-list.png"
+      "preview": "https://mcpcn.dev/previews/product-list.png"
     },
     {
       "name": "option-list",
       "type": "registry:block",
       "title": "Option List",
       "description": "Tag-style option selector with single or multiple selection modes.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["selection"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/option-list.png",
+        "preview": "https://mcpcn.dev/previews/option-list.png",
         "version": "3.1.0",
         "changelog": {
           "1.0.0": "Initial release with single and multiple selection modes",
@@ -306,7 +306,7 @@
       "dependencies": ["lucide-react"],
       "registryDependencies": [
         "button",
-        "https://ui.manifest.build/r/manifest-types.json"
+        "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
         {
@@ -320,23 +320,23 @@
           "target": "components/ui/demo/selection.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "selection",
-      "preview": "https://ui.manifest.build/previews/option-list.png"
+      "preview": "https://mcpcn.dev/previews/option-list.png"
     },
     {
       "name": "amount-input",
       "type": "registry:block",
       "title": "Amount Input",
       "description": "Amount input with increment/decrement buttons and preset values.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["payment"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/amount-input.png",
+        "preview": "https://mcpcn.dev/previews/amount-input.png",
         "version": "2.0.3",
         "changelog": {
           "1.0.0": "Initial release with increment buttons and preset values",
@@ -352,7 +352,7 @@
       "dependencies": ["lucide-react"],
       "registryDependencies": [
         "button",
-        "https://ui.manifest.build/r/manifest-types.json"
+        "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
         {
@@ -366,23 +366,23 @@
           "target": "components/ui/demo/payment.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "payment",
-      "preview": "https://ui.manifest.build/previews/amount-input.png"
+      "preview": "https://mcpcn.dev/previews/amount-input.png"
     },
     {
       "name": "tag-select",
       "type": "registry:block",
       "title": "Tag Select",
       "description": "Colored tag selector with single or multiple selection and color variants.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["selection"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/tag-select.png",
+        "preview": "https://mcpcn.dev/previews/tag-select.png",
         "version": "2.1.0",
         "changelog": {
           "1.0.0": "Initial release with color variants and multi-select",
@@ -412,23 +412,23 @@
           "target": "components/ui/demo/selection.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "selection",
-      "preview": "https://ui.manifest.build/previews/tag-select.png"
+      "preview": "https://mcpcn.dev/previews/tag-select.png"
     },
     {
       "name": "quick-reply",
       "type": "registry:block",
       "title": "Quick Reply",
       "description": "Quick reply buttons for common chat responses.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["selection"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/quick-reply.png",
+        "preview": "https://mcpcn.dev/previews/quick-reply.png",
         "version": "3.2.0",
         "changelog": {
           "1.0.0": "Initial release with quick reply button options",
@@ -457,23 +457,23 @@
           "target": "components/ui/demo/selection.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "selection",
-      "preview": "https://ui.manifest.build/previews/quick-reply.png"
+      "preview": "https://mcpcn.dev/previews/quick-reply.png"
     },
     {
       "name": "progress-steps",
       "type": "registry:block",
       "title": "Progress Steps",
       "description": "Progress indicator with horizontal or vertical layout and step statuses.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["status"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/progress-steps.png",
+        "preview": "https://mcpcn.dev/previews/progress-steps.png",
         "version": "2.1.0",
         "changelog": {
           "1.0.0": "Initial release with horizontal and vertical layouts",
@@ -501,23 +501,23 @@
           "target": "components/ui/demo/status.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "status",
-      "preview": "https://ui.manifest.build/previews/progress-steps.png"
+      "preview": "https://mcpcn.dev/previews/progress-steps.png"
     },
     {
       "name": "status-badge",
       "type": "registry:block",
       "title": "Status Badge",
       "description": "Status badge with multiple states (success, pending, processing, error, shipped, delivered).",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["status"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/status-badge.png",
+        "preview": "https://mcpcn.dev/previews/status-badge.png",
         "version": "1.2.0",
         "changelog": {
           "1.0.0": "Initial release with multiple status states",
@@ -542,23 +542,23 @@
           "target": "components/ui/demo/status.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "status",
-      "preview": "https://ui.manifest.build/previews/status-badge.png"
+      "preview": "https://mcpcn.dev/previews/status-badge.png"
     },
     {
       "name": "stat-card",
       "type": "registry:block",
       "title": "Stat Card",
       "description": "Scrollable stat cards with values, trends, and change indicators.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["miscellaneous"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/stat-card.png",
+        "preview": "https://mcpcn.dev/previews/stat-card.png",
         "version": "2.0.0",
         "changelog": {
           "1.0.0": "Initial release with scrollable stat cards and trends",
@@ -585,23 +585,23 @@
           "target": "components/ui/demo/miscellaneous.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "miscellaneous",
-      "preview": "https://ui.manifest.build/previews/stat-card.png"
+      "preview": "https://mcpcn.dev/previews/stat-card.png"
     },
     {
       "name": "post-card",
       "type": "registry:block",
       "title": "Post Card",
       "description": "Post card with image, title, excerpt, author info and read more button. Supports default, compact, horizontal, and covered variants. Includes post-detail for fullscreen view.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["blogging"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/post-card.png",
+        "preview": "https://mcpcn.dev/previews/post-card.png",
         "version": "2.1.0",
         "changelog": {
           "1.0.0": "Initial release with default, compact, horizontal and covered variants",
@@ -621,7 +621,7 @@
       "registryDependencies": [
         "button",
         "tooltip",
-        "https://ui.manifest.build/r/manifest-types.json"
+        "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
         {
@@ -640,23 +640,23 @@
           "target": "components/ui/demo/blogging.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "blogging",
-      "preview": "https://ui.manifest.build/previews/post-card.png"
+      "preview": "https://mcpcn.dev/previews/post-card.png"
     },
     {
       "name": "post-list",
       "type": "registry:block",
       "title": "Post List",
       "description": "Post list with list, grid, carousel, and fullwidth variants. Fullwidth mode shows paginated posts.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["blogging"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/post-list.png",
+        "preview": "https://mcpcn.dev/previews/post-list.png",
         "version": "3.1.0",
         "changelog": {
           "1.0.0": "Initial release with list, grid and carousel variants",
@@ -680,7 +680,7 @@
       "registryDependencies": [
         "button",
         "tooltip",
-        "https://ui.manifest.build/r/manifest-types.json"
+        "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
         {
@@ -704,23 +704,23 @@
           "target": "components/ui/demo/blogging.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "blogging",
-      "preview": "https://ui.manifest.build/previews/post-list.png"
+      "preview": "https://mcpcn.dev/previews/post-list.png"
     },
     {
       "name": "post-detail",
       "type": "registry:block",
       "title": "Post Detail",
       "description": "Full post view with cover image, author info, content, tags and related posts section.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["blogging"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/post-detail.png",
+        "preview": "https://mcpcn.dev/previews/post-detail.png",
         "version": "2.2.0",
         "changelog": {
           "1.0.0": "Initial release with cover image, author info and related posts",
@@ -752,7 +752,7 @@
       "registryDependencies": [
         "button",
         "tooltip",
-        "https://ui.manifest.build/r/manifest-types.json"
+        "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
         {
@@ -771,23 +771,23 @@
           "target": "components/ui/demo/blogging.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "blogging",
-      "preview": "https://ui.manifest.build/previews/post-detail.png"
+      "preview": "https://mcpcn.dev/previews/post-detail.png"
     },
     {
       "name": "table",
       "type": "registry:block",
       "title": "Table",
       "description": "Data table with optional single or multi-select modes for chat interfaces.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["list"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/table.png",
+        "preview": "https://mcpcn.dev/previews/table.png",
         "version": "2.1.0",
         "changelog": {
           "1.0.0": "Initial release with single and multi-select modes",
@@ -820,23 +820,23 @@
           "target": "components/ui/demo/list.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "list",
-      "preview": "https://ui.manifest.build/previews/table.png"
+      "preview": "https://mcpcn.dev/previews/table.png"
     },
     {
       "name": "message-bubble",
       "type": "registry:block",
       "title": "Message Bubble",
       "description": "Chat message bubbles with text, image, voice, and reaction variants.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["messaging"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/message-bubble.png",
+        "preview": "https://mcpcn.dev/previews/message-bubble.png",
         "version": "3.0.6",
         "changelog": {
           "1.0.0": "Initial release with text, image, voice and reaction variants",
@@ -866,23 +866,23 @@
           "target": "components/ui/demo/messaging.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "messaging",
-      "preview": "https://ui.manifest.build/previews/message-bubble.png"
+      "preview": "https://mcpcn.dev/previews/message-bubble.png"
     },
     {
       "name": "chat-conversation",
       "type": "registry:block",
       "title": "Chat Conversation",
       "description": "Full chat conversation component with multiple message types.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["messaging"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/chat-conversation.png",
+        "preview": "https://mcpcn.dev/previews/chat-conversation.png",
         "version": "4.1.0",
         "changelog": {
           "1.0.0": "Initial release with multiple message types",
@@ -907,7 +907,7 @@
       "dependencies": ["lucide-react"],
       "registryDependencies": [
         "dropdown-menu",
-        "https://ui.manifest.build/r/manifest-types.json"
+        "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
         {
@@ -926,23 +926,23 @@
           "target": "components/ui/demo/messaging.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "messaging",
-      "preview": "https://ui.manifest.build/previews/chat-conversation.png"
+      "preview": "https://mcpcn.dev/previews/chat-conversation.png"
     },
     {
       "name": "x-post",
       "type": "registry:block",
       "title": "X Post",
       "description": "X (Twitter) post card with engagement metrics.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["social"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/x-post.png",
+        "preview": "https://mcpcn.dev/previews/x-post.png",
         "version": "1.2.0",
         "changelog": {
           "1.0.0": "Initial release with engagement metrics display",
@@ -968,23 +968,23 @@
           "target": "components/ui/demo/social.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "social",
-      "preview": "https://ui.manifest.build/previews/x-post.png"
+      "preview": "https://mcpcn.dev/previews/x-post.png"
     },
     {
       "name": "instagram-post",
       "type": "registry:block",
       "title": "Instagram Post",
       "description": "Instagram post card with image and engagement.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["social"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/instagram-post.png",
+        "preview": "https://mcpcn.dev/previews/instagram-post.png",
         "version": "1.2.0",
         "changelog": {
           "1.0.0": "Initial release with image and engagement display",
@@ -1011,23 +1011,23 @@
           "target": "components/ui/demo/social.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "social",
-      "preview": "https://ui.manifest.build/previews/instagram-post.png"
+      "preview": "https://mcpcn.dev/previews/instagram-post.png"
     },
     {
       "name": "linkedin-post",
       "type": "registry:block",
       "title": "LinkedIn Post",
       "description": "LinkedIn post card with professional styling.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["social"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/linkedin-post.png",
+        "preview": "https://mcpcn.dev/previews/linkedin-post.png",
         "version": "3.1.0",
         "changelog": {
           "1.0.0": "Initial release with professional styling",
@@ -1055,23 +1055,23 @@
           "target": "components/ui/demo/social.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "social",
-      "preview": "https://ui.manifest.build/previews/linkedin-post.png"
+      "preview": "https://mcpcn.dev/previews/linkedin-post.png"
     },
     {
       "name": "youtube-post",
       "type": "registry:block",
       "title": "YouTube Post",
       "description": "YouTube video card with playable embed.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["social"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/youtube-post.png",
+        "preview": "https://mcpcn.dev/previews/youtube-post.png",
         "version": "1.2.0",
         "changelog": {
           "1.0.0": "Initial release with playable video embed",
@@ -1097,23 +1097,23 @@
           "target": "components/ui/demo/social.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "social",
-      "preview": "https://ui.manifest.build/previews/youtube-post.png"
+      "preview": "https://mcpcn.dev/previews/youtube-post.png"
     },
     {
       "name": "map-carousel",
       "type": "registry:block",
       "title": "Map Carousel",
       "description": "Interactive map with location markers and a draggable carousel of cards.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["map"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/map-carousel.png",
+        "preview": "https://mcpcn.dev/previews/map-carousel.png",
         "version": "2.1.2",
         "changelog": {
           "1.0.0": "Initial release with interactive map and location cards",
@@ -1150,23 +1150,23 @@
           "target": "components/ui/demo/map.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "map",
-      "preview": "https://ui.manifest.build/previews/map-carousel.png"
+      "preview": "https://mcpcn.dev/previews/map-carousel.png"
     },
     {
       "name": "event-card",
       "type": "registry:block",
       "title": "Event Card",
       "description": "Display event information with multiple layouts. Supports events with images, signals, vibe tags, and display-formatted date/time. Entire card is clickable.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["events"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/event-card.png",
+        "preview": "https://mcpcn.dev/previews/event-card.png",
         "version": "5.1.0",
         "changelog": {
           "1.0.0": "Initial release with default, compact, horizontal and covered variants. Supports physical, online, and hybrid events with signals and vibe tags.",
@@ -1189,9 +1189,7 @@
         }
       },
       "dependencies": ["lucide-react"],
-      "registryDependencies": [
-        "https://ui.manifest.build/r/manifest-types.json"
-      ],
+      "registryDependencies": ["https://mcpcn.dev/r/shared-types.json"],
       "files": [
         {
           "path": "registry/events/event-card.tsx",
@@ -1204,23 +1202,23 @@
           "target": "components/ui/demo/events.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events",
-      "preview": "https://ui.manifest.build/previews/event-card.png"
+      "preview": "https://mcpcn.dev/previews/event-card.png"
     },
     {
       "name": "event-list",
       "type": "registry:block",
       "title": "Event List",
       "description": "Display events in grid, list, or carousel layouts. Fullscreen mode shows interactive split-screen map with Leaflet and animated filter panel.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["events"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/event-list.png",
+        "preview": "https://mcpcn.dev/previews/event-list.png",
         "version": "7.1.1",
         "changelog": {
           "1.0.0": "Initial release with grid, list and carousel layouts. Includes pagination support.",
@@ -1252,9 +1250,9 @@
       "registryDependencies": [
         "button",
         "checkbox",
-        "https://ui.manifest.build/r/event-card.json",
-        "https://ui.manifest.build/r/manifest-types.json",
-        "https://ui.manifest.build/r/event-shared.json"
+        "https://mcpcn.dev/r/event-card.json",
+        "https://mcpcn.dev/r/shared-types.json",
+        "https://mcpcn.dev/r/event-shared.json"
       ],
       "files": [
         {
@@ -1268,23 +1266,23 @@
           "target": "components/ui/demo/events.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events",
-      "preview": "https://ui.manifest.build/previews/event-list.png"
+      "preview": "https://mcpcn.dev/previews/event-list.png"
     },
     {
       "name": "event-detail",
       "type": "registry:block",
       "title": "Event Detail",
       "description": "Full event detail view with organizer info, interactive map, policies, and ticket purchase. Fullwidth mode only.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["events"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/event-detail.png",
+        "preview": "https://mcpcn.dev/previews/event-detail.png",
         "version": "3.1.1",
         "changelog": {
           "1.0.0": "Initial release with image carousel, organizer info, location, policies, FAQs, and ticket purchase.",
@@ -1310,8 +1308,8 @@
       "devDependencies": ["@types/leaflet"],
       "registryDependencies": [
         "button",
-        "https://ui.manifest.build/r/manifest-types.json",
-        "https://ui.manifest.build/r/event-shared.json"
+        "https://mcpcn.dev/r/shared-types.json",
+        "https://mcpcn.dev/r/event-shared.json"
       ],
       "files": [
         {
@@ -1325,23 +1323,23 @@
           "target": "components/ui/demo/events.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events",
-      "preview": "https://ui.manifest.build/previews/event-detail.png"
+      "preview": "https://mcpcn.dev/previews/event-detail.png"
     },
     {
       "name": "ticket-tier-select",
       "type": "registry:block",
       "title": "Ticket Tier Select",
       "description": "Ticket tier selection with quantity controls and order summary. Shows price breakdown with fees.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["events"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/ticket-tier-select.png",
+        "preview": "https://mcpcn.dev/previews/ticket-tier-select.png",
         "version": "4.1.0",
         "changelog": {
           "1.0.0": "Initial release with ticket tier cards, quantity controls, price breakdown, and order summary sidebar",
@@ -1370,23 +1368,23 @@
           "target": "components/ui/demo/events.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events",
-      "preview": "https://ui.manifest.build/previews/ticket-tier-select.png"
+      "preview": "https://mcpcn.dev/previews/ticket-tier-select.png"
     },
     {
       "name": "event-confirmation",
       "type": "registry:block",
       "title": "Event Confirmation",
       "description": "Order confirmation with event details, ticket delivery info, organizer follow, and social sharing.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["events"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/event-confirmation.png",
+        "preview": "https://mcpcn.dev/previews/event-confirmation.png",
         "version": "2.1.0",
         "changelog": {
           "1.0.0": "Initial release with success message, event details, organizer follow, and social sharing",
@@ -1411,23 +1409,23 @@
           "target": "components/ui/demo/events.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events",
-      "preview": "https://ui.manifest.build/previews/event-confirmation.png"
+      "preview": "https://mcpcn.dev/previews/event-confirmation.png"
     },
     {
       "name": "hero",
       "type": "registry:block",
       "title": "Hero",
       "description": "Landing hero section with optional logos, title, subtitle, CTA buttons, and tech logos footer. Supports image or text logos with separator.",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["miscellaneous"],
       "meta": {
-        "preview": "https://ui.manifest.build/previews/hero.png",
+        "preview": "https://mcpcn.dev/previews/hero.png",
         "version": "2.2.1",
         "changelog": {
           "1.0.0": "Initial release with logos, title, subtitle, CTA buttons, and tech logos footer",
@@ -1456,20 +1454,20 @@
           "target": "components/ui/demo/miscellaneous.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
       ],
       "category": "miscellaneous",
-      "preview": "https://ui.manifest.build/previews/hero.png"
+      "preview": "https://mcpcn.dev/previews/hero.png"
     },
     {
       "name": "event-shared",
       "type": "registry:lib",
       "title": "Event Shared Utilities",
       "description": "Shared utilities for event components (Leaflet map helpers, signal badges).",
-      "author": "MNFST, Inc",
+      "author": "mcpcn",
       "categories": ["events"],
       "meta": {
         "version": "1.0.1",
@@ -1480,9 +1478,7 @@
       },
       "dependencies": ["lucide-react", "react-leaflet", "leaflet"],
       "devDependencies": ["@types/leaflet"],
-      "registryDependencies": [
-        "https://ui.manifest.build/r/manifest-types.json"
-      ],
+      "registryDependencies": ["https://mcpcn.dev/r/shared-types.json"],
       "files": [
         {
           "path": "registry/events/shared.tsx",
@@ -1490,7 +1486,7 @@
           "target": "components/ui/shared.tsx"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }
@@ -1498,11 +1494,11 @@
       "category": "events"
     },
     {
-      "name": "manifest-types",
+      "name": "shared-types",
       "type": "registry:lib",
-      "title": "Manifest Types",
-      "description": "Shared type definitions for Manifest UI components.",
-      "author": "MNFST, Inc",
+      "title": "Shared Types",
+      "description": "Shared type definitions for mcpcn components.",
+      "author": "mcpcn",
       "categories": ["lib"],
       "files": [
         {
@@ -1511,7 +1507,7 @@
           "target": "components/ui/types.ts"
         },
         {
-          "path": "registry/_lib/manifest-compound.tsx",
+          "path": "registry/_lib/compound-component.tsx",
           "type": "registry:lib",
           "target": "components/ui/compound.tsx"
         }

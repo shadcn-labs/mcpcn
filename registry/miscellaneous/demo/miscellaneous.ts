@@ -13,22 +13,22 @@ export const demoHeroDefault = {
   secondaryButton: { label: "GitHub" },
   subtitle:
     "Create beautiful chat experiences with our comprehensive component library designed for agentic applications.",
-  title: "Build beautiful chat experiences with Manifest UI",
+  title: "Build beautiful MCP App experiences with mcpcn",
 };
 
 export const demoHeroTwoLogos = {
   logo1: { text: "Acme" },
   logo2: {
-    alt: "Manifest",
-    url: "/logo-manifest-ui.svg",
-    urlLight: "/logo-manifest-ui-light.svg",
+    alt: "mcpcn",
+    url: "/favicon.svg",
+    urlLight: "/favicon.svg",
   },
   logoSeparator: "x",
   primaryButton: { label: "Get Started" },
   secondaryButton: { label: "GitHub" },
   subtitle:
     "Combining the best of both worlds to deliver exceptional user experiences.",
-  title: "Acme x Manifest UI",
+  title: "Acme x mcpcn",
 };
 
 export const demoHeroWithTechLogos = {
@@ -59,9 +59,9 @@ export const demoHeroWithTechLogos = {
       url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
     },
     {
-      alt: "Manifest",
-      name: "Manifest",
-      url: "https://ui.manifest.build/demo/os-tech-mnfst.svg",
+      alt: "mcpcn",
+      name: "mcpcn",
+      url: "https://mcpcn.dev/favicon.svg",
     },
   ],
   techLogosLabel: "Built with open-source technologies",

@@ -8,7 +8,7 @@ export const demoProducts: Product[] = [
   {
     badge: "New",
     description: "Nike",
-    image: "https://ui.manifest.build/demo/shoe-1.png",
+    image: "https://mcpcn.dev/demo/shoe-1.png",
     inStock: true,
     name: "Air Force 1 '07",
     price: 119,
@@ -16,7 +16,7 @@ export const demoProducts: Product[] = [
   },
   {
     description: "Nike",
-    image: "https://ui.manifest.build/demo/shoe-2.png",
+    image: "https://mcpcn.dev/demo/shoe-2.png",
     inStock: true,
     name: "Air Max 90",
     price: 140,
@@ -25,7 +25,7 @@ export const demoProducts: Product[] = [
   {
     badge: "-10%",
     description: "Nike",
-    image: "https://ui.manifest.build/demo/shoe-4.png",
+    image: "https://mcpcn.dev/demo/shoe-4.png",
     inStock: true,
     name: "Air Max Plus",
     originalPrice: 190,
@@ -34,7 +34,7 @@ export const demoProducts: Product[] = [
   },
   {
     description: "Nike",
-    image: "https://ui.manifest.build/demo/shoe-3.png",
+    image: "https://mcpcn.dev/demo/shoe-3.png",
     inStock: true,
     name: "Dunk Low",
     price: 115,
@@ -42,7 +42,7 @@ export const demoProducts: Product[] = [
   },
   {
     description: "Nike",
-    image: "https://ui.manifest.build/demo/shoe-1.png",
+    image: "https://mcpcn.dev/demo/shoe-1.png",
     inStock: true,
     name: "Jordan 1 Low",
     price: 135,
@@ -50,7 +50,7 @@ export const demoProducts: Product[] = [
   },
   {
     description: "Nike",
-    image: "https://ui.manifest.build/demo/shoe-2.png",
+    image: "https://mcpcn.dev/demo/shoe-2.png",
     inStock: true,
     name: "Blazer Mid",
     price: 105,

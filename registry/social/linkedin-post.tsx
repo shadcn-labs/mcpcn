@@ -6,7 +6,7 @@ import type { JSX } from "react";
 import React, { useEffect, useRef, useState } from "react";
 
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 
@@ -474,7 +474,7 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
   );
 };
 
-export const LinkedInPost = createManifestCompound(
+export const LinkedInPost = createCompoundComponent(
   LinkedInPostView,
   "LinkedInPost"
 );

@@ -11,7 +11,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import {
   Popover,
   PopoverContent,
@@ -539,7 +539,7 @@ const DateTimePickerView = ({
   );
 };
 
-export const DateTimePicker = createManifestCompound(
+export const DateTimePicker = createCompoundComponent(
   DateTimePickerView,
   "DateTimePicker"
 );

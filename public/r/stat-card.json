@@ -1,0 +1,49 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stat-card",
+  "title": "Stat Card",
+  "author": "mcpcn",
+  "description": "Scrollable stat cards with values, trends, and change indicators.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "registry/miscellaneous/stat-card.tsx",
+      "content": "/* oxlint-disable unicorn/consistent-function-scoping */\n\"use client\";\n\nimport { TrendingUp, TrendingDown, Minus } from \"lucide-react\";\n\nimport { createCompoundComponent } from \"@/components/ui/compound\";\nimport { cn } from \"@/lib/utils\";\n\nimport { demoStats } from \"./demo/miscellaneous\";\n\n/**\n * Represents a single statistic card with trend data.\n * @interface StatCard\n * @property {string} [label] - Label for the stat (e.g., \"Sales\", \"Orders\")\n * @property {string | number} [value] - The stat value to display\n * @property {number} [change] - Percentage change value\n * @property {string} [changeLabel] - Additional context for the change\n * @property {React.ReactNode} [icon] - Optional icon for the stat\n * @property {\"up\" | \"down\" | \"neutral\"} [trend] - Trend direction\n */\nexport interface StatCard {\n  label?: string;\n  value?: string | number;\n  change?: number;\n  changeLabel?: string;\n  icon?: React.ReactNode;\n  trend?: \"up\" | \"down\" | \"neutral\";\n}\n\n/**\n * ═══════════════════════════════════════════════════════════════════════════\n * StatCardProps\n * ═══════════════════════════════════════════════════════════════════════════\n *\n * Props for the StatCard component, which displays a grid of statistic cards\n * with values, trend indicators, and optional icons.\n */\nexport interface StatCardProps {\n  data?: {\n    /** Array of stat cards to display in the grid. */\n    stats?: StatCard[];\n  };\n}\n\nconst StatCardView = ({ data }: StatCardProps) => {\n  const resolved: NonNullable<StatCardProps[\"data\"]> = data ?? {\n    stats: demoStats,\n  };\n  const stats = resolved.stats ?? [];\n  const getTrendIcon = (trend?: \"up\" | \"down\" | \"neutral\") => {\n    switch (trend) {\n      case \"up\": {\n        return <TrendingUp className=\"h-3.5 w-3.5\" />;\n      }\n      case \"down\": {\n        return <TrendingDown className=\"h-3.5 w-3.5\" />;\n      }\n      default: {\n        return <Minus className=\"h-3.5 w-3.5\" />;\n      }\n    }\n  };\n\n  const getTrendColor = (trend?: \"up\" | \"down\" | \"neutral\") => {\n    switch (trend) {\n      case \"up\": {\n        return \"text-green-600\";\n      }\n      case \"down\": {\n        return \"text-red-600\";\n      }\n      default: {\n        return \"text-muted-foreground\";\n      }\n    }\n  };\n\n  return (\n    <div className=\"w-full\">\n      <div className=\"grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4\">\n        {stats.map((stat, index) => (\n          <div\n            key={index}\n            className=\"rounded-md sm:rounded-lg border bg-card p-2 sm:p-3 space-y-0.5 sm:space-y-1\"\n          >\n            {stat.label ||\n              (stat.icon && (\n                <div className=\"flex items-center justify-between\">\n                  {stat.label && (\n                    <span className=\"text-[10px] sm:text-xs text-muted-foreground\">\n                      {stat.label}\n                    </span>\n                  )}\n                  {stat.icon}\n                </div>\n              ))}\n            {stat.value !== undefined ||\n              (stat.change !== undefined && (\n                <div className=\"flex flex-wrap items-baseline gap-1 sm:gap-2\">\n                  {stat.value !== undefined && (\n                    <span className=\"text-base sm:text-xl font-bold\">\n                      {stat.value}\n                    </span>\n                  )}\n                  {stat.change !== undefined && (\n                    <span\n                      className={cn(\n                        \"flex items-center gap-0.5 text-[10px] sm:text-xs font-medium shrink-0\",\n                        getTrendColor(stat.trend)\n                      )}\n                    >\n                      {getTrendIcon(stat.trend)}\n                      {Math.abs(stat.change)}%\n                    </span>\n                  )}\n                </div>\n              ))}\n            {stat.changeLabel && (\n              <span className=\"text-[10px] sm:text-xs text-muted-foreground\">\n                {stat.changeLabel}\n              </span>\n            )}\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport const StatCard = createCompoundComponent(StatCardView, \"StatCard\");\n",
+      "type": "registry:block",
+      "target": "components/ui/stat-card.tsx"
+    },
+    {
+      "path": "registry/miscellaneous/demo/miscellaneous.ts",
+      "content": "// Demo data for Miscellaneous category components\n// This file contains sample data used for component previews and documentation\n\nexport const demoStats = [\n  { change: 12.5, label: \"Revenue\", value: \"$12,345\" },\n  { change: -3.2, label: \"Orders\", value: \"1,234\" },\n  { change: 8.1, label: \"Customers\", value: \"567\" },\n];\n\nexport const demoHeroDefault = {\n  logo1: { alt: \"Acme\", text: \"Acme\" },\n  primaryButton: { label: \"Get Started\" },\n  secondaryButton: { label: \"GitHub\" },\n  subtitle:\n    \"Create beautiful chat experiences with our comprehensive component library designed for agentic applications.\",\n  title: \"Build beautiful MCP App experiences with mcpcn\",\n};\n\nexport const demoHeroTwoLogos = {\n  logo1: { text: \"Acme\" },\n  logo2: {\n    alt: \"mcpcn\",\n    url: \"/favicon.svg\",\n    urlLight: \"/favicon.svg\",\n  },\n  logoSeparator: \"x\",\n  primaryButton: { label: \"Get Started\" },\n  secondaryButton: { label: \"GitHub\" },\n  subtitle:\n    \"Combining the best of both worlds to deliver exceptional user experiences.\",\n  title: \"Acme x mcpcn\",\n};\n\nexport const demoHeroWithTechLogos = {\n  logo1: { text: \"Acme\" },\n  primaryButton: { label: \"Get Started\" },\n  secondaryButton: { label: \"GitHub\" },\n  subtitle:\n    \"Create beautiful experiences with our comprehensive platform designed for modern applications.\",\n  techLogos: [\n    {\n      alt: \"Next.js\",\n      name: \"Next.js\",\n      url: \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg\",\n    },\n    {\n      alt: \"TypeScript\",\n      name: \"TypeScript\",\n      url: \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg\",\n    },\n    {\n      alt: \"React\",\n      name: \"React\",\n      url: \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg\",\n    },\n    {\n      alt: \"Tailwind CSS\",\n      name: \"Tailwind CSS\",\n      url: \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg\",\n    },\n    {\n      alt: \"mcpcn\",\n      name: \"mcpcn\",\n      url: \"https://mcpcn.dev/favicon.svg\",\n    },\n  ],\n  techLogosLabel: \"Built with open-source technologies\",\n  title: \"Build your next project with Acme\",\n};\n\nexport const demoHeroMinimal = {\n  logo1: undefined,\n  primaryButton: { label: \"Get Started\" },\n  secondaryButton: undefined,\n  subtitle: \"A simple, clean hero without logos or extra elements.\",\n  title: \"Welcome to the Future\",\n};\n",
+      "type": "registry:lib",
+      "target": "components/ui/demo/miscellaneous.ts"
+    },
+    {
+      "path": "registry/_lib/compound-component.tsx",
+      "content": "\"use client\";\n\nimport { createContext, createElement, useContext } from \"react\";\nimport type { ComponentType, ImgHTMLAttributes, ReactNode } from \"react\";\n\nexport const RegistryImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>\n  createElement(\"img\", props);\n\nexport const createCompoundComponent = <Props extends object>(\n  View: ComponentType<Props>,\n  displayName: string\n) => {\n  const Context = createContext<Props | null>(null);\n\n  const Content = (overrides: Partial<Props>) => {\n    const value = useContext(Context);\n\n    if (!value) {\n      throw new Error(\n        `${displayName}.Content must be used within ${displayName}`\n      );\n    }\n\n    return <View {...value} {...overrides} />;\n  };\n\n  const Root = ({\n    children,\n    ...props\n  }: Props & {\n    children?: ReactNode;\n  }) => (\n    <Context.Provider value={props as Props}>\n      {children ?? <Content />}\n    </Context.Provider>\n  );\n\n  Root.displayName = displayName;\n  Content.displayName = `${displayName}.Content`;\n\n  return Object.assign(Root, { Content });\n};\n",
+      "type": "registry:lib",
+      "target": "components/ui/compound.tsx"
+    }
+  ],
+  "meta": {
+    "preview": "https://mcpcn.dev/previews/stat-card.png",
+    "version": "2.0.0",
+    "changelog": {
+      "1.0.0": "Initial release with scrollable stat cards and trends",
+      "1.0.2": "Added comprehensive JSDoc documentation",
+      "1.0.3": "Updated Props interface with decorative header and sub-parameter JSDoc documentation",
+      "1.0.4": "Fixed defensive property access to handle empty objects and null values",
+      "1.0.5": "Additional defensive property access improvements",
+      "1.0.6": "Removed default content data - component only renders explicitly provided data",
+      "1.1.0": "Added demo data defaults - component renders demo content when no data prop is provided",
+      "2.0.0": "BREAKING: Renamed component export from Stats to StatCard and StatsProps to StatCardProps for naming consistency"
+    }
+  },
+  "categories": [
+    "miscellaneous"
+  ],
+  "type": "registry:block"
+}

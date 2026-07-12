@@ -5,7 +5,7 @@ import type { SVGProps } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 
@@ -209,7 +209,7 @@ const EventConfirmationView = ({ data, actions }: EventConfirmationProps) => {
   );
 };
 
-export const EventConfirmation = createManifestCompound(
+export const EventConfirmation = createCompoundComponent(
   EventConfirmationView,
   "EventConfirmation"
 );

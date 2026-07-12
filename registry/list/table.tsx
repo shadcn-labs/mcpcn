@@ -23,7 +23,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 import { Input } from "@/components/ui/input";
@@ -1276,4 +1276,4 @@ const TableView = <T extends Record<string, unknown>>({
   );
 };
 
-export const Table = createManifestCompound(TableView, "Table");
+export const Table = createCompoundComponent(TableView, "Table");

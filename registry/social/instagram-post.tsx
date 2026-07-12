@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 import {
@@ -182,7 +182,7 @@ const InstagramPostView = ({ data }: InstagramPostProps) => {
   );
 };
 
-export const InstagramPost = createManifestCompound(
+export const InstagramPost = createCompoundComponent(
   InstagramPostView,
   "InstagramPost"
 );

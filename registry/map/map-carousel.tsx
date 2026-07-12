@@ -13,7 +13,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
@@ -1071,7 +1071,7 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
   );
 };
 
-export const MapCarousel = createManifestCompound(
+export const MapCarousel = createCompoundComponent(
   MapCarouselView,
   "MapCarousel"
 );

@@ -5,7 +5,7 @@ import { ChevronDown, Paperclip, Search, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -365,7 +365,7 @@ const ContactFormView = ({
   );
 };
 
-export const ContactForm = createManifestCompound(
+export const ContactForm = createCompoundComponent(
   ContactFormView,
   "ContactForm"
 );

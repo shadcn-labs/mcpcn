@@ -24,7 +24,7 @@ export const demoOrderData = {
 export const demoOrderConfirm = {
   deliveryDate: "Jan 20, 2024",
   price: 299,
-  productImage: "https://ui.manifest.build/demo/shoe-1.png",
+  productImage: "https://mcpcn.dev/demo/shoe-1.png",
   productName: "Air Force 1 '07",
 };
 
@@ -35,6 +35,6 @@ export const demoAmountPresets = [10, 25, 50, 100];
 export const demoPaymentConfirmed = {
   deliveryDate: "Jan 20, 2024",
   price: 299,
-  productImage: "https://ui.manifest.build/demo/shoe-1.png",
+  productImage: "https://mcpcn.dev/demo/shoe-1.png",
   productName: "Air Force 1 '07",
 };

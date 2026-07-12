@@ -21,7 +21,7 @@ import { Suspense, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
@@ -708,7 +708,7 @@ const EventDetailView = ({ data, actions, appearance }: EventDetailProps) => {
   );
 };
 
-export const EventDetail = createManifestCompound(
+export const EventDetail = createCompoundComponent(
   EventDetailView,
   "EventDetail"
 );

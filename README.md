@@ -1,69 +1,66 @@
-# mcpcn
+<p align="center">
+  <img src="public/android-chrome-512x512.png" alt="mcpcn" width="96" />
+</p>
 
-Composition-first React blocks for [MCP Apps](https://modelcontextprotocol.io/), distributed as a shadcn-compatible registry.
+<h1 align="center">mcpcn</h1>
 
-The shared UI primitives use [Base UI](https://base-ui.com/) as their accessible, unstyled foundation.
+<p align="center">
+  Free and open-source, ready-to-use compound React components for MCP Apps.<br/>
+  Composition first. One-command installation. Built with <a href="https://base-ui.com/">Base UI</a> and compatible with <a href="https://ui.shadcn.com/">shadcn/ui</a>.
+</p>
 
-mcpcn starts from the visual language and responsive JSX patterns of [Manifest UI](https://github.com/mnfst/manifest-ui), then turns fixed widgets into compound components. Factual data stays close to the subcomponent that renders it, shared behavior flows through context, and replaceable interface elements are expressed as children.
+<p align="center">
+  <a href="https://github.com/shadcn-labs/mcpcn"><img src="https://www.shieldcn.dev/github/stars/shadcn-labs/mcpcn.svg?variant=secondary&size=xs&theme=zinc" alt="GitHub Stars" /></a>
+  <a href="https://github.com/shadcn-labs/mcpcn/actions"><img src="https://www.shieldcn.dev/github/ci/shadcn-labs/mcpcn.svg?variant=secondary&size=xs&theme=zinc" alt="CI" /></a>
+  <a href="https://discord.gg/N6G36KhYK4"><img src="https://www.shieldcn.dev/discord/online-members/N6G36KhYK4.svg?variant=secondary&size=xs&theme=zinc" alt="Discord Members" /></a>
+  <a href="https://x.com/shadcnlabs"><img src="https://www.shieldcn.dev/x/follow/shadcnlabs.svg?variant=branded&size=xs&theme=zinc" alt="X Follow" /></a>
+</p>
 
-## Why compound components?
+<p align="center">
+  <a href="https://mcpcn.dev/docs">Get Started</a> ·
+  <a href="https://mcpcn.dev/docs/installation">Installation</a> ·
+  <a href="https://mcpcn.dev/docs/blocks">Components</a>
+</p>
 
-An MCP App rarely knows every interface requirement ahead of time. A fixed `data` and `actions` object can expose only the extension points its author predicted. Compound components keep the useful default design while letting consumers rearrange, omit, or extend any section with ordinary JSX.
+## Features
 
-```tsx
-<EventConfirmation
-  onViewTickets={() => openTickets()}
-  onFollowOrganizer={() => followOrganizer()}
-  onShare={(platform) => share(platform)}
->
-  <EventConfirmation.Header orderNumber="#14040333743" />
-  <EventConfirmation.Details
-    eventTitle="A night under the stars"
-    ticketCount={2}
-    recipientEmail="hello@example.com"
-    eventDate="Friday, Feb 6 · 8pm"
-    eventLocation="Los Angeles, CA"
-  />
-  <EventConfirmation.Organizer name="Manifest Events">
-    <VerifiedBadge />
-  </EventConfirmation.Organizer>
-  <EventConfirmation.Share>
-    <MyShareMenu />
-  </EventConfirmation.Share>
-</EventConfirmation>
-```
+- 🧩 **Composition first** — Extend and rearrange component content with ordinary JSX
+- 🤖 **Built for MCP Apps** — Polished interface patterns for model-driven applications
+- 📦 **shadcn/ui compatible** — Install source code with the familiar registry CLI
+- ♿ **Base UI primitives** — Accessible foundations without Radix UI
+- 🧱 **30 ready-to-use blocks** — Forms, payments, lists, messaging, social, maps, events, and more
+- 🎨 **Theme aware** — Responsive components built with semantic color tokens
+- 🔌 **OpenUI ready** — Every component page includes OpenUI integration guidance
+- 🔓 **Open code** — Components are copied into your project for complete ownership
 
-Each root owns a typed provider. Subcomponents consume shared callbacks and formatting automatically, throw a clear error when used outside their root, accept `className`, and accept arbitrary children. Passing no children renders a polished quick-start composition.
-
-## Registry
-
-The registry contains 21 blocks across payment, events, social, form, blogging, list, status, and miscellaneous categories. Browse their source in [`registry`](./registry) and both quick-start and composed examples in [`examples`](./examples).
-
-Install a block from a deployed registry:
+Install a component with one command:
 
 ```bash
-npx shadcn@latest add https://mcpcn.dev/r/event-confirmation.json
+npx shadcn@latest add https://mcpcn.dev/r/order-confirm.json
 ```
 
-## Development
+## Contributing
 
-```bash
-pnpm install
-pnpm typecheck
-pnpm registry:build
-pnpm dev
-```
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-Run `pnpm build` for the full registry and Next.js production build.
-
-## Design rules
-
-- Preserve a single responsive JSX tree; do not duplicate mobile and desktop markup.
-- Use props for factual values, context for shared behavior, and children for replaceable UI.
-- Prefer optional callbacks so blocks remain useful in read-only previews.
-- Merge `className` with `cn()` and use Tailwind core utilities plus semantic color variables.
-- Keep every compound subcomponent inside its root provider.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Install dependencies (`pnpm install`)
+4. Run the checks (`pnpm check && pnpm typecheck`)
+5. Commit your changes (`git commit -m 'Add some amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
 ## License
 
-[MIT](./LICENSE)
+[MIT](LICENSE)
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=shadcn-labs%2Fmcpcn&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=shadcn-labs/mcpcn&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=shadcn-labs/mcpcn&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=shadcn-labs/mcpcn&type=date&legend=top-left" />
+ </picture>
+</a>

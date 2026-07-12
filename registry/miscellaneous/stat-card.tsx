@@ -3,7 +3,7 @@
 
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
 import { demoStats } from "./demo/miscellaneous";
@@ -127,4 +127,4 @@ const StatCardView = ({ data }: StatCardProps) => {
   );
 };
 
-export const StatCard = createManifestCompound(StatCardView, "StatCard");
+export const StatCard = createCompoundComponent(StatCardView, "StatCard");

@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
-  createManifestCompound,
+  createCompoundComponent,
   RegistryImage,
 } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
@@ -351,7 +351,7 @@ const TicketTierSelectView = ({
   );
 };
 
-export const TicketTierSelect = createManifestCompound(
+export const TicketTierSelect = createCompoundComponent(
   TicketTierSelectView,
   "TicketTierSelect"
 );

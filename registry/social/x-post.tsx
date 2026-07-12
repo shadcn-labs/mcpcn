@@ -3,7 +3,7 @@
 
 import { Heart, MessageCircle, Repeat2, Share, Bookmark } from "lucide-react";
 
-import { createManifestCompound } from "@/components/ui/compound";
+import { createCompoundComponent } from "@/components/ui/compound";
 
 import { demoXPost } from "./demo/social";
 
@@ -164,4 +164,4 @@ const XPostView = ({ data }: XPostProps) => {
   );
 };
 
-export const XPost = createManifestCompound(XPostView, "XPost");
+export const XPost = createCompoundComponent(XPostView, "XPost");
