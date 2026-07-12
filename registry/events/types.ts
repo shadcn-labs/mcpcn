@@ -1,10 +1,22 @@
 export type SharePlatform = "facebook" | "twitter" | "messenger" | "email";
 
-export interface CompoundItem {
-  id?: string;
-  title?: string;
+export interface EventDetails {
+  eventDate?: string;
+  eventLocation?: string;
+  eventTitle: string;
+  recipientEmail?: string;
+  ticketCount?: number;
+}
+
+export interface TicketTier {
   description?: string;
-  image?: string;
-  price?: number;
-  status?: "completed" | "current" | "pending" | string;
+  label: string;
+  price: number;
+  soldOut?: boolean;
+  value: string;
+}
+
+export interface Seat {
+  disabled?: boolean;
+  id: string;
 }

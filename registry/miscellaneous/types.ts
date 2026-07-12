@@ -1,10 +1,12 @@
-export type SharePlatform = "facebook" | "twitter" | "messenger" | "email";
+export interface RatingValue {
+  feedback?: string;
+  rating: number;
+}
 
-export interface CompoundItem {
-  id?: string;
-  title?: string;
-  description?: string;
-  image?: string;
-  price?: number;
-  status?: "completed" | "current" | "pending" | string;
+export interface Testimonial {
+  author: string;
+  company?: string;
+  quote: string;
+  rating?: number;
+  role?: string;
 }

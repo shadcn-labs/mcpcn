@@ -7,20 +7,17 @@ export default function TwitterPostDemo() {
     <div className="grid gap-6 lg:grid-cols-2">
       <TwitterPost />
       <TwitterPost>
-        <TwitterPost.Header>
-          <div>
-            <p className="font-semibold">Custom Twitter Post</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
-          </div>
-        </TwitterPost.Header>
+        <TwitterPost.Header
+          name="mcpcn"
+          handle="@mcpcn_registry"
+          timestamp="now"
+        />
         <TwitterPost.Text>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
+          Props for facts. Context for shared behavior. Children for everything
+          else.
         </TwitterPost.Text>
+        <TwitterPost.Metrics likes={256} replies={18} retweets={42} />
+        <TwitterPost.Actions />
       </TwitterPost>
     </div>
   );

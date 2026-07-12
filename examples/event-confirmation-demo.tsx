@@ -7,20 +7,23 @@ export default function EventConfirmationDemo() {
     <div className="grid gap-6 lg:grid-cols-2">
       <EventConfirmation />
       <EventConfirmation>
-        <EventConfirmation.Header>
-          <div>
-            <p className="font-semibold">Custom Event Confirmation</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
-          </div>
-        </EventConfirmation.Header>
-        <EventConfirmation.Details>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
-        </EventConfirmation.Details>
+        <EventConfirmation.Header
+          orderNumber="#EVENT-2048"
+          heading="You’re on the list"
+        />
+        <EventConfirmation.Details
+          eventTitle="MCP Apps Summit"
+          ticketCount={1}
+          recipientEmail="builder@example.com"
+          eventDate="July 24 · 10 AM"
+          eventLocation="Bengaluru"
+        />
+        <EventConfirmation.Organizer name="mcpcn community">
+          <span className="rounded-full bg-muted px-2 py-0.5 text-xs">
+            Verified
+          </span>
+        </EventConfirmation.Organizer>
+        <EventConfirmation.Share />
       </EventConfirmation>
     </div>
   );

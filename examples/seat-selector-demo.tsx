@@ -6,21 +6,20 @@ export default function SeatSelectorDemo() {
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       <SeatSelector />
-      <SeatSelector>
-        <SeatSelector.Header>
-          <div>
-            <p className="font-semibold">Custom Seat Selector</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
-          </div>
-        </SeatSelector.Header>
+      <SeatSelector selectedSeats={["B2", "B3"]}>
+        <div className="flex gap-2">
+          <SeatSelector.Seat seat="B1" />
+          <SeatSelector.Seat seat="B2">
+            <span className="font-bold">B2</span>
+          </SeatSelector.Seat>
+          <SeatSelector.Seat seat="B3" />
+          <SeatSelector.Seat seat="B4" disabled />
+        </div>
         <SeatSelector.Legend>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
+          <span>Outlined: available</span>
+          <span>Filled: your group</span>
         </SeatSelector.Legend>
+        <SeatSelector.Summary />
       </SeatSelector>
     </div>
   );

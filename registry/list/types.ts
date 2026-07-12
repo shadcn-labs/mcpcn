@@ -1,10 +1,13 @@
-export type SharePlatform = "facebook" | "twitter" | "messenger" | "email";
+export interface TodoItem {
+  completed?: boolean;
+  id: string;
+  text: string;
+}
 
-export interface CompoundItem {
-  id?: string;
-  title?: string;
-  description?: string;
+export interface Product {
+  id: string;
   image?: string;
-  price?: number;
-  status?: "completed" | "current" | "pending" | string;
+  name: string;
+  price: number;
+  rating?: number;
 }

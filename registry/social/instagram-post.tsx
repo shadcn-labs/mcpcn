@@ -1,93 +1,193 @@
 "use client";
 
-import { Heart } from "lucide-react";
+import { Heart, MessageCircle, Send } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { createCompoundBlock } from "../_lib/compound";
+import { createCompoundContext } from "../_lib/compound";
 
-interface ActionContext {
-  [key: string]: unknown;
-  onLike?: () => void;
+interface InstagramContextValue {
   onComment?: () => void;
+  onLike?: () => void;
   onShare?: () => void;
 }
 
-export interface InstagramPostProps extends Omit<
-  ComponentPropsWithoutRef<"div">,
-  "onSelect" | "onToggle" | "onSubmit"
-> {
-  onLike?: () => void;
+const { Provider, useCompoundContext } =
+  createCompoundContext<InstagramContextValue>("InstagramPost");
+
+export interface InstagramPostProps extends ComponentPropsWithoutRef<"article"> {
   onComment?: () => void;
+  onLike?: () => void;
   onShare?: () => void;
 }
 
-export const InstagramPost = createCompoundBlock<
-  ActionContext,
-  InstagramPostProps
->({
-  buildContext: (props) => ({
-    onComment: props.onComment,
-    onLike: props.onLike,
-    onShare: props.onShare,
-  }),
-  className: "w-full rounded-xl border bg-card p-4 sm:p-6",
-  name: "InstagramPost",
-  renderDefault: () => (
-    <div className="space-y-4">
-      <InstagramPost.Header>
-        <div className="flex items-center gap-3">
-          <Heart className="h-5 w-5" />
-          <div>
-            <p className="font-semibold">Instagrampost</p>
-            <p className="text-sm text-muted-foreground">
-              Composition-first MCP app block
-            </p>
-          </div>
+interface HeaderProps extends ComponentPropsWithoutRef<"div"> {
+  avatar?: string;
+  handle?: string;
+  name?: string;
+}
+function Header({
+  avatar,
+  handle = "@manifestui",
+  name = "Manifest UI",
+  className,
+  children,
+  ...props
+}: HeaderProps) {
+  useCompoundContext();
+  return (
+    <div className={cn("flex items-center gap-3", className)} {...props}>
+      {avatar ? (
+        <img
+          src={avatar}
+          alt=""
+          className="h-10 w-10 rounded-full object-cover"
+        />
+      ) : (
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted font-semibold">
+          {name.charAt(0)}
         </div>
-      </InstagramPost.Header>
-      <InstagramPost.Image>
-        <div className="flex aspect-video items-center justify-center rounded-lg bg-muted">
-          <Heart className="h-8 w-8 text-muted-foreground" />
-        </div>
-      </InstagramPost.Image>
-      <InstagramPost.Caption>
-        <p className="text-sm text-muted-foreground">
-          Sample caption content that can be fully replaced by children.
-        </p>
-      </InstagramPost.Caption>
-      <InstagramPost.Actions />
+      )}
+      <div className="min-w-0">
+        <p className="truncate text-sm font-semibold">{name}</p>
+        <p className="text-xs text-muted-foreground">{handle}</p>
+      </div>
+      {children}
     </div>
-  ),
-  slots: {
-    Actions: {
-      render: ({ className, children }, context) =>
-        children ? (
-          <div className={cn("flex gap-2", className)}>{children}</div>
+  );
+}
+
+interface ImageProps extends ComponentPropsWithoutRef<"div"> {
+  alt?: string;
+  src?: string;
+}
+function Image({
+  alt = "Post image",
+  src,
+  className,
+  children,
+  ...props
+}: ImageProps) {
+  useCompoundContext();
+  return (
+    <div
+      className={cn("overflow-hidden rounded-lg bg-muted", className)}
+      {...props}
+    >
+      {children ??
+        (src ? (
+          <img
+            src={src}
+            alt={alt}
+            className="aspect-square w-full object-cover"
+          />
         ) : (
-          <div className={cn("flex gap-2", className)}>
-            <Button
-              variant="outline"
-              onClick={(context as { onCancel?: () => void }).onCancel}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={
-                (context as { onConfirm?: () => void }).onConfirm ??
-                (context as { onLike?: () => void }).onLike ??
-                (context as { onPlay?: () => void }).onPlay
-              }
-            >
-              Continue
-            </Button>
+          <div className="flex aspect-square items-center justify-center text-sm text-muted-foreground">
+            Post image
           </div>
-        ),
-    },
-    Caption: { className: "text-sm" },
-    Header: { className: "rounded-lg bg-muted/40 p-4" },
-    Image: { className: "overflow-hidden rounded-lg bg-muted" },
-  },
+        ))}
+    </div>
+  );
+}
+
+interface CaptionProps extends ComponentPropsWithoutRef<"p"> {
+  handle?: string;
+  text?: string;
+}
+function Caption({
+  handle = "manifestui",
+  text = "Building interfaces that agents and people can understand.",
+  className,
+  children,
+  ...props
+}: CaptionProps) {
+  useCompoundContext();
+  return (
+    <p className={cn("text-sm", className)} {...props}>
+      {children ?? (
+        <>
+          <span className="font-semibold">{handle}</span> {text}
+        </>
+      )}
+    </p>
+  );
+}
+
+function Actions({
+  className,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"div">) {
+  const { onComment, onLike, onShare } = useCompoundContext();
+  return (
+    <div className={cn("flex items-center gap-1", className)} {...props}>
+      {children ?? (
+        <>
+          <Button
+            size="icon"
+            variant="ghost"
+            aria-label="Like"
+            onClick={onLike}
+          >
+            <Heart />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            aria-label="Comment"
+            onClick={onComment}
+          >
+            <MessageCircle />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            aria-label="Share"
+            onClick={onShare}
+          >
+            <Send />
+          </Button>
+        </>
+      )}
+    </div>
+  );
+}
+
+function InstagramPostRoot({
+  onComment,
+  onLike,
+  onShare,
+  className,
+  children,
+  ...props
+}: InstagramPostProps) {
+  return (
+    <Provider value={{ onComment, onLike, onShare }}>
+      <article
+        className={cn(
+          "w-full space-y-4 rounded-xl border bg-card p-4 sm:p-6",
+          className
+        )}
+        {...props}
+      >
+        {children ?? (
+          <>
+            <Header />
+            <Image />
+            <Actions />
+            <Caption />
+          </>
+        )}
+      </article>
+    </Provider>
+  );
+}
+
+export const InstagramPost = Object.assign(InstagramPostRoot, {
+  Actions,
+  Caption,
+  Header,
+  Image,
 });

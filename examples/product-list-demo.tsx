@@ -7,20 +7,24 @@ export default function ProductListDemo() {
     <div className="grid gap-6 lg:grid-cols-2">
       <ProductList />
       <ProductList>
-        <ProductList.Header>
-          <div>
-            <p className="font-semibold">Custom Product List</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
-          </div>
-        </ProductList.Header>
         <ProductList.FilterBar>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
+          <button className="rounded-full border px-3 py-1 text-sm">
+            MCP-ready
+          </button>
         </ProductList.FilterBar>
+        <ProductList.SortDropdown>
+          <option value="newest">Newest first</option>
+        </ProductList.SortDropdown>
+        <ProductList.ProductCard
+          id="custom"
+          name="Composable toolkit"
+          price={129}
+          rating={4.9}
+        >
+          <span className="text-xs text-muted-foreground">
+            Includes custom actions
+          </span>
+        </ProductList.ProductCard>
       </ProductList>
     </div>
   );

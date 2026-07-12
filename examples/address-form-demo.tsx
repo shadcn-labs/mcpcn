@@ -7,20 +7,16 @@ export default function AddressFormDemo() {
     <div className="grid gap-6 lg:grid-cols-2">
       <AddressForm />
       <AddressForm>
-        <AddressForm.Header>
-          <div>
-            <p className="font-semibold">Custom Address Form</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
-          </div>
-        </AddressForm.Header>
-        <AddressForm.CityInput>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
-        </AddressForm.CityInput>
+        <label className="text-sm font-medium">Shipping address</label>
+        <AddressForm.StreetInput defaultValue="42 Compound Lane" />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <AddressForm.CityInput defaultValue="Bengaluru" />
+          <AddressForm.StateInput defaultValue="Karnataka" />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <AddressForm.ZipInput defaultValue="560001" />
+          <AddressForm.CountrySelect defaultValue="IN" />
+        </div>
       </AddressForm>
     </div>
   );

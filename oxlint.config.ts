@@ -15,4 +15,12 @@ export default defineConfig({
     ".web-kits/**",
     "audio/**",
   ],
+  overrides: [
+    {
+      files: ["registry/**/*.tsx"],
+      rules: {
+        "func-style": "off",
+      },
+    },
+  ],
 });

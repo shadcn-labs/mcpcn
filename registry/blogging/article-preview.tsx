@@ -1,63 +1,130 @@
 "use client";
 
-import { ArrowRight, Newspaper } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-import { createCompoundBlock } from "../_lib/compound";
+import { createCompoundContext } from "../_lib/compound";
 
-type ActionContext = Record<string, unknown>;
+const { Provider, useCompoundContext } =
+  createCompoundContext<Record<string, never>>("ArticlePreview");
+export type ArticlePreviewProps = ComponentPropsWithoutRef<"article">;
 
-export type ArticlePreviewProps = Omit<
-  ComponentPropsWithoutRef<"div">,
-  "onSelect" | "onToggle" | "onSubmit"
->;
+interface HeaderProps extends ComponentPropsWithoutRef<"header"> {
+  author?: string;
+  date?: string;
+  title?: string;
+}
+function Header({
+  author = "Maya Chen",
+  date = "January 20, 2026",
+  title = "Designing interfaces for agents and people",
+  className,
+  children,
+  ...props
+}: HeaderProps) {
+  useCompoundContext();
+  return (
+    <header className={cn("space-y-2", className)} {...props}>
+      {children ?? (
+        <>
+          <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+          <p className="text-sm text-muted-foreground">
+            By {author} · {date}
+          </p>
+        </>
+      )}
+    </header>
+  );
+}
 
-export const ArticlePreview = createCompoundBlock<
-  ActionContext,
-  ArticlePreviewProps
->({
-  buildContext: () => ({}),
-  className: "w-full rounded-xl border bg-card p-4 sm:p-6",
-  name: "ArticlePreview",
-  renderDefault: () => (
-    <div className="space-y-4">
-      <ArticlePreview.Header>
-        <div className="flex items-center gap-3">
-          <Newspaper className="h-5 w-5" />
-          <div>
-            <p className="font-semibold">Articlepreview</p>
-            <p className="text-sm text-muted-foreground">
-              Composition-first MCP app block
-            </p>
-          </div>
-        </div>
-      </ArticlePreview.Header>
-      <ArticlePreview.Excerpt>
-        <p className="text-sm text-muted-foreground">
-          Sample excerpt content that can be fully replaced by children.
-        </p>
-      </ArticlePreview.Excerpt>
-      <ArticlePreview.Tags>
-        <p className="text-sm text-muted-foreground">
-          Sample tags content that can be fully replaced by children.
-        </p>
-      </ArticlePreview.Tags>
-      <ArticlePreview.CTA />
+interface ExcerptProps extends ComponentPropsWithoutRef<"p"> {
+  text?: string;
+}
+function Excerpt({
+  text = "Compound components preserve polished defaults while leaving room for requirements the original author could not predict.",
+  className,
+  children,
+  ...props
+}: ExcerptProps) {
+  useCompoundContext();
+  return (
+    <p
+      className={cn("text-sm leading-relaxed text-muted-foreground", className)}
+      {...props}
+    >
+      {children ?? text}
+    </p>
+  );
+}
+
+interface TagsProps extends ComponentPropsWithoutRef<"div"> {
+  tags?: string[];
+}
+function Tags({
+  tags = ["MCP Apps", "React", "Composition"],
+  className,
+  children,
+  ...props
+}: TagsProps) {
+  useCompoundContext();
+  return (
+    <div className={cn("flex flex-wrap gap-2", className)} {...props}>
+      {children ??
+        tags.map((tag) => (
+          <span key={tag} className="rounded-full bg-muted px-2.5 py-1 text-xs">
+            {tag}
+          </span>
+        ))}
     </div>
-  ),
-  slots: {
-    CTA: {
-      render: ({ className, children }) => (
-        <Button className={className} variant="outline">
-          {children ?? "Read more"}
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      ),
-    },
-    Excerpt: { className: "text-sm text-muted-foreground" },
-    Header: { className: "rounded-lg bg-muted/40 p-4" },
-    Tags: { className: "flex flex-wrap gap-2" },
-  },
+  );
+}
+
+function CTA({
+  className,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"button">) {
+  useCompoundContext();
+  return (
+    <Button className={className} variant="outline" {...props}>
+      {children ?? "Read more"}
+      <ArrowRight className="ml-2 h-4 w-4" />
+    </Button>
+  );
+}
+
+function ArticlePreviewRoot({
+  className,
+  children,
+  ...props
+}: ArticlePreviewProps) {
+  return (
+    <Provider value={{}}>
+      <article
+        className={cn(
+          "w-full space-y-4 rounded-xl border bg-card p-4 sm:p-6",
+          className
+        )}
+        {...props}
+      >
+        {children ?? (
+          <>
+            <Header />
+            <Excerpt />
+            <Tags />
+            <CTA />
+          </>
+        )}
+      </article>
+    </Provider>
+  );
+}
+export const ArticlePreview = Object.assign(ArticlePreviewRoot, {
+  CTA,
+  Excerpt,
+  Header,
+  Tags,
 });

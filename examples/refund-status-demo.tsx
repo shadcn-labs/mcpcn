@@ -9,18 +9,20 @@ export default function RefundStatusDemo() {
       <RefundStatus>
         <RefundStatus.Header>
           <div>
-            <p className="font-semibold">Custom Refund Status</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
+            <p className="font-semibold">Partial refund approved</p>
+            <p className="text-sm text-muted-foreground">Order #MCP-2048</p>
           </div>
         </RefundStatus.Header>
-        <RefundStatus.RefundAmount>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
-        </RefundStatus.RefundAmount>
+        <RefundStatus.RefundAmount amount={42.5} />
+        <RefundStatus.Timeline
+          steps={[
+            { label: "Approved", status: "completed" },
+            { label: "Returning to card", status: "current" },
+          ]}
+        />
+        <RefundStatus.ContactSupport>
+          Ask about this refund
+        </RefundStatus.ContactSupport>
       </RefundStatus>
     </div>
   );

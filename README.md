@@ -1,96 +1,66 @@
-<p align="center">
-  <img src="https://startercn.vercel.app/og" alt="startercn banner" />
-</p>
+# mcpcn
 
-<h1 align="center">startercn</h1>
+Composition-first React blocks for [MCP Apps](https://modelcontextprotocol.io/), distributed as a shadcn-compatible registry.
 
-<p align="center">
-  A template for building and publishing your own custom shadcn registry components. Includes documentation, landing page, and everything you need to deploy your component registry.
-  <br />
-  <br />
-  <a href="https://github.com/shadcn-labs/startercn"><img src="https://www.shieldcn.dev/github/stars/shadcn-labs/startercn.svg?variant=secondary&size=xs&theme=zinc" alt="GitHub Stars" /></a>
-  <a href="https://github.com/shadcn-labs/startercn/actions"><img src="https://www.shieldcn.dev/github/ci/shadcn-labs/startercn.svg?variant=secondary&size=xs&theme=zinc" alt="CI" /></a>
-  <a href="https://discord.com/invite/N6G36KhYK4"><img src="https://www.shieldcn.dev/discord/online-members/N6G36KhYK4.svg?variant=secondary&size=xs&theme=zinc" alt="Discord Members" /></a>
-  <a href="https://x.com/shadcnlabs"><img src="https://www.shieldcn.dev/x/follow/shadcnlabs.svg?variant=branded&size=xs&theme=zinc" alt="X Follow" /></a>
-</p>
+mcpcn starts from the visual language and responsive JSX patterns of [Manifest UI](https://github.com/mnfst/manifest-ui), then turns fixed widgets into compound components. Factual data stays close to the subcomponent that renders it, shared behavior flows through context, and replaceable interface elements are expressed as children.
 
-## Features
+## Why compound components?
 
-- 📦 **Ready-to-use template** - Fork and start building immediately
-- 📚 **Documentation site** - Beautiful docs powered by Fumadocs
-- 🎨 **Shadcn registry compatible** - Works with `npx shadcn add`
-- 🤖 **[Agent ready](https://www.mintlify.com/score/startercn)** - Includes `llms.txt`, `llms-full.txt`, agent skills discovery routes, and API catalog endpoints
-- 🔊 **[Web audio feedback](https://audio.raphaelsalaja.com/)** - Built-in sound effects powered by `@web-kits/audio`
-- 📳 **[Web haptics](https://haptics.lochie.me/)** - Optional haptic feedback hooks for supported devices via `web-haptics`
-- ✨ **[Motion animations](https://motion.dev/)** - `motion`-powered UI polish for copy states, text transitions, and interactive elements
-- 🎯 **[Animated icons](https://lucide-animated.com/)** - Reusable animated icons for navigation, sharing, sponsorship, and CTAs
-- 🔄 **[View transitions](https://nextjs.org/docs/app/api-reference/config/next-config-js/viewTransition)** - Next.js view transitions enabled for smoother navigation between pages
-- 🚀 **Deploy ready** - Deploy anywhere
+An MCP App rarely knows every interface requirement ahead of time. A fixed `data` and `actions` object can expose only the extension points its author predicted. Compound components keep the useful default design while letting consumers rearrange, omit, or extend any section with ordinary JSX.
 
-## Built In
+```tsx
+<EventConfirmation
+  onViewTickets={() => openTickets()}
+  onFollowOrganizer={() => followOrganizer()}
+  onShare={(platform) => share(platform)}
+>
+  <EventConfirmation.Header orderNumber="#14040333743" />
+  <EventConfirmation.Details
+    eventTitle="A night under the stars"
+    ticketCount={2}
+    recipientEmail="hello@example.com"
+    eventDate="Friday, Feb 6 · 8pm"
+    eventLocation="Los Angeles, CA"
+  />
+  <EventConfirmation.Organizer name="Manifest Events">
+    <VerifiedBadge />
+  </EventConfirmation.Organizer>
+  <EventConfirmation.Share>
+    <MyShareMenu />
+  </EventConfirmation.Share>
+</EventConfirmation>
+```
 
-- `Next.js 16` with the App Router
-- `React 19` and `TypeScript`
-- `Tailwind CSS 4`
-- `Fumadocs` for documentation
-- `shiki` + `rehype-pretty-code` for code blocks
-- `sonner` for toasts
-- `radix-ui` + `vaul` for accessible primitives
-- `@vercel/analytics` for analytics
+Each root owns a typed provider. Subcomponents consume shared callbacks and formatting automatically, throw a clear error when used outside their root, accept `className`, and accept arbitrary children. Passing no children renders a polished quick-start composition.
 
-## Quick Start
+## Registry
 
-1. **Use this template** - Click "Use this template" on GitHub
+The registry contains 21 blocks across payment, events, social, form, blogging, list, status, and miscellaneous categories. Browse their source in [`registry`](./registry) and both quick-start and composed examples in [`examples`](./examples).
 
-2. **Install dependencies**:
+Install a block from a deployed registry:
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/event-confirmation.json
+```
+
+## Development
 
 ```bash
 pnpm install
-```
-
-3. **Replace the placeholder component** at `registry/new-york/your-component.tsx`
-
-4. **Update `registry.json`** with your component details
-
-5. **Build the registry**:
-
-```bash
+pnpm typecheck
 pnpm registry:build
-```
-
-6. **Start development**:
-
-```bash
 pnpm dev
 ```
 
-7. **Deploy** and share your component!
+Run `pnpm build` for the full registry and Next.js production build.
 
-## Usage
+## Design rules
 
-Once deployed, users can install your component with:
-
-```bash
-npx shadcn@latest add https://your-domain.com/r/your-component.json
-```
-
-## Project Structure
-
-```
-├── registry/
-│   └── new-york/           # Your components go here
-│       └── your-component.tsx
-├── registry.json           # Component registry manifest
-├── content/docs/           # Documentation (MDX)
-├── app/                    # Next.js app
-└── public/r/               # Built registry files (auto-generated)
-```
-
-## Scripts
-
-- `pnpm dev` - Start development server
-- `pnpm build` - Build for production
-- `pnpm registry:build` - Rebuild the component registry
+- Preserve a single responsive JSX tree; do not duplicate mobile and desktop markup.
+- Use props for factual values, context for shared behavior, and children for replaceable UI.
+- Prefer optional callbacks so blocks remain useful in read-only previews.
+- Merge `className` with `cn()` and use Tailwind core utilities plus semantic color variables.
+- Keep every compound subcomponent inside its root provider.
 
 ## License
 

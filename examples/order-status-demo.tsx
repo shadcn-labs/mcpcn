@@ -7,20 +7,20 @@ export default function OrderStatusDemo() {
     <div className="grid gap-6 lg:grid-cols-2">
       <OrderStatus />
       <OrderStatus>
-        <OrderStatus.Header>
-          <div>
-            <p className="font-semibold">Custom Order Status</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
-          </div>
-        </OrderStatus.Header>
-        <OrderStatus.StatusBadge>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
-        </OrderStatus.StatusBadge>
+        <div className="flex items-center justify-between gap-3">
+          <OrderStatus.TrackingNumber value="MCP-2048" />
+          <OrderStatus.StatusBadge status="Out for delivery" />
+        </div>
+        <OrderStatus.Timeline
+          steps={[
+            { label: "Dispatched", status: "completed" },
+            { label: "Courier nearby", status: "current" },
+            { label: "Delivered", status: "pending" },
+          ]}
+        />
+        <OrderStatus.EstimatedDelivery>
+          Arriving before 6 PM
+        </OrderStatus.EstimatedDelivery>
       </OrderStatus>
     </div>
   );

@@ -1,98 +1,215 @@
 "use client";
 
-import { MessageCircle } from "lucide-react";
+import { Heart, MessageCircle, Repeat2 } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { createCompoundBlock } from "../_lib/compound";
+import { createCompoundContext } from "../_lib/compound";
 
-interface ActionContext {
-  [key: string]: unknown;
+interface TwitterContextValue {
+  onLike?: () => void;
   onReply?: () => void;
   onRetweet?: () => void;
-  onLike?: () => void;
 }
+const { Provider, useCompoundContext } =
+  createCompoundContext<TwitterContextValue>("TwitterPost");
 
-export interface TwitterPostProps extends Omit<
-  ComponentPropsWithoutRef<"div">,
-  "onSelect" | "onToggle" | "onSubmit"
-> {
+export interface TwitterPostProps extends ComponentPropsWithoutRef<"article"> {
+  onLike?: () => void;
   onReply?: () => void;
   onRetweet?: () => void;
-  onLike?: () => void;
 }
 
-export const TwitterPost = createCompoundBlock<ActionContext, TwitterPostProps>(
-  {
-    buildContext: (props) => ({
-      onLike: props.onLike,
-      onReply: props.onReply,
-      onRetweet: props.onRetweet,
-    }),
-    className: "w-full rounded-xl border bg-card p-4 sm:p-6",
-    name: "TwitterPost",
-    renderDefault: () => (
-      <div className="space-y-4">
-        <TwitterPost.Header>
-          <div className="flex items-center gap-3">
-            <MessageCircle className="h-5 w-5" />
-            <div>
-              <p className="font-semibold">Twitterpost</p>
-              <p className="text-sm text-muted-foreground">
-                Composition-first MCP app block
-              </p>
-            </div>
-          </div>
-        </TwitterPost.Header>
-        <TwitterPost.Text>
-          <p className="text-sm text-muted-foreground">
-            Sample text content that can be fully replaced by children.
-          </p>
-        </TwitterPost.Text>
-        <TwitterPost.Media>
-          <div className="flex aspect-video items-center justify-center rounded-lg bg-muted">
-            <MessageCircle className="h-8 w-8 text-muted-foreground" />
-          </div>
-        </TwitterPost.Media>
-        <TwitterPost.Metrics>
-          <p className="text-sm text-muted-foreground">
-            Sample metrics content that can be fully replaced by children.
-          </p>
-        </TwitterPost.Metrics>
-        <TwitterPost.Actions />
+interface HeaderProps extends ComponentPropsWithoutRef<"div"> {
+  avatar?: string;
+  handle?: string;
+  name?: string;
+  timestamp?: string;
+}
+function Header({
+  avatar,
+  handle = "@manifestui",
+  name = "Manifest UI",
+  timestamp = "2h",
+  className,
+  children,
+  ...props
+}: HeaderProps) {
+  useCompoundContext();
+  return (
+    <div className={cn("flex items-center gap-3", className)} {...props}>
+      {avatar ? (
+        <img
+          src={avatar}
+          alt=""
+          className="h-10 w-10 rounded-full object-cover"
+        />
+      ) : (
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted font-semibold">
+          {name.charAt(0)}
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm">
+          <span className="font-semibold">{name}</span>{" "}
+          <span className="text-muted-foreground">
+            {handle} · {timestamp}
+          </span>
+        </p>
       </div>
-    ),
-    slots: {
-      Actions: {
-        render: ({ className, children }, context) =>
-          children ? (
-            <div className={cn("flex gap-2", className)}>{children}</div>
-          ) : (
-            <div className={cn("flex gap-2", className)}>
-              <Button
-                variant="outline"
-                onClick={(context as { onCancel?: () => void }).onCancel}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={
-                  (context as { onConfirm?: () => void }).onConfirm ??
-                  (context as { onLike?: () => void }).onLike ??
-                  (context as { onPlay?: () => void }).onPlay
-                }
-              >
-                Continue
-              </Button>
-            </div>
-          ),
-      },
-      Header: { className: "rounded-lg bg-muted/40 p-4" },
-      Media: { className: "overflow-hidden rounded-lg bg-muted" },
-      Metrics: { className: "flex gap-4 text-xs text-muted-foreground" },
-      Text: { className: "text-sm leading-relaxed" },
-    },
-  }
-);
+      {children}
+    </div>
+  );
+}
+
+interface TextProps extends ComponentPropsWithoutRef<"p"> {
+  text?: string;
+}
+function Text({
+  text = "Compound components make the extension points visible in JSX.",
+  className,
+  children,
+  ...props
+}: TextProps) {
+  useCompoundContext();
+  return (
+    <p className={cn("text-sm leading-relaxed", className)} {...props}>
+      {children ?? text}
+    </p>
+  );
+}
+
+interface MediaProps extends ComponentPropsWithoutRef<"div"> {
+  alt?: string;
+  src?: string;
+}
+function Media({
+  alt = "Tweet media",
+  src,
+  className,
+  children,
+  ...props
+}: MediaProps) {
+  useCompoundContext();
+  return (
+    <div
+      className={cn("overflow-hidden rounded-xl border bg-muted", className)}
+      {...props}
+    >
+      {children ??
+        (src ? (
+          <img
+            src={src}
+            alt={alt}
+            className="aspect-video w-full object-cover"
+          />
+        ) : (
+          <div className="flex aspect-video items-center justify-center text-sm text-muted-foreground">
+            Media preview
+          </div>
+        ))}
+    </div>
+  );
+}
+
+interface MetricsProps extends ComponentPropsWithoutRef<"div"> {
+  likes?: number;
+  replies?: number;
+  retweets?: number;
+}
+function Metrics({
+  likes = 128,
+  replies = 12,
+  retweets = 34,
+  className,
+  children,
+  ...props
+}: MetricsProps) {
+  useCompoundContext();
+  return (
+    <div
+      className={cn("flex gap-4 text-xs text-muted-foreground", className)}
+      {...props}
+    >
+      {children ?? (
+        <>
+          <span>{replies} replies</span>
+          <span>{retweets} reposts</span>
+          <span>{likes} likes</span>
+        </>
+      )}
+    </div>
+  );
+}
+
+function Actions({
+  className,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"div">) {
+  const context = useCompoundContext();
+  return (
+    <div
+      className={cn("flex justify-between border-t pt-2", className)}
+      {...props}
+    >
+      {children ?? (
+        <>
+          <Button variant="ghost" size="sm" onClick={context.onReply}>
+            <MessageCircle />
+            Reply
+          </Button>
+          <Button variant="ghost" size="sm" onClick={context.onRetweet}>
+            <Repeat2 />
+            Repost
+          </Button>
+          <Button variant="ghost" size="sm" onClick={context.onLike}>
+            <Heart />
+            Like
+          </Button>
+        </>
+      )}
+    </div>
+  );
+}
+
+function TwitterPostRoot({
+  onLike,
+  onReply,
+  onRetweet,
+  className,
+  children,
+  ...props
+}: TwitterPostProps) {
+  return (
+    <Provider value={{ onLike, onReply, onRetweet }}>
+      <article
+        className={cn(
+          "w-full space-y-3 rounded-xl border bg-card p-4 sm:p-6",
+          className
+        )}
+        {...props}
+      >
+        {children ?? (
+          <>
+            <Header />
+            <Text />
+            <Media />
+            <Metrics />
+            <Actions />
+          </>
+        )}
+      </article>
+    </Provider>
+  );
+}
+
+export const TwitterPost = Object.assign(TwitterPostRoot, {
+  Actions,
+  Header,
+  Media,
+  Metrics,
+  Text,
+});

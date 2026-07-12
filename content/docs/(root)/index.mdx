@@ -1,81 +1,49 @@
 ---
 title: Introduction
-description: A template for building and publishing your own shadcn registry components.
+description: Composition-first React blocks for polished MCP Apps.
 ---
 
-A **ready-to-use template** for creating and publishing custom components to the [shadcn registry](https://ui.shadcn.com/docs/registry).
+**mcpcn** is a shadcn-compatible registry of compound React components for [MCP Apps](https://modelcontextprotocol.io/). Its visual patterns start from [Manifest UI](https://github.com/mnfst/manifest-ui), while its APIs favor composition over fixed `data` and `actions` objects.
 
-## What You Get
+## Composition first
 
-- 📦 **Simple structure** - One component file + one config file
-- 📚 **Documentation site** - Powered by Fumadocs
-- 🎨 **Registry compatible** - Works with `npx shadcn add`
-- 🤖 **[Agent ready](https://www.mintlify.com/score/startercn)** - Ships with `llms.txt`, `llms-full.txt`, API catalog routes, and agent skill discovery endpoints
-- 🔊 **[Web audio feedback](https://audio.raphaelsalaja.com/)** - Built-in interaction sounds powered by `@web-kits/audio`
-- 📳 **[Web haptics](https://haptics.lochie.me/)** - Optional haptic feedback for supported devices via `web-haptics`
-- ✨ **[Motion animations](https://motion.dev/)** - Uses `motion` for animated UI states and transitions
-- 🎯 **[Animated icons](https://lucide-animated.com/)** - Includes reusable animated icons for buttons, sharing, and navigation
-- 🔄 **[View transitions](https://nextjs.org/docs/app/api-reference/config/next-config-js/viewTransition)** - Uses Next.js view transitions for smoother page changes
-- 🚀 **Deploy ready** - Deploy anywhere
+Each block has a root provider and named subcomponents. Put factual values on the subcomponent that displays them, share callbacks and formatters through the root context, and replace interface elements with children.
 
-## Tech Stack
-
-- `Next.js 16` + App Router
-- `React 19`
-- `Tailwind CSS 4`
-- `Fumadocs`
-- `motion`
-- `@web-kits/audio`
-- `web-haptics`
-- `shiki` + `rehype-pretty-code`
-
-## How It Works
-
-1. Edit your component at `registry/new-york/your-component.tsx`
-2. Update `registry.json` with your component name and details
-3. Run `pnpm registry:build`
-
-That's it. Deploy your app and users can install your component:
-
-```bash
-npx shadcn@latest add https://your-site.com/r/your-component.json
+```tsx
+<EventConfirmation onShare={(platform) => share(platform)}>
+  <EventConfirmation.Header orderNumber="#EVENT-2048" />
+  <EventConfirmation.Details
+    eventTitle="MCP Apps Summit"
+    eventDate="July 24 · 10 AM"
+    eventLocation="Bengaluru"
+  />
+  <EventConfirmation.Organizer name="mcpcn community">
+    <VerifiedBadge />
+  </EventConfirmation.Organizer>
+  <EventConfirmation.Share />
+</EventConfirmation>
 ```
 
-## FAQ
+Omit the root children when you want a polished quick-start composition.
 
-<Accordion type="multiple">
+## Registry
 
-<AccordionItem value="faq-1">
-<AccordionTrigger>
-Why copy/paste instead of npm packages?
-</AccordionTrigger>
-<AccordionContent>
+The registry includes 21 blocks across payment, events, social, forms, blogging, lists, status, and miscellaneous categories. Every block includes:
 
-The shadcn philosophy gives you **ownership** of the code. You can customize components to your exact needs without fighting library constraints.
+- A typed compound API
+- Contextual shared behavior
+- Arbitrary child composition
+- Responsive semantic Tailwind styles
+- Quick-start and composed examples
 
-</AccordionContent>
-</AccordionItem>
+Install a block directly:
 
-<AccordionItem value="faq-2">
-<AccordionTrigger>
-Which frameworks are supported?
-</AccordionTrigger>
-<AccordionContent>
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/event-confirmation.json
+```
 
-Any React framework: Next.js, Remix, Astro, Gatsby, Vite, etc.
+Browse the block categories in the documentation sidebar or open the full registry at `/r/registry.json`.
 
-</AccordionContent>
-</AccordionItem>
+## Why copy/paste?
 
-<AccordionItem value="faq-3">
-<AccordionTrigger>
-Can I publish multiple components?
-</AccordionTrigger>
-<AccordionContent>
-
-Yes! Add more files to `registry/new-york/` and list them in `registry.json`.
-
-</AccordionContent>
-</AccordionItem>
-
-</Accordion>
+The shadcn model gives your application ownership of the component code. You can adapt layout, behavior, and product language without waiting for a package API to anticipate your use case.

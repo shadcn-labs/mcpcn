@@ -45,8 +45,8 @@ export const formatCode = async (code: string) => {
   let formattedCode = code;
 
   formattedCode = formattedCode.replaceAll(
-    "@/registry/new-york/",
-    "@/components/"
+    /@\/registry\/[^/]+\//g,
+    "@/components/ui/"
   );
 
   formattedCode = formattedCode.replaceAll("export default", "export");

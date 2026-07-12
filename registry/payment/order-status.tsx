@@ -3,63 +3,172 @@
 import { Check, Clock } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 
-import { createCompoundBlock } from "../_lib/compound";
+import { cn } from "@/lib/utils";
 
-type ActionContext = Record<string, unknown>;
+import { createCompoundContext, statusClasses } from "../_lib/compound";
+import type { TimelineStep } from "../_lib/compound";
 
-export type OrderStatusProps = Omit<
-  ComponentPropsWithoutRef<"div">,
-  "onSelect" | "onToggle" | "onSubmit"
->;
+const { Provider, useCompoundContext } =
+  createCompoundContext<Record<string, never>>("OrderStatus");
 
-export const OrderStatus = createCompoundBlock<ActionContext, OrderStatusProps>(
+export type OrderStatusProps = ComponentPropsWithoutRef<"div">;
+
+interface TrackingNumberProps extends ComponentPropsWithoutRef<"div"> {
+  value?: string;
+}
+
+function TrackingNumber({
+  value = "1Z999AA10123456784",
+  className,
+  children,
+  ...props
+}: TrackingNumberProps) {
+  useCompoundContext();
+  return (
+    <div className={cn("rounded-lg bg-muted/40 p-3", className)} {...props}>
+      {children ?? (
+        <>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            Tracking number
+          </p>
+          <p className="font-mono text-sm">{value}</p>
+        </>
+      )}
+    </div>
+  );
+}
+
+interface StatusBadgeProps extends ComponentPropsWithoutRef<"span"> {
+  status?: string;
+}
+
+function StatusBadge({
+  status = "In transit",
+  className,
+  children,
+  ...props
+}: StatusBadgeProps) {
+  useCompoundContext();
+  return (
+    <span
+      className={cn(
+        "inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-xs font-medium",
+        className
+      )}
+      {...props}
+    >
+      {children ?? status}
+    </span>
+  );
+}
+
+interface TimelineProps extends ComponentPropsWithoutRef<"ol"> {
+  steps?: TimelineStep[];
+}
+
+function Timeline({
+  steps = [],
+  className,
+  children,
+  ...props
+}: TimelineProps) {
+  useCompoundContext();
+  return (
+    <ol className={cn("space-y-3 rounded-lg border p-4", className)} {...props}>
+      {children ??
+        steps.map((step) => (
+          <li key={step.label} className="flex gap-3">
+            <span className={statusClasses(step.status)}>
+              {step.status === "completed" ? (
+                <Check className="h-3.5 w-3.5" />
+              ) : (
+                <Clock className="h-3.5 w-3.5" />
+              )}
+            </span>
+            <span>
+              <span className="block text-sm font-medium">{step.label}</span>
+              {step.description ? (
+                <span className="block text-xs text-muted-foreground">
+                  {step.description}
+                </span>
+              ) : null}
+            </span>
+          </li>
+        ))}
+    </ol>
+  );
+}
+
+interface EstimatedDeliveryProps extends ComponentPropsWithoutRef<"p"> {
+  value?: string;
+}
+
+function EstimatedDelivery({
+  value = "Friday, January 20",
+  className,
+  children,
+  ...props
+}: EstimatedDeliveryProps) {
+  useCompoundContext();
+  return (
+    <p className={cn("text-sm text-muted-foreground", className)} {...props}>
+      {children ?? (
+        <>
+          Estimated delivery:{" "}
+          <span className="font-medium text-foreground">{value}</span>
+        </>
+      )}
+    </p>
+  );
+}
+
+const defaultSteps: TimelineStep[] = [
   {
-    buildContext: () => ({}),
-    className: "w-full rounded-xl border bg-card p-4 sm:p-6",
-    name: "OrderStatus",
-    renderDefault: () => (
-      <div className="space-y-4">
-        <OrderStatus.TrackingNumber>
-          <p className="text-sm text-muted-foreground">
-            Sample trackingnumber content that can be fully replaced by
-            children.
-          </p>
-        </OrderStatus.TrackingNumber>
-        <OrderStatus.StatusBadge>
-          <p className="text-sm text-muted-foreground">
-            Sample statusbadge content that can be fully replaced by children.
-          </p>
-        </OrderStatus.StatusBadge>
-        <OrderStatus.Timeline>
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Check className="h-4 w-4" />
-              <span>Received</span>
+    description: "January 16 · 9:42 AM",
+    label: "Order received",
+    status: "completed",
+  },
+  {
+    description: "January 17 · 3:18 PM",
+    label: "Shipped",
+    status: "completed",
+  },
+  {
+    description: "Arrived at regional facility",
+    label: "In transit",
+    status: "current",
+  },
+  { label: "Delivered", status: "pending" },
+];
+
+function OrderStatusRoot({ className, children, ...props }: OrderStatusProps) {
+  return (
+    <Provider value={{}}>
+      <div
+        className={cn(
+          "w-full space-y-4 rounded-xl border bg-card p-4 sm:p-6",
+          className
+        )}
+        {...props}
+      >
+        {children ?? (
+          <>
+            <div className="flex items-center justify-between gap-3">
+              <TrackingNumber />
+              <StatusBadge />
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              <span>Processing</span>
-            </div>
-          </div>
-        </OrderStatus.Timeline>
-        <OrderStatus.EstimatedDelivery>
-          <p className="text-sm text-muted-foreground">
-            Sample estimateddelivery content that can be fully replaced by
-            children.
-          </p>
-        </OrderStatus.EstimatedDelivery>
+            <Timeline steps={defaultSteps} />
+            <EstimatedDelivery />
+          </>
+        )}
       </div>
-    ),
-    slots: {
-      EstimatedDelivery: { className: "text-sm text-muted-foreground" },
-      StatusBadge: {
-        className:
-          "inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-xs font-medium",
-      },
-      Timeline: { className: "rounded-lg border p-3" },
-      TrackingNumber: {
-        className: "rounded-lg bg-muted/40 p-3 font-mono text-sm",
-      },
-    },
-  }
-);
+    </Provider>
+  );
+}
+
+export const OrderStatus = Object.assign(OrderStatusRoot, {
+  EstimatedDelivery,
+  StatusBadge,
+  Timeline,
+  TrackingNumber,
+});

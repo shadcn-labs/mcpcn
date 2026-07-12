@@ -1,103 +1,66 @@
 ---
 title: Installation
-description: How to use this template to build your own shadcn component.
+description: Install and compose mcpcn blocks in a React application.
 ---
 
-## Building Your Component
+## Prerequisites
 
-### 1. Fork the Template
+mcpcn targets React applications configured for shadcn/ui and Tailwind CSS. Initialize shadcn first if your project does not already have a `components.json` file.
 
-Click "Use this template" on [GitHub](https://github.com/mehmetpekcan/shadcn-registry-kit).
+## Install a block
 
-### 2. Install Dependencies
+Use the block’s registry URL:
+
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/event-confirmation.json
+```
+
+The installer copies the block, its category types, and the small compound-context helper into your application.
+
+## Use the default composition
+
+Every root renders a ready-to-use default when no children are supplied:
+
+```tsx
+import { EventConfirmation } from "@/components/ui/event-confirmation";
+
+export function Confirmation() {
+  return <EventConfirmation onViewTickets={() => openTickets()} />;
+}
+```
+
+## Compose the slots
+
+Supply named children when your interface needs different content or structure:
+
+```tsx
+<EventConfirmation onFollowOrganizer={() => follow()}>
+  <EventConfirmation.Header
+    heading="You’re on the list"
+    orderNumber="#EVENT-2048"
+  />
+  <EventConfirmation.Details
+    eventTitle="MCP Apps Summit"
+    ticketCount={1}
+    recipientEmail="builder@example.com"
+  />
+  <EventConfirmation.Organizer name="mcpcn community">
+    <VerifiedBadge />
+  </EventConfirmation.Organizer>
+</EventConfirmation>
+```
+
+Subcomponents must remain inside their root. Rendering one outside its provider throws a clear runtime error.
+
+## Local development
+
+To work on this registry itself:
 
 ```bash
 pnpm install
-```
-
-### 3. Create Your Component
-
-Replace the placeholder at `registry/new-york/your-component.tsx`:
-
-```tsx
-import { forwardRef, HTMLAttributes } from "react";
-import { cn } from "@/lib/utils";
-
-export interface MyButtonProps extends HTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "outline";
-}
-
-const MyButton = forwardRef<HTMLButtonElement, MyButtonProps>(
-  ({ className, variant = "default", ...props }, ref) => {
-    return (
-      <button
-        ref={ref}
-        className={cn(
-          "rounded-md px-4 py-2 font-medium",
-          variant === "default" && "bg-primary text-primary-foreground",
-          variant === "outline" && "border border-input",
-          className
-        )}
-        {...props}
-      />
-    );
-  }
-);
-
-MyButton.displayName = "MyButton";
-
-export { MyButton };
-```
-
-### 4. Update registry.json
-
-```json
-{
-  "name": "your-name/your-registry",
-  "homepage": "https://your-site.com",
-  "items": [
-    {
-      "name": "my-button",
-      "type": "registry:ui",
-      "title": "My Button",
-      "description": "A custom button component.",
-      "files": [
-        {
-          "path": "registry/new-york/my-button.tsx",
-          "type": "registry:ui",
-          "target": "components/ui/my-button.tsx"
-        }
-      ]
-    }
-  ]
-}
-```
-
-### 5. Build & Deploy
-
-```bash
+pnpm typecheck
 pnpm registry:build
-pnpm build
+pnpm dev
 ```
 
-Deploy your app and your component is live!
-
----
-
-## Installing Components
-
-To install a component from any registry built with this template:
-
-```bash
-npx shadcn@latest add https://example.com/r/my-button.json
-```
-
-Then use it:
-
-```tsx
-import { MyButton } from "@/components/ui/my-button";
-
-export function Demo() {
-  return <MyButton variant="outline">Click me</MyButton>;
-}
-```
+Run `pnpm build` before deployment to regenerate the registry and verify the documentation site.

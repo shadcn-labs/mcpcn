@@ -7,20 +7,17 @@ export default function ArticlePreviewDemo() {
     <div className="grid gap-6 lg:grid-cols-2">
       <ArticlePreview />
       <ArticlePreview>
-        <ArticlePreview.Header>
-          <div>
-            <p className="font-semibold">Custom Article Preview</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
-          </div>
-        </ArticlePreview.Header>
+        <ArticlePreview.Header
+          title="Why children are the best escape hatch"
+          author="mcpcn team"
+          date="Today"
+        />
         <ArticlePreview.Excerpt>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
+          A component API stays useful longer when consumers can supply ordinary
+          JSX.
         </ArticlePreview.Excerpt>
+        <ArticlePreview.Tags tags={["API design", "React"]} />
+        <ArticlePreview.CTA>Open article</ArticlePreview.CTA>
       </ArticlePreview>
     </div>
   );

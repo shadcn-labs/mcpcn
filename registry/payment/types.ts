@@ -1,10 +1,21 @@
-export type SharePlatform = "facebook" | "twitter" | "messenger" | "email";
+import type { TimelineStep } from "../_lib/compound";
 
-export interface CompoundItem {
-  id?: string;
-  title?: string;
-  description?: string;
+export interface OrderItem {
   image?: string;
-  price?: number;
-  status?: "completed" | "current" | "pending" | string;
+  name: string;
+  price: number;
+  quantity?: number;
+  sku?: string;
+  variant?: string;
+}
+
+export interface PaymentMethod {
+  description?: string;
+  label: string;
+  value: string;
+}
+
+export interface RefundDetails {
+  amount: number;
+  steps: TimelineStep[];
 }

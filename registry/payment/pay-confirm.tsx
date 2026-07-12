@@ -1,100 +1,199 @@
 "use client";
 
-import { ShieldCheck } from "lucide-react";
+import { Check, CreditCard, ShieldCheck } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-import { createCompoundBlock, formatPrice } from "../_lib/compound";
+import { createCompoundContext, formatPrice } from "../_lib/compound";
 
-interface ActionContext {
-  [key: string]: unknown;
-  currency?: string;
-  onConfirm?: () => void;
-  onCancel?: () => void;
+interface PayConfirmContextValue {
+  currency: string;
   formatPrice: (value: number) => string;
-}
-
-export interface PayConfirmProps extends Omit<
-  ComponentPropsWithoutRef<"div">,
-  "onSelect" | "onToggle" | "onSubmit"
-> {
-  currency?: string;
-  onConfirm?: () => void;
+  isLoading: boolean;
   onCancel?: () => void;
+  onConfirm?: () => void;
 }
 
-export const PayConfirm = createCompoundBlock<ActionContext, PayConfirmProps>({
-  buildContext: (props) => ({
-    currency: props.currency ?? "USD",
-    formatPrice: (value: number) => formatPrice(value, props.currency ?? "USD"),
-    onCancel: props.onCancel,
-    onConfirm: props.onConfirm,
-  }),
-  className: "w-full rounded-xl border bg-card p-4 sm:p-6",
-  name: "PayConfirm",
-  renderDefault: () => (
-    <div className="space-y-4">
-      <PayConfirm.Header>
-        <div className="flex items-center gap-3">
-          <ShieldCheck className="h-5 w-5" />
-          <div>
-            <p className="font-semibold">Payconfirm</p>
-            <p className="text-sm text-muted-foreground">
-              Composition-first MCP app block
-            </p>
-          </div>
-        </div>
-      </PayConfirm.Header>
-      <PayConfirm.CardPreview>
-        <p className="text-sm text-muted-foreground">
-          Sample cardpreview content that can be fully replaced by children.
-        </p>
-      </PayConfirm.CardPreview>
-      <PayConfirm.Amount>
-        <p className="text-sm text-muted-foreground">
-          Sample amount content that can be fully replaced by children.
-        </p>
-      </PayConfirm.Amount>
-      <PayConfirm.Disclaimer>
-        <p className="text-sm text-muted-foreground">
-          Sample disclaimer content that can be fully replaced by children.
-        </p>
-      </PayConfirm.Disclaimer>
-      <PayConfirm.Actions />
+const { Provider, useCompoundContext } =
+  createCompoundContext<PayConfirmContextValue>("PayConfirm");
+
+export interface PayConfirmProps extends ComponentPropsWithoutRef<"div"> {
+  currency?: string;
+  isLoading?: boolean;
+  onCancel?: () => void;
+  onConfirm?: () => void;
+}
+
+function Header({
+  className,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"div">) {
+  useCompoundContext();
+  return (
+    <div className={cn("text-center", className)} {...props}>
+      <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+        <ShieldCheck className="h-5 w-5" />
+      </div>
+      {children ?? (
+        <>
+          <h2 className="font-semibold leading-none tracking-tight">
+            Confirm payment
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Review and confirm your payment details
+          </p>
+        </>
+      )}
     </div>
-  ),
-  slots: {
-    Actions: {
-      render: ({ className, children }, context) =>
-        children ? (
-          <div className={cn("flex gap-2", className)}>{children}</div>
-        ) : (
-          <div className={cn("flex gap-2", className)}>
-            <Button
-              variant="outline"
-              onClick={(context as { onCancel?: () => void }).onCancel}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={
-                (context as { onConfirm?: () => void }).onConfirm ??
-                (context as { onLike?: () => void }).onLike ??
-                (context as { onPlay?: () => void }).onPlay
-              }
-            >
-              Continue
-            </Button>
+  );
+}
+
+interface AmountProps extends ComponentPropsWithoutRef<"div"> {
+  amount?: number;
+}
+
+function Amount({ amount, className, children, ...props }: AmountProps) {
+  const context = useCompoundContext();
+  return (
+    <div
+      className={cn("rounded-lg bg-muted p-4 text-center", className)}
+      {...props}
+    >
+      {children ?? (
+        <>
+          <p className="text-sm text-muted-foreground">Amount to pay</p>
+          <p className="text-2xl font-semibold">
+            {context.formatPrice(amount ?? 99.99)}
+          </p>
+        </>
+      )}
+    </div>
+  );
+}
+
+interface CardPreviewProps extends ComponentPropsWithoutRef<"div"> {
+  brand?: string;
+  last4?: string;
+}
+
+function CardPreview({
+  brand = "Visa",
+  last4 = "4242",
+  className,
+  children,
+  ...props
+}: CardPreviewProps) {
+  useCompoundContext();
+  return (
+    <div
+      className={cn("flex items-center justify-between", className)}
+      {...props}
+    >
+      {children ?? (
+        <>
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted">
+              <CreditCard className="h-4 w-4 text-muted-foreground" />
+            </div>
+            <div>
+              <p className="text-sm font-medium">{brand}</p>
+              <p className="text-sm text-muted-foreground">•••• {last4}</p>
+            </div>
           </div>
-        ),
-    },
-    Amount: {
-      className: "rounded-lg bg-muted p-4 text-center text-2xl font-semibold",
-    },
-    CardPreview: { className: "rounded-lg border bg-muted/30 p-4" },
-    Disclaimer: { className: "text-xs text-muted-foreground" },
-    Header: { className: "rounded-lg bg-muted/40 p-4" },
-  },
+          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-foreground">
+            <Check className="h-3 w-3 text-background" />
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function Disclaimer({
+  className,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"p">) {
+  useCompoundContext();
+  return (
+    <p className={cn("text-xs text-muted-foreground", className)} {...props}>
+      {children ?? "Your payment details are encrypted and securely processed."}
+    </p>
+  );
+}
+
+function Actions({
+  className,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"div">) {
+  const { isLoading, onCancel, onConfirm } = useCompoundContext();
+  return (
+    <div className={cn("flex gap-3", className)} {...props}>
+      {children ?? (
+        <>
+          <Button
+            className="flex-1"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+          <Button className="flex-1" onClick={onConfirm} disabled={isLoading}>
+            {isLoading ? "Processing…" : "Confirm"}
+          </Button>
+        </>
+      )}
+    </div>
+  );
+}
+
+function PayConfirmRoot({
+  currency = "USD",
+  isLoading = false,
+  onCancel,
+  onConfirm,
+  className,
+  children,
+  ...props
+}: PayConfirmProps) {
+  const value = {
+    currency,
+    formatPrice: (amount: number) => formatPrice(amount, currency),
+    isLoading,
+    onCancel,
+    onConfirm,
+  };
+
+  return (
+    <Provider value={value}>
+      <Card
+        className={cn("w-full max-w-md space-y-4 p-6", className)}
+        {...props}
+      >
+        {children ?? (
+          <>
+            <Header />
+            <Amount />
+            <CardPreview />
+            <Disclaimer />
+            <Actions />
+          </>
+        )}
+      </Card>
+    </Provider>
+  );
+}
+
+export const PayConfirm = Object.assign(PayConfirmRoot, {
+  Actions,
+  Amount,
+  CardPreview,
+  Disclaimer,
+  Header,
 });

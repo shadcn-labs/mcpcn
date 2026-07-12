@@ -1,10 +1,18 @@
-export type SharePlatform = "facebook" | "twitter" | "messenger" | "email";
+export interface SocialProfile {
+  avatar?: string;
+  handle?: string;
+  name: string;
+}
 
-export interface CompoundItem {
-  id?: string;
-  title?: string;
+export interface SocialMetrics {
+  likes?: number;
+  replies?: number;
+  retweets?: number;
+}
+
+export interface VideoDetails {
+  channel: string;
   description?: string;
-  image?: string;
-  price?: number;
-  status?: "completed" | "current" | "pending" | string;
+  duration?: string;
+  title: string;
 }

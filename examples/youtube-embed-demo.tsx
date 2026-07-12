@@ -7,20 +7,15 @@ export default function YoutubeEmbedDemo() {
     <div className="grid gap-6 lg:grid-cols-2">
       <YoutubeEmbed />
       <YoutubeEmbed>
-        <YoutubeEmbed.Header>
-          <div>
-            <p className="font-semibold">Custom Youtube Embed</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
-          </div>
-        </YoutubeEmbed.Header>
+        <YoutubeEmbed.Header channel="mcpcn" subscribers="New registry" />
         <YoutubeEmbed.VideoThumbnail>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
+          <div className="aspect-video bg-gradient-to-br from-red-500 to-fuchsia-700" />
         </YoutubeEmbed.VideoThumbnail>
+        <YoutubeEmbed.Description
+          title="Composition without limits"
+          description="A practical tour of compound MCP App blocks."
+        />
+        <YoutubeEmbed.Actions />
       </YoutubeEmbed>
     </div>
   );

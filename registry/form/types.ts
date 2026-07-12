@@ -1,10 +1,15 @@
-export type SharePlatform = "facebook" | "twitter" | "messenger" | "email";
-
-export interface CompoundItem {
-  id?: string;
-  title?: string;
-  description?: string;
-  image?: string;
-  price?: number;
-  status?: "completed" | "current" | "pending" | string;
+export interface AddressValue {
+  city?: string;
+  country?: string;
+  state?: string;
+  street?: string;
+  zip?: string;
 }
+
+export interface CountryOption {
+  callingCode?: string;
+  code: string;
+  label: string;
+}
+
+export type FieldValidator<T> = (value: T) => boolean;

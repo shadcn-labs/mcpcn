@@ -6,21 +6,17 @@ export default function PayConfirmDemo() {
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       <PayConfirm />
-      <PayConfirm>
+      <PayConfirm currency="EUR">
         <PayConfirm.Header>
-          <div>
-            <p className="font-semibold">Custom Pay Confirm</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
-          </div>
+          <h2 className="font-semibold">Approve subscription</h2>
+          <p className="text-sm text-muted-foreground">Billed once per year</p>
         </PayConfirm.Header>
-        <PayConfirm.CardPreview>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
-        </PayConfirm.CardPreview>
+        <PayConfirm.Amount amount={149} />
+        <PayConfirm.CardPreview brand="Mastercard" last4="2048" />
+        <PayConfirm.Disclaimer>
+          Cancel any time before renewal.
+        </PayConfirm.Disclaimer>
+        <PayConfirm.Actions />
       </PayConfirm>
     </div>
   );

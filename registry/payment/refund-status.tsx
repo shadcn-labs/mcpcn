@@ -4,84 +4,182 @@ import { Check, Clock, RefreshCcw } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-import { createCompoundBlock, formatPrice } from "../_lib/compound";
+import {
+  createCompoundContext,
+  formatPrice,
+  statusClasses,
+} from "../_lib/compound";
+import type { TimelineStep } from "../_lib/compound";
 
-interface ActionContext {
-  [key: string]: unknown;
-  currency?: string;
-  onSupport?: () => void;
+interface RefundStatusContextValue {
   formatPrice: (value: number) => string;
+  onSupport?: () => void;
 }
 
-export interface RefundStatusProps extends Omit<
-  ComponentPropsWithoutRef<"div">,
-  "onSelect" | "onToggle" | "onSubmit"
-> {
+const { Provider, useCompoundContext } =
+  createCompoundContext<RefundStatusContextValue>("RefundStatus");
+
+export interface RefundStatusProps extends ComponentPropsWithoutRef<"div"> {
   currency?: string;
   onSupport?: () => void;
 }
 
-export const RefundStatus = createCompoundBlock<
-  ActionContext,
-  RefundStatusProps
->({
-  buildContext: (props) => ({
-    currency: props.currency ?? "USD",
-    formatPrice: (value: number) => formatPrice(value, props.currency ?? "USD"),
-    onSupport: props.onSupport,
-  }),
-  className: "w-full rounded-xl border bg-card p-4 sm:p-6",
-  name: "RefundStatus",
-  renderDefault: () => (
-    <div className="space-y-4">
-      <RefundStatus.Header>
-        <div className="flex items-center gap-3">
-          <RefreshCcw className="h-5 w-5" />
-          <div>
-            <p className="font-semibold">Refundstatus</p>
+function Header({
+  className,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"div">) {
+  useCompoundContext();
+  return (
+    <div className={cn("flex items-center gap-3", className)} {...props}>
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+        <RefreshCcw className="h-5 w-5" />
+      </div>
+      <div>
+        {children ?? (
+          <>
+            <h2 className="font-semibold">Refund in progress</h2>
             <p className="text-sm text-muted-foreground">
-              Composition-first MCP app block
+              We’ll notify you when the funds arrive.
             </p>
-          </div>
-        </div>
-      </RefundStatus.Header>
-      <RefundStatus.RefundAmount>
-        <p className="text-sm text-muted-foreground">
-          Sample refundamount content that can be fully replaced by children.
-        </p>
-      </RefundStatus.RefundAmount>
-      <RefundStatus.Timeline>
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Check className="h-4 w-4" />
-            <span>Received</span>
-          </div>
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Clock className="h-4 w-4" />
-            <span>Processing</span>
-          </div>
-        </div>
-      </RefundStatus.Timeline>
-      <RefundStatus.ContactSupport />
+          </>
+        )}
+      </div>
     </div>
-  ),
-  slots: {
-    ContactSupport: {
-      render: ({ className, children }, context) => (
-        <Button
-          className={className}
-          variant="outline"
-          onClick={(context as { onSupport?: () => void }).onSupport}
-        >
-          {children ?? "Contact support"}
-        </Button>
-      ),
-    },
-    Header: { className: "rounded-lg bg-muted/40 p-4" },
-    RefundAmount: {
-      className: "rounded-lg bg-muted p-4 text-center font-semibold",
-    },
-    Timeline: { className: "rounded-lg border p-3" },
+  );
+}
+
+interface RefundAmountProps extends ComponentPropsWithoutRef<"div"> {
+  amount?: number;
+}
+
+function RefundAmount({
+  amount = 99.99,
+  className,
+  children,
+  ...props
+}: RefundAmountProps) {
+  const context = useCompoundContext();
+  return (
+    <div
+      className={cn("rounded-lg bg-muted p-4 text-center", className)}
+      {...props}
+    >
+      {children ?? (
+        <>
+          <p className="text-sm text-muted-foreground">Refund amount</p>
+          <p className="text-2xl font-semibold">
+            {context.formatPrice(amount)}
+          </p>
+        </>
+      )}
+    </div>
+  );
+}
+
+interface TimelineProps extends ComponentPropsWithoutRef<"ol"> {
+  steps?: TimelineStep[];
+}
+const defaultSteps: TimelineStep[] = [
+  { label: "Refund requested", status: "completed" },
+  {
+    description: "Usually 3–5 business days",
+    label: "Payment provider processing",
+    status: "current",
   },
+  { label: "Funds returned", status: "pending" },
+];
+
+function Timeline({
+  steps = defaultSteps,
+  className,
+  children,
+  ...props
+}: TimelineProps) {
+  useCompoundContext();
+  return (
+    <ol className={cn("space-y-3 rounded-lg border p-4", className)} {...props}>
+      {children ??
+        steps.map((step) => (
+          <li key={step.label} className="flex gap-3">
+            <span className={statusClasses(step.status)}>
+              {step.status === "completed" ? (
+                <Check className="h-3.5 w-3.5" />
+              ) : (
+                <Clock className="h-3.5 w-3.5" />
+              )}
+            </span>
+            <span>
+              <span className="block text-sm font-medium">{step.label}</span>
+              {step.description ? (
+                <span className="block text-xs text-muted-foreground">
+                  {step.description}
+                </span>
+              ) : null}
+            </span>
+          </li>
+        ))}
+    </ol>
+  );
+}
+
+function ContactSupport({
+  className,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"button">) {
+  const { onSupport } = useCompoundContext();
+  return (
+    <Button
+      variant="outline"
+      className={className}
+      onClick={onSupport}
+      {...props}
+    >
+      {children ?? "Contact support"}
+    </Button>
+  );
+}
+
+function RefundStatusRoot({
+  currency = "USD",
+  onSupport,
+  className,
+  children,
+  ...props
+}: RefundStatusProps) {
+  return (
+    <Provider
+      value={{
+        formatPrice: (value) => formatPrice(value, currency),
+        onSupport,
+      }}
+    >
+      <div
+        className={cn(
+          "w-full space-y-4 rounded-xl border bg-card p-4 sm:p-6",
+          className
+        )}
+        {...props}
+      >
+        {children ?? (
+          <>
+            <Header />
+            <RefundAmount />
+            <Timeline />
+            <ContactSupport />
+          </>
+        )}
+      </div>
+    </Provider>
+  );
+}
+
+export const RefundStatus = Object.assign(RefundStatusRoot, {
+  ContactSupport,
+  Header,
+  RefundAmount,
+  Timeline,
 });

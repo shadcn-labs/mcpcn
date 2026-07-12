@@ -7,20 +7,23 @@ export default function TestimonialCardDemo() {
     <div className="grid gap-6 lg:grid-cols-2">
       <TestimonialCard />
       <TestimonialCard>
-        <TestimonialCard.Header>
+        <TestimonialCard.Quote>
+          We replaced three rigid widgets with one composition that fits every
+          workflow.
+        </TestimonialCard.Quote>
+        <div className="flex items-center gap-3">
+          <TestimonialCard.Avatar name="Priya Rao">
+            <span>PR</span>
+          </TestimonialCard.Avatar>
           <div>
-            <p className="font-semibold">Custom Testimonial Card</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
+            <TestimonialCard.Author name="Priya Rao" />
+            <TestimonialCard.Metadata
+              jobTitle="Design engineer"
+              company="Orbit"
+              rating={5}
+            />
           </div>
-        </TestimonialCard.Header>
-        <TestimonialCard.Author>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
-        </TestimonialCard.Author>
+        </div>
       </TestimonialCard>
     </div>
   );

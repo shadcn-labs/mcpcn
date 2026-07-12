@@ -1,10 +1,13 @@
-export type SharePlatform = "facebook" | "twitter" | "messenger" | "email";
+import type { StepStatus } from "../_lib/compound";
 
-export interface CompoundItem {
-  id?: string;
-  title?: string;
+export interface StatusStep {
   description?: string;
-  image?: string;
-  price?: number;
-  status?: "completed" | "current" | "pending" | string;
+  label: string;
+  status?: StepStatus;
+}
+
+export interface DeliveryEstimate {
+  status: string;
+  trackingNumber?: string;
+  value: string;
 }

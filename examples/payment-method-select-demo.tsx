@@ -6,20 +6,18 @@ export default function PaymentMethodSelectDemo() {
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       <PaymentMethodSelect />
-      <PaymentMethodSelect>
-        <PaymentMethodSelect.Header>
-          <div>
-            <p className="font-semibold">Custom Payment Method Select</p>
-            <p className="text-sm text-muted-foreground">
-              A composed path with swapped children.
-            </p>
-          </div>
-        </PaymentMethodSelect.Header>
+      <PaymentMethodSelect selectedMethod="wallet">
+        <PaymentMethodSelect.Option
+          value="wallet"
+          label="Team wallet"
+          description="Use the shared organization balance"
+        >
+          <span className="rounded-full bg-muted px-2 py-1 text-xs">
+            Preferred
+          </span>
+        </PaymentMethodSelect.Option>
         <PaymentMethodSelect.TermsCheckbox>
-          <div className="flex items-center justify-between gap-3">
-            <span>Injected slot content</span>
-            <span className="text-sm text-muted-foreground">mcpcn</span>
-          </div>
+          Save this choice for future purchases
         </PaymentMethodSelect.TermsCheckbox>
       </PaymentMethodSelect>
     </div>
