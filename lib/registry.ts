@@ -1,6 +1,5 @@
-import path from "node:path";
-
 import { readFileFromRoot } from "@/lib/read-file";
+import registry from "@/registry.json";
 
 export const readOptionalFromRoot = async (
   relativePath: string
@@ -12,24 +11,12 @@ export const readOptionalFromRoot = async (
   }
 };
 
-const REGISTRY_CATEGORIES = [
-  "blogging",
-  "events",
-  "form",
-  "list",
-  "miscellaneous",
-  "payment",
-  "social",
-  "status",
-];
-
 export const getRegistryUiSourceCandidates = ({ name }: { name: string }) =>
-  REGISTRY_CATEGORIES.map((category) =>
-    path.join("registry", category, `${name}.tsx`)
-  );
-
-export const getDemoSource = (name: string): Promise<string | null> =>
-  readOptionalFromRoot(path.join("examples", `${name}.tsx`));
+  registry.items
+    .filter((item) => item.name === name)
+    .flatMap((item) => item.files)
+    .filter((file) => file.type === "registry:block")
+    .map((file) => file.path);
 
 export const getRegistrySource = async (
   name: string
