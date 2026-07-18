@@ -3,7 +3,6 @@ import { ComponentPreview } from "@/components/component-preview";
 import { HomeCtas } from "@/components/home-ctas";
 import { PageTransition } from "@/components/page-transition";
 import { ROUTES } from "@/constants/routes";
-import { cn } from "@/lib/utils";
 import { BreadcrumbJsonLd } from "@/seo/json-ld";
 
 export const dynamic = "force-static";
@@ -11,20 +10,18 @@ export const revalidate = false;
 
 const showcaseItems = [
   {
-    className: "md:col-span-2",
-    name: "event-card",
-    title: "Event Card",
-  },
-  {
-    name: "order-confirm",
-    title: "Order Confirm",
+    name: "amount-input",
+    title: "Amount Input",
   },
   {
     name: "message-bubble",
     title: "Message Bubble",
   },
   {
-    className: "md:col-span-2",
+    name: "status-badge",
+    title: "Status Badge",
+  },
+  {
     name: "stat-card",
     title: "Stat Card",
   },
@@ -55,11 +52,11 @@ export default function IndexPage() {
 
         <section className="container-wrapper pb-8 lg:pb-12">
           <div className="container">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {showcaseItems.map((item) => (
                 <ComponentPreview
                   key={item.name}
-                  className={cn("h-full", item.className)}
+                  className="h-full"
                   name={item.name}
                   showcase
                   title={item.title}

@@ -1,3 +1,5 @@
+import { ROUTES } from "./routes";
+
 export const FALLBACK_SITE_ORIGIN = "https://mcpcn.dev" as const;
 
 const getBaseUrl = () => {
@@ -16,8 +18,8 @@ const baseUrl = getBaseUrl();
 
 export const SITE = {
   AUTHOR: {
-    NAME: "mcpcn maintainers",
-    TWITTER: "@shadcn",
+    NAME: "Aniket Pawar",
+    TWITTER: "@alaymanguy",
   },
   DESCRIPTION: {
     LONG: "Composition-first React blocks for building polished MCP Apps, distributed through a shadcn-compatible registry.",
@@ -47,3 +49,11 @@ export const META_THEME_COLORS = {
 export const UTM_PARAMS = {
   utm_source: new URL(baseUrl).hostname,
 };
+
+export const TOP_LEVEL_SECTIONS = [
+  { href: ROUTES.DOCS, name: "Introduction" },
+  { href: ROUTES.DOCS_INSTALLATION, name: "Installation" },
+  { href: ROUTES.DOCS_BLOCKS, name: "Blocks" },
+  { href: ROUTES.LLMS, name: "llms.txt" },
+  // { href: ROUTES.DOCS_CHANGELOG, name: "Changelog" },
+];

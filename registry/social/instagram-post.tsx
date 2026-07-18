@@ -40,7 +40,7 @@ const DEFAULT_POST: InstagramPostData = {
   author: "mcpcn",
   avatar: "M",
   caption: "Building the future of agentic UIs, one component at a time.",
-  image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+  image: "https://picsum.photos/seed/instagram-post/800/800",
   likes: "2,847",
   time: "2h",
   verified: true,

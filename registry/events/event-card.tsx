@@ -48,7 +48,7 @@ const DEFAULT_EVENT: Event = {
   city: "Los Angeles",
   dateTime: "Tonight 9:00 PM - 3:00 AM",
   eventSignal: "going-fast",
-  image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800",
+  image: "https://picsum.photos/seed/event-card/800/450",
   neighborhood: "Echo Park",
   organizerRating: 4.8,
   priceRange: "$45 - $150",

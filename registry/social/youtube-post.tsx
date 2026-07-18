@@ -39,8 +39,7 @@ const DEFAULT_POST: YouTubePostData = {
   avatar: "M",
   channel: "mcpcn",
   duration: "15:42",
-  thumbnail:
-    "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800",
+  thumbnail: "https://picsum.photos/seed/youtube-post/800/450",
   time: "3 days ago",
   title: "Building Agentic UIs with mcpcn",
   views: "12K",

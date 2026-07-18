@@ -147,7 +147,7 @@ export interface MapCarouselProps {
 const DEFAULT_LOCATIONS: Location[] = [
   {
     coordinates: [37.7935, -122.3938],
-    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400",
+    image: "https://picsum.photos/seed/hotel-1/400/300",
     name: "The Embarcadero Grand",
     price: 329,
     priceLabel: "$329 per night",
@@ -157,7 +157,7 @@ const DEFAULT_LOCATIONS: Location[] = [
   },
   {
     coordinates: [37.7925, -122.4138],
-    image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400",
+    image: "https://picsum.photos/seed/hotel-2/400/300",
     name: "Hotel Nob Hill",
     price: 275,
     priceLabel: "$275 per night",
@@ -167,7 +167,7 @@ const DEFAULT_LOCATIONS: Location[] = [
   },
   {
     coordinates: [37.8025, -122.4382],
-    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400",
+    image: "https://picsum.photos/seed/hotel-3/400/300",
     name: "Marina Bay Suites",
     price: 389,
     priceLabel: "$389 per night",
@@ -177,7 +177,7 @@ const DEFAULT_LOCATIONS: Location[] = [
   },
   {
     coordinates: [37.7599, -122.4148],
-    image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400",
+    image: "https://picsum.photos/seed/hotel-4/400/300",
     name: "Mission Street Inn",
     price: 189,
     priceLabel: "$189 per night",

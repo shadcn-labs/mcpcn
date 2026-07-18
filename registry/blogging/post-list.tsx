@@ -46,10 +46,12 @@ export interface PostListProps {
 
 const DEFAULT_POSTS: Post[] = [
   {
-    author: { avatar: "https://i.pravatar.cc/150?u=sarah", name: "Sarah Chen" },
+    author: {
+      avatar: "https://picsum.photos/seed/sarah/150/150",
+      name: "Sarah Chen",
+    },
     category: "Tutorial",
-    coverImage:
-      "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800",
+    coverImage: "https://picsum.photos/seed/post-list-1/800/450",
     excerpt:
       "Learn how to build conversational interfaces for AI-powered applications.",
     publishedAt: "2024-01-15",
@@ -58,10 +60,12 @@ const DEFAULT_POSTS: Post[] = [
     title: "Getting Started with Agentic UI Components",
   },
   {
-    author: { avatar: "https://i.pravatar.cc/150?u=alex", name: "Alex Rivera" },
+    author: {
+      avatar: "https://picsum.photos/seed/alex/150/150",
+      name: "Alex Rivera",
+    },
     category: "Design",
-    coverImage:
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800",
+    coverImage: "https://picsum.photos/seed/post-list-2/800/450",
     excerpt: "Best practices for intuitive UI components in chat environments.",
     publishedAt: "2024-01-12",
     readTime: "8 min read",
@@ -70,12 +74,11 @@ const DEFAULT_POSTS: Post[] = [
   },
   {
     author: {
-      avatar: "https://i.pravatar.cc/150?u=jordan",
+      avatar: "https://picsum.photos/seed/jordan/150/150",
       name: "Jordan Kim",
     },
     category: "Development",
-    coverImage:
-      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800",
+    coverImage: "https://picsum.photos/seed/post-list-3/800/450",
     excerpt: "Use Model Context Protocol for seamless backend communication.",
     publishedAt: "2024-01-10",
     readTime: "12 min read",
@@ -84,12 +87,11 @@ const DEFAULT_POSTS: Post[] = [
   },
   {
     author: {
-      avatar: "https://i.pravatar.cc/150?u=morgan",
+      avatar: "https://picsum.photos/seed/morgan/150/150",
       name: "Morgan Lee",
     },
     category: "Tutorial",
-    coverImage:
-      "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800",
+    coverImage: "https://picsum.photos/seed/post-list-4/800/450",
     excerpt:
       "A guide to secure payment experiences in conversational interfaces.",
     publishedAt: "2024-01-08",
@@ -99,12 +101,11 @@ const DEFAULT_POSTS: Post[] = [
   },
   {
     author: {
-      avatar: "https://i.pravatar.cc/150?u=casey",
+      avatar: "https://picsum.photos/seed/casey/150/150",
       name: "Casey Taylor",
     },
     category: "Development",
-    coverImage:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+    coverImage: "https://picsum.photos/seed/post-list-5/800/450",
     excerpt:
       "Implement real-time updates for collaborative agentic experiences.",
     publishedAt: "2024-01-06",

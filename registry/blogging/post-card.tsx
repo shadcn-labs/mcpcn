@@ -34,12 +34,11 @@ export const usePostCard = () => {
 
 const DEFAULT_POST: Post = {
   author: {
-    avatar: "https://i.pravatar.cc/150?u=sarah",
+    avatar: "https://picsum.photos/seed/sarah/150/150",
     name: "Sarah Chen",
   },
   category: "Tutorial",
-  coverImage:
-    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800",
+  coverImage: "https://picsum.photos/seed/post-card/800/450",
   excerpt:
     "Learn how to build conversational interfaces with our comprehensive component library designed for AI-powered applications.",
   publishedAt: "2024-01-15",

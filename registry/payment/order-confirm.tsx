@@ -45,7 +45,7 @@ export const useOrderConfirm = () => {
 const DEFAULT_ORDER: OrderConfirmData = {
   deliveryDate: "Jan 20, 2024",
   price: 299,
-  productImage: "https://mcpcn.dev/demo/shoe-1.png",
+  productImage: "https://picsum.photos/seed/order-product/400/400",
   productName: "Air Force 1 '07",
 };
 

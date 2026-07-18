@@ -62,7 +62,7 @@ export const ComponentPreviewFrame = ({
         <div className="flex h-10 items-center border-b px-4 text-sm font-medium">
           {title}
         </div>
-        <div className="flex min-h-64 items-center justify-center p-4 sm:p-6">
+        <div className="flex min-h-40 items-center justify-center p-4 sm:p-6">
           <div className="w-full">{children}</div>
         </div>
       </div>

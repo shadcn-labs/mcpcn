@@ -80,14 +80,14 @@ const DEFAULT_EVENT: EventDetails = {
     showtime: "7:30 PM",
   },
   images: [
-    "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800",
-    "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800",
+    "https://picsum.photos/seed/event-detail-1/800/450",
+    "https://picsum.photos/seed/event-detail-2/800/450",
   ],
   organizer: {
     eventsCount: 154,
     followers: 1200,
     hostingYears: 8,
-    image: "https://i.pravatar.cc/80?u=midnight",
+    image: "https://picsum.photos/seed/midnight-lovers/80/80",
     name: "Midnight Lovers",
     rating: 4.5,
     reviewCount: 1067,

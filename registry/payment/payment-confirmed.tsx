@@ -44,7 +44,7 @@ export const usePaymentConfirmed = () => {
 const DEFAULT_PAYMENT: PaymentConfirmedData = {
   deliveryDate: "Jan 20, 2024",
   price: 299,
-  productImage: "https://mcpcn.dev/demo/shoe-1.png",
+  productImage: "https://picsum.photos/seed/payment-product/400/400",
   productName: "Air Force 1 '07",
 };
 

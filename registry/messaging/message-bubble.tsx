@@ -107,7 +107,7 @@ export interface MessageBubbleProps {
 
 const DEFAULT_TEXT_MESSAGE = {
   avatarFallback: "S",
-  avatarUrl: "https://i.pravatar.cc/150?u=sarah",
+  avatarUrl: "https://picsum.photos/seed/sarah/150/150",
   content: "Hey! How are you doing today?",
   time: "Dec 8, 10:30 AM",
 } satisfies NonNullable<MessageBubbleProps["data"]>;
@@ -204,10 +204,9 @@ export interface ImageMessageBubbleProps {
 
 const DEFAULT_IMAGE_MESSAGE = {
   avatarFallback: "A",
-  avatarUrl: "https://i.pravatar.cc/150?u=alex",
+  avatarUrl: "https://picsum.photos/seed/alex/150/150",
   content: "Check out this view!",
-  image:
-    "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400&h=300&fit=crop",
+  image: "https://picsum.photos/seed/message-attachment/400/300",
   time: "Dec 8, 2:45 PM",
 } satisfies NonNullable<ImageMessageBubbleProps["data"]>;
 
@@ -491,7 +490,7 @@ export interface VoiceMessageBubbleProps {
 
 const DEFAULT_VOICE_MESSAGE = {
   avatarFallback: "M",
-  avatarUrl: "https://i.pravatar.cc/150?u=mickael",
+  avatarUrl: "https://picsum.photos/seed/mickael/150/150",
   duration: "0:42",
   time: "Dec 8, 3:15 PM",
 } satisfies NonNullable<VoiceMessageBubbleProps["data"]>;

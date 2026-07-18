@@ -70,7 +70,7 @@ const DEFAULT_PRODUCTS: Product[] = [
   {
     badge: "New",
     description: "Nike",
-    image: "https://mcpcn.dev/demo/shoe-1.png",
+    image: "https://picsum.photos/seed/product-1/400/400",
     inStock: true,
     name: "Air Force 1 '07",
     price: 119,
@@ -78,7 +78,7 @@ const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     description: "Nike",
-    image: "https://mcpcn.dev/demo/shoe-2.png",
+    image: "https://picsum.photos/seed/product-2/400/400",
     inStock: true,
     name: "Air Max 90",
     price: 140,
@@ -87,7 +87,7 @@ const DEFAULT_PRODUCTS: Product[] = [
   {
     badge: "-10%",
     description: "Nike",
-    image: "https://mcpcn.dev/demo/shoe-4.png",
+    image: "https://picsum.photos/seed/product-3/400/400",
     inStock: true,
     name: "Air Max Plus",
     originalPrice: 190,
@@ -96,7 +96,7 @@ const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     description: "Nike",
-    image: "https://mcpcn.dev/demo/shoe-3.png",
+    image: "https://picsum.photos/seed/product-4/400/400",
     inStock: true,
     name: "Dunk Low",
     price: 115,

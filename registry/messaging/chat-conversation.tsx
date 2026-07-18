@@ -50,8 +50,7 @@ const DEFAULT_MESSAGES: ChatMessage[] = [
     author: "Sarah",
     avatarFallback: "S",
     content: "Here's a preview of the dashboard",
-    image:
-      "https://images.unsplash.com/photo-1618477388954-7852f32655ec?w=400&h=300&fit=crop",
+    image: "https://picsum.photos/seed/chat-attachment/400/300",
     time: "10:32 AM",
     type: "image",
   },
