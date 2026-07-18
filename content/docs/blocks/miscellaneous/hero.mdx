@@ -70,32 +70,6 @@ Hero
 └── HeroTitle
 ```
 
-## Integrate with OpenUI
-
-Register `Hero` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
-
-```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { Hero } from "@/components/ui/hero";
-
-const OpenUIHero = defineComponent({
-  name: "Hero",
-  description:
-    "Landing hero section with optional logos, title, subtitle, CTA buttons, and tech logos footer. Supports image or text logos with separator.",
-  props: z.object({}),
-  component: () => <Hero />,
-});
-
-export const heroLibrary = createLibrary({
-  root: "Hero",
-  components: [OpenUIHero],
-});
-```
-
-For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
-
 ## Examples
 
 ### Two Logos
@@ -121,6 +95,32 @@ For richer generated compositions, define the child primitives separately and co
   src="examples/hero-minimal-demo.tsx"
   showCode
 />
+
+## OpenUI Integration
+
+Register `Hero` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { Hero } from "@/components/ui/hero";
+
+const OpenUIHero = defineComponent({
+  name: "Hero",
+  description:
+    "Landing hero section with optional logos, title, subtitle, CTA buttons, and tech logos footer. Supports image or text logos with separator.",
+  props: z.object({}),
+  component: () => <Hero />,
+});
+
+export const heroLibrary = createLibrary({
+  root: "Hero",
+  components: [OpenUIHero],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
 
 ## API Reference
 

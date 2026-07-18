@@ -70,32 +70,6 @@ EventCard
 └── EventCardTags
 ```
 
-## Integrate with OpenUI
-
-Register `EventCard` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
-
-```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { EventCard } from "@/components/ui/event-card";
-
-const OpenUIEventCard = defineComponent({
-  name: "EventCard",
-  description:
-    "Display event information with multiple layouts. Supports events with images, signals, vibe tags, and display-formatted date/time. Entire card is clickable.",
-  props: z.object({}),
-  component: () => <EventCard />,
-});
-
-export const event_cardLibrary = createLibrary({
-  root: "EventCard",
-  components: [OpenUIEventCard],
-});
-```
-
-For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
-
 ## Examples
 
 ### Compact
@@ -121,6 +95,32 @@ For richer generated compositions, define the child primitives separately and co
   src="examples/event-card-covered-demo.tsx"
   showCode
 />
+
+## OpenUI Integration
+
+Register `EventCard` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { EventCard } from "@/components/ui/event-card";
+
+const OpenUIEventCard = defineComponent({
+  name: "EventCard",
+  description:
+    "Display event information with multiple layouts. Supports events with images, signals, vibe tags, and display-formatted date/time. Entire card is clickable.",
+  props: z.object({}),
+  component: () => <EventCard />,
+});
+
+export const event_cardLibrary = createLibrary({
+  root: "EventCard",
+  components: [OpenUIEventCard],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
 
 ## API Reference
 

@@ -65,31 +65,6 @@ ProductList
 └── ProductListContent
 ```
 
-## Integrate with OpenUI
-
-Register `ProductList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
-
-```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { ProductList } from "@/components/ui/product-list";
-
-const OpenUIProductList = defineComponent({
-  name: "ProductList",
-  description: "Product list with list, grid, carousel, and picker variants.",
-  props: z.object({}),
-  component: () => <ProductList />,
-});
-
-export const product_listLibrary = createLibrary({
-  root: "ProductList",
-  components: [OpenUIProductList],
-});
-```
-
-For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
-
 ## Examples
 
 ### Grid
@@ -115,6 +90,31 @@ For richer generated compositions, define the child primitives separately and co
   src="examples/product-list-picker-demo.tsx"
   showCode
 />
+
+## OpenUI Integration
+
+Register `ProductList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { ProductList } from "@/components/ui/product-list";
+
+const OpenUIProductList = defineComponent({
+  name: "ProductList",
+  description: "Product list with list, grid, carousel, and picker variants.",
+  props: z.object({}),
+  component: () => <ProductList />,
+});
+
+export const product_listLibrary = createLibrary({
+  root: "ProductList",
+  components: [OpenUIProductList],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
 
 ## API Reference
 

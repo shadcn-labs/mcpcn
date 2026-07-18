@@ -65,7 +65,25 @@ LinkedInPost
 └── LinkedInPostContent
 ```
 
-## Integrate with OpenUI
+## Examples
+
+### With Media
+
+<ComponentPreview
+  name="linkedin-post-media"
+  src="examples/linkedin-post-media-demo.tsx"
+  showCode
+/>
+
+### Truncated Content
+
+<ComponentPreview
+  name="linkedin-post-truncated"
+  src="examples/linkedin-post-truncated-demo.tsx"
+  showCode
+/>
+
+## OpenUI Integration
 
 Register `LinkedInPost` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
@@ -89,24 +107,6 @@ export const linkedin_postLibrary = createLibrary({
 ```
 
 For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
-
-## Examples
-
-### With Media
-
-<ComponentPreview
-  name="linkedin-post-media"
-  src="examples/linkedin-post-media-demo.tsx"
-  showCode
-/>
-
-### Truncated Content
-
-<ComponentPreview
-  name="linkedin-post-truncated"
-  src="examples/linkedin-post-truncated-demo.tsx"
-  showCode
-/>
 
 ## API Reference
 

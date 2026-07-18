@@ -71,32 +71,6 @@ MessageBubble
 └── MessageBubbleContent
 ```
 
-## Integrate with OpenUI
-
-Register `MessageBubble` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
-
-```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { MessageBubble } from "@/components/ui/message-bubble";
-
-const OpenUIMessageBubble = defineComponent({
-  name: "MessageBubble",
-  description:
-    "Chat message bubbles with text, image, voice, and reaction variants.",
-  props: z.object({}),
-  component: () => <MessageBubble />,
-});
-
-export const message_bubbleLibrary = createLibrary({
-  root: "MessageBubble",
-  components: [OpenUIMessageBubble],
-});
-```
-
-For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
-
 ## Examples
 
 ### Image Messages
@@ -122,6 +96,32 @@ For richer generated compositions, define the child primitives separately and co
   src="examples/message-bubble-voice-demo.tsx"
   showCode
 />
+
+## OpenUI Integration
+
+Register `MessageBubble` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { MessageBubble } from "@/components/ui/message-bubble";
+
+const OpenUIMessageBubble = defineComponent({
+  name: "MessageBubble",
+  description:
+    "Chat message bubbles with text, image, voice, and reaction variants.",
+  props: z.object({}),
+  component: () => <MessageBubble />,
+});
+
+export const message_bubbleLibrary = createLibrary({
+  root: "MessageBubble",
+  components: [OpenUIMessageBubble],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
 
 ## API Reference
 

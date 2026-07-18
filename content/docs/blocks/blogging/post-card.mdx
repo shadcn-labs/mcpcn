@@ -71,32 +71,6 @@ PostCard
 └── PostCardText
 ```
 
-## Integrate with OpenUI
-
-Register `PostCard` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
-
-```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { PostCard } from "@/components/ui/post-card";
-
-const OpenUIPostCard = defineComponent({
-  name: "PostCard",
-  description:
-    "Post card with image, title, excerpt, author info and read more button. Supports default, compact, horizontal, and covered variants. Includes post-detail for fullscreen view.",
-  props: z.object({}),
-  component: () => <PostCard />,
-});
-
-export const post_cardLibrary = createLibrary({
-  root: "PostCard",
-  components: [OpenUIPostCard],
-});
-```
-
-For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
-
 ## Examples
 
 ### Without Image
@@ -130,6 +104,32 @@ For richer generated compositions, define the child primitives separately and co
   src="examples/post-card-covered-demo.tsx"
   showCode
 />
+
+## OpenUI Integration
+
+Register `PostCard` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+
+```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
+import { PostCard } from "@/components/ui/post-card";
+
+const OpenUIPostCard = defineComponent({
+  name: "PostCard",
+  description:
+    "Post card with image, title, excerpt, author info and read more button. Supports default, compact, horizontal, and covered variants. Includes post-detail for fullscreen view.",
+  props: z.object({}),
+  component: () => <PostCard />,
+});
+
+export const post_cardLibrary = createLibrary({
+  root: "PostCard",
+  components: [OpenUIPostCard],
+});
+```
+
+For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
 
 ## API Reference
 

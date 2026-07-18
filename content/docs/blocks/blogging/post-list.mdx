@@ -65,7 +65,25 @@ PostList
 └── PostListContent
 ```
 
-## Integrate with OpenUI
+## Examples
+
+### Grid
+
+<ComponentPreview
+  name="post-list-grid"
+  src="examples/post-list-grid-demo.tsx"
+  showCode
+/>
+
+### Carousel
+
+<ComponentPreview
+  name="post-list-carousel"
+  src="examples/post-list-carousel-demo.tsx"
+  showCode
+/>
+
+## OpenUI Integration
 
 Register `PostList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
@@ -90,24 +108,6 @@ export const post_listLibrary = createLibrary({
 ```
 
 For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
-
-## Examples
-
-### Grid
-
-<ComponentPreview
-  name="post-list-grid"
-  src="examples/post-list-grid-demo.tsx"
-  showCode
-/>
-
-### Carousel
-
-<ComponentPreview
-  name="post-list-carousel"
-  src="examples/post-list-carousel-demo.tsx"
-  showCode
-/>
 
 ## API Reference
 
