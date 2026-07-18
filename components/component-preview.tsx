@@ -68,14 +68,18 @@ const demos = {
 } as const;
 
 export const ComponentPreview = ({
+  className,
   name,
+  showcase = false,
   src,
   title,
   showCode = false,
   variant = "default",
   children,
 }: {
+  className?: string;
   name?: string;
+  showcase?: boolean;
   src?: string;
   title?: string;
   showCode?: boolean;
@@ -90,7 +94,11 @@ export const ComponentPreview = ({
 
   return (
     <>
-      <ComponentPreviewFrame>
+      <ComponentPreviewFrame
+        className={className}
+        showcase={showcase}
+        title={title}
+      >
         {children ??
           (Demo ? (
             <div

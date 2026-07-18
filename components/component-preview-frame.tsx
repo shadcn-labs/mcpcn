@@ -21,8 +21,14 @@ const modes: {
 
 export const ComponentPreviewFrame = ({
   children,
+  className,
+  showcase = false,
+  title,
 }: {
   children: ReactNode;
+  className?: string;
+  showcase?: boolean;
+  title?: string;
 }) => {
   const [mode, setMode] = useState<PreviewMode>("inline");
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
@@ -44,8 +50,26 @@ export const ComponentPreviewFrame = ({
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [isFullscreenOpen, isPipOpen]);
 
+  if (showcase) {
+    return (
+      <div
+        className={cn(
+          "not-prose h-full overflow-hidden rounded-xl border bg-background",
+          className
+        )}
+      >
+        <div className="flex h-10 items-center border-b px-4 text-sm font-medium">
+          {title}
+        </div>
+        <div className="flex min-h-64 items-center justify-center p-4 sm:p-6">
+          <div className="w-full">{children}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="not-prose my-6">
+    <div className={cn("not-prose my-6", className)}>
       <div
         aria-label="Preview layout"
         className="mb-2 flex items-center gap-1"
