@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 type PreviewMode = "inline" | "pip" | "full-width";
@@ -73,49 +74,49 @@ export const ComponentPreviewFrame = ({
       data-slot="component-preview"
       className={cn("not-prose my-6", className)}
     >
-      <div
-        aria-label="Preview layout"
-        className="mb-2 flex items-center gap-1"
-        role="group"
+      <Tabs
+        className="gap-0"
+        value={mode}
+        onValueChange={(value) => setMode(value as PreviewMode)}
       >
-        {modes.map(({ icon: Icon, label, value }) => (
-          <button
-            key={value}
-            aria-label={label}
-            aria-pressed={mode === value}
-            className={cn(
-              "inline-flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              mode === value &&
-                "bg-foreground text-background hover:bg-foreground hover:text-background"
-            )}
-            onClick={() => setMode(value)}
-            title={label}
-            type="button"
-          >
-            <Icon className="size-3.5" />
-          </button>
-        ))}
-      </div>
+        <TabsList aria-label="Preview layout" className="mb-2">
+          {modes.map(({ icon: Icon, label, value }) => (
+            <TabsTrigger
+              key={value}
+              aria-label={label}
+              title={label}
+              value={value}
+            >
+              <Icon />
+              {label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
 
-      <div className="flex min-h-[360px] items-center justify-center overflow-hidden rounded-xl border bg-background p-4 sm:p-8">
-        {mode === "inline" ? (
-          <div className="mx-auto w-full max-w-3xl">{children}</div>
-        ) : (
-          <button
-            className="inline-flex h-9 items-center justify-center rounded-md border bg-background px-4 text-sm font-medium shadow-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            onClick={() => {
-              if (mode === "pip") {
-                setIsPipOpen(true);
-              } else {
-                setIsFullscreenOpen(true);
-              }
-            }}
-            type="button"
-          >
-            {mode === "pip" ? "Open PiP" : "Open full-width"}
-          </button>
-        )}
-      </div>
+        <div className="flex min-h-[360px] items-center justify-center overflow-hidden rounded-xl border bg-background p-4 sm:p-8">
+          <TabsContent className="w-full" value="inline">
+            <div className="mx-auto w-full max-w-3xl">{children}</div>
+          </TabsContent>
+          <TabsContent className="w-full text-center" value="pip">
+            <button
+              className="inline-flex h-9 items-center justify-center rounded-md border bg-background px-4 text-sm font-medium shadow-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              onClick={() => setIsPipOpen(true)}
+              type="button"
+            >
+              Open PiP
+            </button>
+          </TabsContent>
+          <TabsContent className="w-full text-center" value="full-width">
+            <button
+              className="inline-flex h-9 items-center justify-center rounded-md border bg-background px-4 text-sm font-medium shadow-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              onClick={() => setIsFullscreenOpen(true)}
+              type="button"
+            >
+              Open full-width
+            </button>
+          </TabsContent>
+        </div>
+      </Tabs>
 
       {isPipOpen
         ? createPortal(

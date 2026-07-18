@@ -37,9 +37,7 @@ export const ComponentPreview = ({
       >
         {children ?? (Demo ? <Demo /> : null)}
       </ComponentPreviewFrame>
-      {showCode && src ? (
-        <ComponentSource src={src} title={title ?? src.split("/").at(-1)} />
-      ) : null}
+      {showCode && src ? <ComponentSource src={src} /> : null}
     </>
   );
 };
