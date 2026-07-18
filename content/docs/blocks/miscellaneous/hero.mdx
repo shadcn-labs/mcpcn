@@ -62,21 +62,13 @@ Use the following composition to build an `Hero`:
 
 ```text
 Hero
-└── Hero.Content
+├── HeroActions
+├── HeroContent
+├── HeroDescription
+├── HeroLogos
+├── HeroTechLogos
+└── HeroTitle
 ```
-
-## Examples
-
-### With a custom heading
-
-This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original component view needs no repeated props.
-
-<ComponentPreview
-  name="hero"
-  src="examples/hero-demo.tsx"
-  variant="composed"
-  showCode
-/>
 
 ## Integrate with OpenUI
 

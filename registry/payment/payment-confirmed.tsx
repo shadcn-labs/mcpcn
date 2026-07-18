@@ -1,340 +1,374 @@
-/* oxlint-disable complexity */
 "use client";
 
 import { Check, ExternalLink } from "lucide-react";
+import { createContext, createElement, useContext } from "react";
+import type { ComponentProps, ImgHTMLAttributes } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
+import { cn } from "@/lib/utils";
 
-import { demoPaymentConfirmed } from "./demo/payment";
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * PaymentConfirmedProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for a payment confirmation card with product image, price, delivery info,
- * and tracking button. Supports default (detailed) and compressed layouts.
- */
-export interface PaymentConfirmedProps {
-  data?: {
-    /** Order reference number displayed in the header. */
-    orderId?: string;
-    /** Name of the purchased product. */
-    productName?: string;
-    /** Product description or variant details (e.g., "Nike - Size 42 - White"). Only shown in default variant. */
-    productDescription?: string;
-    /** URL to the product image. */
-    productImage?: string;
-    /** Total price paid for the order. */
-    price?: number;
-    /** Expected delivery date string (e.g., "Tue. Dec 10"). */
-    deliveryDate?: string;
-  };
-  actions?: {
-    /** Called when the user clicks the track order button. */
-    onTrackOrder?: () => void;
-  };
-  appearance?: {
-    /**
-     * Display variant: "default" shows detailed layout with header, "compressed" shows compact inline layout.
-     * @default "default"
-     */
-    variant?: "default" | "compressed";
-    /**
-     * Currency code for formatting the price.
-     * @default "EUR"
-     */
-    currency?: string;
-  };
+interface PaymentConfirmedData {
+  deliveryDate?: string;
+  orderId?: string;
+  price?: number;
+  productDescription?: string;
+  productImage?: string;
+  productName?: string;
 }
 
-const PaymentConfirmedView = ({
-  data,
-  actions,
-  appearance,
-}: PaymentConfirmedProps) => {
-  const resolved: NonNullable<PaymentConfirmedProps["data"]> =
-    data ?? demoPaymentConfirmed;
-  const orderId = resolved?.orderId;
-  const productName = resolved?.productName;
-  const productDescription = resolved?.productDescription;
-  const productImage = resolved?.productImage;
-  const price = resolved?.price;
-  const deliveryDate = resolved?.deliveryDate;
-  const { onTrackOrder } = actions ?? {};
-  const { variant = "default", currency = "EUR" } = appearance ?? {};
+interface PaymentConfirmedContextValue {
+  data: PaymentConfirmedData;
+  formatCurrency: (value: number) => string;
+  onTrackOrder?: () => void;
+  variant: "compressed" | "default";
+}
 
-  const formatCurrency = (value: number) =>
-    new Intl.NumberFormat("en-US", {
-      currency,
-      style: "currency",
-    }).format(value);
+const PaymentConfirmedContext =
+  createContext<PaymentConfirmedContextValue | null>(null);
 
-  // Compressed variant - compact inline layout
-  if (variant === "compressed") {
-    return (
-      <div className="w-full rounded-lg bg-card border">
-        {/* Mobile layout */}
-        <div className="sm:hidden p-4 space-y-4">
-          {/* Success icon and title */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-foreground">
-              <Check className="h-5 w-5 text-background" />
-            </div>
-            <p className="font-semibold text-base">Payment confirmed</p>
-          </div>
+export const usePaymentConfirmed = () => {
+  const context = useContext(PaymentConfirmedContext);
 
-          {/* Product image centered */}
-          <div className="flex justify-center">
-            <div className="h-20 w-20 rounded-lg overflow-hidden bg-muted">
-              {productImage ? (
-                <RegistryImage
-                  src={productImage}
-                  alt={productName ?? "Product image"}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="h-full w-full bg-muted" />
-              )}
-            </div>
-          </div>
-
-          {/* Product info stacked */}
-          <div className="text-center space-y-1">
-            {productName && (
-              <p className="font-medium text-sm">{productName}</p>
-            )}
-            {orderId && (
-              <p className="text-xs text-muted-foreground">Order #{orderId}</p>
-            )}
-          </div>
-
-          {/* Price and delivery */}
-          {price !== undefined ||
-            (deliveryDate && (
-              <div className="flex items-center justify-between py-3 border-y">
-                {price !== undefined && (
-                  <div>
-                    <p className="text-xs text-muted-foreground">Total</p>
-                    <p className="text-lg font-semibold">
-                      {formatCurrency(price)}
-                    </p>
-                  </div>
-                )}
-                {deliveryDate && (
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground">Delivery</p>
-                    <p className="text-sm font-medium">{deliveryDate}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onTrackOrder}
-            className="w-full"
-          >
-            Track order
-            <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
-          </Button>
-        </div>
-
-        {/* Desktop layout - compact inline */}
-        <div className="hidden sm:flex items-center gap-3 p-3">
-          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-foreground">
-            <Check className="h-4 w-4 text-background" />
-          </div>
-          <div className="h-9 w-9 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
-            {productImage ? (
-              <RegistryImage
-                src={productImage}
-                alt={productName ?? "Product image"}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="h-full w-full bg-muted" />
-            )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              {productName && (
-                <span className="font-medium text-sm truncate">
-                  {productName}
-                </span>
-              )}
-              {orderId && (
-                <span className="text-xs text-muted-foreground">
-                  #{orderId}
-                </span>
-              )}
-            </div>
-            {deliveryDate && (
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span>Delivery: {deliveryDate}</span>
-              </div>
-            )}
-          </div>
-          {price !== undefined && (
-            <div className="text-right flex-shrink-0">
-              <p className="font-semibold">{formatCurrency(price)}</p>
-            </div>
-          )}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onTrackOrder}
-            className="flex-shrink-0"
-          >
-            Track
-            <ExternalLink className="ml-1 h-3 w-3" />
-          </Button>
-        </div>
-      </div>
+  if (!context) {
+    throw new Error(
+      "PaymentConfirmed components must be used within PaymentConfirmed"
     );
   }
 
-  // Default variant - detailed layout with header
-  return (
-    <div className="w-full rounded-lg bg-card border overflow-hidden">
-      {/* Mobile layout */}
-      <div className="sm:hidden">
-        {/* Header */}
-        <div className="flex flex-col items-center gap-1 px-3 py-3 bg-muted border-b">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground">
-            <Check className="h-4 w-4 text-background" />
-          </div>
-          <span className="text-sm font-medium">Payment confirmed</span>
-          {orderId && (
-            <span className="text-xs text-muted-foreground">#{orderId}</span>
-          )}
-        </div>
-        {/* Content */}
-        <div className="p-4 space-y-4">
-          {/* Product image centered */}
-          {productImage && (
-            <div className="flex justify-center">
-              <div className="h-20 w-20 rounded-lg overflow-hidden bg-muted">
-                <RegistryImage
-                  src={productImage}
-                  alt={productName ?? "Product image"}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            </div>
-          )}
-          {/* Product details stacked */}
-          <div className="text-center space-y-1">
-            {productName && (
-              <p className="text-base font-medium">{productName}</p>
-            )}
-            {productDescription && (
-              <p className="text-sm text-muted-foreground">
-                {productDescription}
-              </p>
-            )}
-          </div>
-          {/* Price and delivery */}
-          {price !== undefined ||
-            (deliveryDate && (
-              <div className="flex items-center justify-between py-3 border-y">
-                {price !== undefined && (
-                  <div>
-                    <p className="text-xs text-muted-foreground">Total</p>
-                    <p className="text-lg font-semibold">
-                      {formatCurrency(price)}
-                    </p>
-                  </div>
-                )}
-                {deliveryDate && (
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground">Delivery</p>
-                    <p className="text-sm font-medium">{deliveryDate}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            onClick={onTrackOrder}
-          >
-            Track order
-            <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
-          </Button>
-        </div>
-      </div>
+  return context;
+};
 
-      {/* Desktop layout */}
-      <div className="hidden sm:block">
-        {/* Header */}
-        <div className="flex items-center gap-2 px-4 py-2 bg-muted border-b">
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-foreground flex-shrink-0">
-            <Check className="h-3 w-3 text-background" />
-          </div>
-          <span className="text-sm font-medium">Payment confirmed</span>
-          {orderId && (
-            <span className="text-xs text-muted-foreground ml-auto">
-              #{orderId}
-            </span>
-          )}
-        </div>
-        {/* Product info */}
-        <div className="p-4">
-          <div className="flex gap-4">
-            <div className="h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
-              {productImage ? (
-                <RegistryImage
-                  src={productImage}
-                  alt={productName ?? "Product image"}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="h-full w-full bg-muted" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              {productName && (
-                <p className="text-base font-medium truncate">{productName}</p>
-              )}
-              {productDescription && (
-                <p className="text-sm text-muted-foreground">
-                  {productDescription}
-                </p>
-              )}
-              <div className="flex items-center justify-between mt-2">
-                {price !== undefined && (
-                  <span className="text-lg font-semibold">
-                    {formatCurrency(price)}
-                  </span>
-                )}
-                {deliveryDate && (
-                  <span className="text-sm text-muted-foreground">
-                    Delivery: {deliveryDate}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 pt-4 border-t flex justify-end">
-            <Button variant="outline" size="sm" onClick={onTrackOrder}>
-              Track order
-              <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
-            </Button>
-          </div>
-        </div>
-      </div>
+const DEFAULT_PAYMENT: PaymentConfirmedData = {
+  deliveryDate: "Jan 20, 2024",
+  price: 299,
+  productImage: "https://mcpcn.dev/demo/shoe-1.png",
+  productName: "Air Force 1 '07",
+};
+
+export interface PaymentConfirmedProps extends ComponentProps<"div"> {
+  actions?: {
+    onTrackOrder?: () => void;
+  };
+  appearance?: {
+    currency?: string;
+    variant?: "default" | "compressed";
+  };
+  data?: PaymentConfirmedData;
+}
+
+const PaymentConfirmedIcon = ({
+  className,
+  ...props
+}: ComponentProps<"div">) => (
+  <div
+    className={cn(
+      "flex size-8 items-center justify-center rounded-full bg-foreground",
+      className
+    )}
+    {...props}
+  >
+    <Check className="size-4 text-background" />
+  </div>
+);
+
+export const PaymentConfirmedImage = ({
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data } = usePaymentConfirmed();
+
+  return (
+    <div
+      className={cn("overflow-hidden rounded-lg bg-muted", className)}
+      {...props}
+    >
+      {data.productImage ? (
+        <BlockImage
+          alt={data.productName ?? "Product image"}
+          className="size-full object-cover"
+          src={data.productImage}
+        />
+      ) : (
+        <div className="size-full bg-muted" />
+      )}
     </div>
   );
 };
 
-export const PaymentConfirmed = createCompoundComponent(
-  PaymentConfirmedView,
-  "PaymentConfirmed"
-);
+export const PaymentConfirmedHeader = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data } = usePaymentConfirmed();
+
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2 border-b bg-muted px-4 py-2",
+        className
+      )}
+      {...props}
+    >
+      {children ?? (
+        <>
+          <PaymentConfirmedIcon className="size-6 shrink-0" />
+          <span className="font-medium text-sm">Payment confirmed</span>
+          {data.orderId && (
+            <span className="ml-auto text-muted-foreground text-xs">
+              #{data.orderId}
+            </span>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+export const PaymentConfirmedSummary = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data, formatCurrency } = usePaymentConfirmed();
+
+  if (!(children || data.price !== undefined || data.deliveryDate)) {
+    return null;
+  }
+
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-between border-y py-3",
+        className
+      )}
+      {...props}
+    >
+      {children ?? (
+        <>
+          {data.price !== undefined && (
+            <div>
+              <p className="text-muted-foreground text-xs">Total</p>
+              <p className="font-semibold text-lg">
+                {formatCurrency(data.price)}
+              </p>
+            </div>
+          )}
+          {data.deliveryDate && (
+            <div className="text-right">
+              <p className="text-muted-foreground text-xs">Delivery</p>
+              <p className="font-medium text-sm">{data.deliveryDate}</p>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+export const PaymentConfirmedAction = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<typeof Button>) => {
+  const { onTrackOrder } = usePaymentConfirmed();
+
+  return (
+    <Button
+      className={className}
+      onClick={onTrackOrder}
+      size="sm"
+      variant="outline"
+      {...props}
+    >
+      {children ?? (
+        <>
+          Track order
+          <ExternalLink className="ml-1.5 size-3.5" />
+        </>
+      )}
+    </Button>
+  );
+};
+
+const CompressedPaymentConfirmed = () => {
+  const { data, formatCurrency } = usePaymentConfirmed();
+
+  return (
+    <>
+      <div className="space-y-4 p-4 sm:hidden">
+        <div className="flex flex-col items-center gap-2">
+          <PaymentConfirmedIcon className="size-10" />
+          <p className="font-semibold text-base">Payment confirmed</p>
+        </div>
+        <div className="flex justify-center">
+          <PaymentConfirmedImage className="size-20" />
+        </div>
+        <div className="space-y-1 text-center">
+          {data.productName && (
+            <p className="font-medium text-sm">{data.productName}</p>
+          )}
+          {data.orderId && (
+            <p className="text-muted-foreground text-xs">
+              Order #{data.orderId}
+            </p>
+          )}
+        </div>
+        <PaymentConfirmedSummary />
+        <PaymentConfirmedAction className="w-full" />
+      </div>
+      <div className="hidden items-center gap-3 p-3 sm:flex">
+        <PaymentConfirmedIcon className="size-9 shrink-0" />
+        <PaymentConfirmedImage className="size-9 shrink-0" />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            {data.productName && (
+              <span className="truncate font-medium text-sm">
+                {data.productName}
+              </span>
+            )}
+            {data.orderId && (
+              <span className="text-muted-foreground text-xs">
+                #{data.orderId}
+              </span>
+            )}
+          </div>
+          {data.deliveryDate && (
+            <span className="text-muted-foreground text-xs">
+              Delivery: {data.deliveryDate}
+            </span>
+          )}
+        </div>
+        {data.price !== undefined && (
+          <p className="shrink-0 font-semibold">{formatCurrency(data.price)}</p>
+        )}
+        <PaymentConfirmedAction className="shrink-0">
+          Track
+          <ExternalLink className="ml-1 size-3" />
+        </PaymentConfirmedAction>
+      </div>
+    </>
+  );
+};
+
+const DefaultPaymentConfirmed = () => {
+  const { data, formatCurrency } = usePaymentConfirmed();
+
+  return (
+    <>
+      <div className="sm:hidden">
+        <PaymentConfirmedHeader className="flex-col gap-1 px-3 py-3">
+          <PaymentConfirmedIcon />
+          <span className="font-medium text-sm">Payment confirmed</span>
+          {data.orderId && (
+            <span className="text-muted-foreground text-xs">
+              #{data.orderId}
+            </span>
+          )}
+        </PaymentConfirmedHeader>
+        <div className="space-y-4 p-4">
+          {data.productImage && (
+            <div className="flex justify-center">
+              <PaymentConfirmedImage className="size-20" />
+            </div>
+          )}
+          <div className="space-y-1 text-center">
+            {data.productName && (
+              <p className="font-medium text-base">{data.productName}</p>
+            )}
+            {data.productDescription && (
+              <p className="text-muted-foreground text-sm">
+                {data.productDescription}
+              </p>
+            )}
+          </div>
+          <PaymentConfirmedSummary />
+          <PaymentConfirmedAction className="w-full" />
+        </div>
+      </div>
+      <div className="hidden sm:block">
+        <PaymentConfirmedHeader />
+        <div className="p-4">
+          <div className="flex gap-4">
+            <PaymentConfirmedImage className="size-20 shrink-0" />
+            <div className="min-w-0 flex-1">
+              {data.productName && (
+                <p className="truncate font-medium text-base">
+                  {data.productName}
+                </p>
+              )}
+              {data.productDescription && (
+                <p className="text-muted-foreground text-sm">
+                  {data.productDescription}
+                </p>
+              )}
+              <div className="mt-2 flex items-center justify-between">
+                {data.price !== undefined && (
+                  <span className="font-semibold text-lg">
+                    {formatCurrency(data.price)}
+                  </span>
+                )}
+                {data.deliveryDate && (
+                  <span className="text-muted-foreground text-sm">
+                    Delivery: {data.deliveryDate}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 flex justify-end border-t pt-4">
+            <PaymentConfirmedAction />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export const PaymentConfirmedContent = () => {
+  const { variant } = usePaymentConfirmed();
+  return variant === "compressed" ? (
+    <CompressedPaymentConfirmed />
+  ) : (
+    <DefaultPaymentConfirmed />
+  );
+};
+
+const PaymentConfirmedRoot = ({
+  actions,
+  appearance,
+  children,
+  className,
+  data,
+  ...props
+}: PaymentConfirmedProps) => {
+  const currency = appearance?.currency ?? "EUR";
+  const context: PaymentConfirmedContextValue = {
+    data: data ?? DEFAULT_PAYMENT,
+    formatCurrency: (value) =>
+      new Intl.NumberFormat("en-US", { currency, style: "currency" }).format(
+        value
+      ),
+    onTrackOrder: actions?.onTrackOrder,
+    variant: appearance?.variant ?? "default",
+  };
+
+  return (
+    <PaymentConfirmedContext.Provider value={context}>
+      <div
+        className={cn(
+          "w-full overflow-hidden rounded-lg border bg-card",
+          className
+        )}
+        {...props}
+      >
+        {children ?? <PaymentConfirmedContent />}
+      </div>
+    </PaymentConfirmedContext.Provider>
+  );
+};
+
+export const PaymentConfirmed = PaymentConfirmedRoot;

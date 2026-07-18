@@ -1,246 +1,355 @@
-/* oxlint-disable complexity */
 "use client";
 
-import type { ReactNode } from "react";
+import { createContext, createElement, useContext } from "react";
+import type { ComponentProps, ImgHTMLAttributes, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
+import { cn } from "@/lib/utils";
 
-import { demoHeroDefault } from "./demo/miscellaneous";
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
 
-/**
- * Represents a logo in the hero section.
- * @interface HeroLogo
- * @property {string} [url] - URL of the logo image (shown in light mode)
- * @property {string} [urlLight] - URL of the light version logo (shown in dark mode for visibility)
- * @property {string} [alt] - Alt text for the logo
- * @property {string} [text] - Text to display if no URL is provided (e.g., "Acme")
- */
 export interface HeroLogo {
-  url?: string;
-  urlLight?: string;
   alt?: string;
   text?: string;
+  url?: string;
+  urlLight?: string;
 }
 
-/**
- * Represents a tech/partner logo in the footer section.
- * @interface TechLogo
- * @property {string} [url] - URL of the tech logo image
- * @property {string} [alt] - Alt text for the logo
- * @property {string} [name] - Name of the technology (used for tooltip)
- */
 export interface TechLogo {
-  url?: string;
   alt?: string;
   name?: string;
+  url?: string;
 }
 
-/**
- * Represents a button configuration in the hero section.
- * @interface HeroButton
- * @property {string} [label] - Text label for the button (optional)
- * @property {ReactNode} [icon] - Icon to display in the button (optional)
- */
 export interface HeroButton {
-  label?: string;
   icon?: ReactNode;
+  label?: string;
 }
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * HeroProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the Hero component. A landing hero section with optional logos,
- * title, subtitle, call-to-action buttons, and tech logos footer.
- */
-export interface HeroProps {
-  data?: {
-    /** Primary logo displayed in the hero. Can be an image URL or text. */
-    logo1?: HeroLogo;
-    /** Secondary logo displayed next to the primary logo (shows separator between them). */
-    logo2?: HeroLogo;
-    /** Separator text between logos (e.g., "x", "&", "and"). Only shown when both logos are present. */
-    logoSeparator?: string;
-    /** Main title/heading of the hero section. */
-    title?: string;
-    /** Subtitle or description text below the title. */
-    subtitle?: string;
-    /** Primary button configuration with optional label and icon. */
-    primaryButton?: HeroButton;
-    /** Secondary button configuration with optional label and icon. */
-    secondaryButton?: HeroButton;
-    /** Label text above the tech logos (e.g., "Built with open-source technologies"). */
-    techLogosLabel?: string;
-    /** Array of tech/partner logos to display in the footer section. */
-    techLogos?: TechLogo[];
-  };
+interface HeroData {
+  logo1?: HeroLogo;
+  logo2?: HeroLogo;
+  logoSeparator?: string;
+  primaryButton?: HeroButton;
+  secondaryButton?: HeroButton;
+  subtitle?: string;
+  techLogos?: TechLogo[];
+  techLogosLabel?: string;
+  title?: string;
+}
+
+interface HeroContextValue {
+  data: HeroData;
+  onPrimaryClick?: () => void;
+  onSecondaryClick?: () => void;
+}
+
+const HeroContext = createContext<HeroContextValue | null>(null);
+
+export const useHero = () => {
+  const context = useContext(HeroContext);
+
+  if (!context) {
+    throw new Error("Hero components must be used within Hero");
+  }
+
+  return context;
+};
+
+const DEFAULT_HERO: HeroData = {
+  logo1: { alt: "Acme", text: "Acme" },
+  primaryButton: { label: "Get Started" },
+  secondaryButton: { label: "GitHub" },
+  subtitle:
+    "Create beautiful chat experiences with our comprehensive component library designed for agentic applications.",
+  title: "Build beautiful MCP App experiences with mcpcn",
+};
+
+export interface HeroProps extends ComponentProps<"section"> {
   actions?: {
-    /** Called when the primary button is clicked. */
     onPrimaryClick?: () => void;
-    /** Called when the secondary button is clicked. */
     onSecondaryClick?: () => void;
   };
+  data?: HeroData;
 }
 
-const LogoDisplay = ({ logo }: { logo: HeroLogo }) => {
-  // Image logos display directly without a container
-  if (logo.url) {
-    // If urlLight is provided, show different logos for light/dark mode
-    if (logo.urlLight) {
-      return (
-        <>
-          <RegistryImage
-            src={logo.url}
-            alt={logo.alt || "Logo"}
-            className="h-8 sm:h-10 w-auto object-contain dark:hidden"
-          />
-          <RegistryImage
-            src={logo.urlLight}
-            alt={logo.alt || "Logo"}
-            className="h-8 sm:h-10 w-auto object-contain hidden dark:block"
-          />
-        </>
-      );
-    }
-    // Single logo for both modes
+const Logo = ({ logo }: { logo: HeroLogo }) => {
+  if (logo.url && logo.urlLight) {
     return (
-      <RegistryImage
+      <>
+        <BlockImage
+          alt={logo.alt ?? "Logo"}
+          className="h-8 w-auto object-contain dark:hidden sm:h-10"
+          src={logo.url}
+        />
+        <BlockImage
+          alt={logo.alt ?? "Logo"}
+          className="hidden h-8 w-auto object-contain dark:block sm:h-10"
+          src={logo.urlLight}
+        />
+      </>
+    );
+  }
+
+  if (logo.url) {
+    return (
+      <BlockImage
+        alt={logo.alt ?? "Logo"}
+        className="h-16 w-auto object-contain sm:h-20"
         src={logo.url}
-        alt={logo.alt || "Logo"}
-        className="h-16 sm:h-20 w-auto object-contain"
       />
     );
   }
-  // Text logos get a bordered square container
+
   if (logo.text) {
     return (
-      <div className="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-xl border bg-background p-3">
-        <span className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+      <div className="flex size-16 items-center justify-center rounded-xl border bg-background p-3 sm:size-20">
+        <span className="font-bold text-foreground text-xl tracking-tight sm:text-2xl">
           {logo.text}
         </span>
       </div>
     );
   }
+
   return null;
 };
 
-const HeroView = ({ data, actions }: HeroProps) => {
-  const resolved: NonNullable<HeroProps["data"]> = data ?? demoHeroDefault;
-  const logo1 = resolved?.logo1;
-  const logo2 = resolved?.logo2;
-  const logoSeparator = resolved?.logoSeparator ?? "x";
-  const title = resolved?.title;
-  const subtitle = resolved?.subtitle;
-  const primaryButton = resolved?.primaryButton;
-  const secondaryButton = resolved?.secondaryButton;
-  const techLogosLabel = resolved?.techLogosLabel;
-  const techLogos = resolved?.techLogos;
+export const HeroLogos = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data } = useHero();
+  const { logo1 } = data;
+  const { logo2 } = data;
+  const hasLogo1 = Boolean(logo1?.url || logo1?.text);
+  const hasLogo2 = Boolean(logo2?.url || logo2?.text);
 
-  const hasLogo1 = logo1?.url || logo1?.text;
-  const hasLogo2 = logo2?.url || logo2?.text;
-  const hasLogos = hasLogo1 || hasLogo2;
-  const hasBothLogos = hasLogo1 && hasLogo2;
-  const hasPrimaryButton = primaryButton?.label || primaryButton?.icon;
-  const hasSecondaryButton = secondaryButton?.label || secondaryButton?.icon;
-  const hasButtons = hasPrimaryButton || hasSecondaryButton;
-  const hasTechLogos = techLogos && techLogos.length > 0;
+  if (!(children || hasLogo1 || hasLogo2)) {
+    return null;
+  }
 
   return (
-    <div className="w-full rounded-xl border bg-card shadow-sm">
-      <div className="flex flex-col items-center justify-center py-16 sm:py-20 lg:py-24 px-6 sm:px-8 lg:px-12">
-        {/* Logos Section */}
-        {hasLogos && (
-          <div className="flex items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
-            {hasLogo1 && <LogoDisplay logo={logo1} />}
-            {hasBothLogos && (
-              <span className="text-lg sm:text-xl font-medium text-muted-foreground">
-                {logoSeparator}
-              </span>
-            )}
-            {hasLogo2 && logo2 && <LogoDisplay logo={logo2} />}
-          </div>
-        )}
-
-        {/* Title */}
-        {title && (
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground text-center max-w-4xl mb-4 sm:mb-6">
-            {title}
-          </h1>
-        )}
-
-        {/* Subtitle */}
-        {subtitle && (
-          <p className="text-base sm:text-lg text-muted-foreground text-center max-w-2xl mb-8 sm:mb-10">
-            {subtitle}
-          </p>
-        )}
-
-        {/* Buttons */}
-        {hasButtons && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-            {hasPrimaryButton && (
-              <Button
-                variant="outline"
-                size="lg"
-                className="min-w-[140px]"
-                onClick={actions?.onPrimaryClick}
-              >
-                {primaryButton.icon && (
-                  <span className="mr-2">{primaryButton.icon}</span>
-                )}
-                {primaryButton.label}
-              </Button>
-            )}
-            {hasSecondaryButton && (
-              <Button
-                size="lg"
-                className="min-w-[140px]"
-                onClick={actions?.onSecondaryClick}
-              >
-                {secondaryButton.icon && (
-                  <span className="mr-2">{secondaryButton.icon}</span>
-                )}
-                {secondaryButton.label}
-              </Button>
-            )}
-          </div>
-        )}
-
-        {/* Tech Logos Footer */}
-        {hasTechLogos && (
-          <div className="flex flex-col items-center mt-12 sm:mt-16 pt-8 sm:pt-10 border-t w-full max-w-2xl">
-            {techLogosLabel && (
-              <p className="text-sm text-muted-foreground mb-4">
-                {techLogosLabel}
-              </p>
-            )}
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              {techLogos.map((logo) => (
-                <div
-                  key={logo.name || logo.url || logo.alt}
-                  className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-lg border bg-background p-2"
-                  title={logo.name}
-                >
-                  {logo.url && (
-                    <RegistryImage
-                      src={logo.url}
-                      alt={logo.alt || logo.name || "Tech logo"}
-                      className="max-w-full max-h-full object-contain opacity-60 grayscale"
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+    <div
+      className={cn(
+        "mb-8 flex items-center justify-center gap-3 sm:mb-10 sm:gap-4",
+        className
+      )}
+      {...props}
+    >
+      {children ?? (
+        <>
+          {hasLogo1 && logo1 && <Logo logo={logo1} />}
+          {hasLogo1 && hasLogo2 && (
+            <span className="font-medium text-lg text-muted-foreground sm:text-xl">
+              {data.logoSeparator ?? "x"}
+            </span>
+          )}
+          {hasLogo2 && logo2 && <Logo logo={logo2} />}
+        </>
+      )}
     </div>
   );
 };
 
-export const Hero = createCompoundComponent(HeroView, "Hero");
+export const HeroTitle = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"h1">) => {
+  const { data } = useHero();
+
+  if (!(children || data.title)) {
+    return null;
+  }
+
+  return (
+    <h1
+      className={cn(
+        "mb-4 max-w-4xl text-center font-bold text-3xl text-foreground sm:mb-6 sm:text-4xl lg:text-5xl",
+        className
+      )}
+      {...props}
+    >
+      {children ?? data.title}
+    </h1>
+  );
+};
+
+export const HeroDescription = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"p">) => {
+  const { data } = useHero();
+
+  if (!(children || data.subtitle)) {
+    return null;
+  }
+
+  return (
+    <p
+      className={cn(
+        "mb-8 max-w-2xl text-center text-base text-muted-foreground sm:mb-10 sm:text-lg",
+        className
+      )}
+      {...props}
+    >
+      {children ?? data.subtitle}
+    </p>
+  );
+};
+
+export const HeroActions = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data, onPrimaryClick, onSecondaryClick } = useHero();
+  const primary = data.primaryButton;
+  const secondary = data.secondaryButton;
+  const hasPrimary = Boolean(primary?.label || primary?.icon);
+  const hasSecondary = Boolean(secondary?.label || secondary?.icon);
+
+  if (!(children || hasPrimary || hasSecondary)) {
+    return null;
+  }
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4",
+        className
+      )}
+      {...props}
+    >
+      {children ?? (
+        <>
+          {hasPrimary && primary && (
+            <Button
+              className="min-w-[140px]"
+              onClick={onPrimaryClick}
+              size="lg"
+              variant="outline"
+            >
+              {primary.icon && <span className="mr-2">{primary.icon}</span>}
+              {primary.label}
+            </Button>
+          )}
+          {hasSecondary && secondary && (
+            <Button
+              className="min-w-[140px]"
+              onClick={onSecondaryClick}
+              size="lg"
+            >
+              {secondary.icon && <span className="mr-2">{secondary.icon}</span>}
+              {secondary.label}
+            </Button>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+export const HeroTechLogos = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data } = useHero();
+  const logos = data.techLogos ?? [];
+
+  if (!(children || logos.length > 0)) {
+    return null;
+  }
+
+  return (
+    <div
+      className={cn(
+        "mt-12 flex w-full max-w-2xl flex-col items-center border-t pt-8 sm:mt-16 sm:pt-10",
+        className
+      )}
+      {...props}
+    >
+      {children ?? (
+        <>
+          {data.techLogosLabel && (
+            <p className="mb-4 text-muted-foreground text-sm">
+              {data.techLogosLabel}
+            </p>
+          )}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {logos.map((logo) => (
+              <div
+                className="flex size-12 items-center justify-center rounded-lg border bg-background p-2 sm:size-14"
+                key={logo.name ?? logo.url ?? logo.alt}
+                title={logo.name}
+              >
+                {logo.url && (
+                  <BlockImage
+                    alt={logo.alt ?? logo.name ?? "Tech logo"}
+                    className="max-h-full max-w-full object-contain opacity-60 grayscale"
+                    src={logo.url}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export const HeroContent = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => (
+  <div
+    className={cn(
+      "flex flex-col items-center justify-center px-6 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24",
+      className
+    )}
+    {...props}
+  >
+    {children ?? (
+      <>
+        <HeroLogos />
+        <HeroTitle />
+        <HeroDescription />
+        <HeroActions />
+        <HeroTechLogos />
+      </>
+    )}
+  </div>
+);
+
+const HeroRoot = ({
+  actions,
+  children,
+  className,
+  data,
+  ...props
+}: HeroProps) => {
+  const context: HeroContextValue = {
+    data: data ?? DEFAULT_HERO,
+    onPrimaryClick: actions?.onPrimaryClick,
+    onSecondaryClick: actions?.onSecondaryClick,
+  };
+
+  return (
+    <HeroContext.Provider value={context}>
+      <section
+        className={cn("w-full rounded-xl border bg-card shadow-sm", className)}
+        {...props}
+      >
+        {children ?? <HeroContent />}
+      </section>
+    </HeroContext.Provider>
+  );
+};
+
+export const Hero = HeroRoot;

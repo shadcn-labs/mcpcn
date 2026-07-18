@@ -1,24 +1,17 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
+import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
-import { demoPosts } from "./demo/blogging";
 import { PostCard } from "./post-card";
 import type { Post } from "./types";
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * PostListProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the PostList component, a blog post list with multiple layout variants.
- */
 export interface PostListProps {
+  children?: ReactNode;
   data?: {
     /** Array of blog posts to display. */
     posts?: Post[];
@@ -51,9 +44,89 @@ export interface PostListProps {
   };
 }
 
+const DEFAULT_POSTS: Post[] = [
+  {
+    author: { avatar: "https://i.pravatar.cc/150?u=sarah", name: "Sarah Chen" },
+    category: "Tutorial",
+    coverImage:
+      "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800",
+    excerpt:
+      "Learn how to build conversational interfaces for AI-powered applications.",
+    publishedAt: "2024-01-15",
+    readTime: "5 min read",
+    tags: ["Tutorial", "Components", "AI"],
+    title: "Getting Started with Agentic UI Components",
+  },
+  {
+    author: { avatar: "https://i.pravatar.cc/150?u=alex", name: "Alex Rivera" },
+    category: "Design",
+    coverImage:
+      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800",
+    excerpt: "Best practices for intuitive UI components in chat environments.",
+    publishedAt: "2024-01-12",
+    readTime: "8 min read",
+    tags: ["Design", "UX"],
+    title: "Designing for Conversational MCP Interfaces",
+  },
+  {
+    author: {
+      avatar: "https://i.pravatar.cc/150?u=jordan",
+      name: "Jordan Kim",
+    },
+    category: "Development",
+    coverImage:
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800",
+    excerpt: "Use Model Context Protocol for seamless backend communication.",
+    publishedAt: "2024-01-10",
+    readTime: "12 min read",
+    tags: ["MCP", "Backend"],
+    title: "MCP Integration Patterns",
+  },
+  {
+    author: {
+      avatar: "https://i.pravatar.cc/150?u=morgan",
+      name: "Morgan Lee",
+    },
+    category: "Tutorial",
+    coverImage:
+      "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800",
+    excerpt:
+      "A guide to secure payment experiences in conversational interfaces.",
+    publishedAt: "2024-01-08",
+    readTime: "10 min read",
+    tags: ["Payments", "Security"],
+    title: "Building Payment Flows in Chat",
+  },
+  {
+    author: {
+      avatar: "https://i.pravatar.cc/150?u=casey",
+      name: "Casey Taylor",
+    },
+    category: "Development",
+    coverImage:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+    excerpt:
+      "Implement real-time updates for collaborative agentic experiences.",
+    publishedAt: "2024-01-06",
+    readTime: "15 min read",
+    tags: ["WebSocket", "Real-time"],
+    title: "Real-time Collaboration in AI Apps",
+  },
+];
+
+const PostListContext = createContext<PostListProps | null>(null);
+
+export const usePostList = () => {
+  const context = useContext(PostListContext);
+  if (!context) {
+    throw new Error("PostList components must be used within PostList");
+  }
+  return context;
+};
+
 const PostListView = ({ data, actions, appearance }: PostListProps) => {
   const resolved: NonNullable<PostListProps["data"]> = data ?? {
-    posts: demoPosts,
+    posts: DEFAULT_POSTS,
   };
   const posts = resolved.posts ?? [];
   const onReadMore = actions?.onReadMore;
@@ -62,8 +135,6 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
   const showAuthor = appearance?.showAuthor ?? true;
   const showCategory = appearance?.showCategory ?? true;
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // List variant
   if (variant === "list") {
     return (
       <div className="space-y-3 m-3 bg-card rounded-lg p-3">
@@ -78,8 +149,6 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
       </div>
     );
   }
-
-  // Grid variant (inline mode - show only 4 posts)
   if (variant === "grid") {
     return (
       <div
@@ -104,8 +173,6 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
       </div>
     );
   }
-
-  // Fullwidth variant
   if (variant === "fullwidth") {
     const getGridColsClass = () => {
       switch (columns) {
@@ -139,8 +206,6 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
       </div>
     );
   }
-
-  // Carousel variant
   const maxIndexMobile = posts.length - 1;
   const maxIndexTablet = Math.max(0, posts.length - 2);
   const maxIndexDesktop = Math.max(0, posts.length - 3);
@@ -233,22 +298,22 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={prev}
             disabled={isAtStart}
             aria-label="Previous post"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="size-4" />
           </Button>
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={next}
             disabled={isAtEndMobile}
             aria-label="Next post"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="size-4" />
           </Button>
         </div>
         {/* Tablet navigation */}
@@ -256,22 +321,22 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={prev}
             disabled={isAtStart}
             aria-label="Previous post"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="size-4" />
           </Button>
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={next}
             disabled={isAtEndTablet}
             aria-label="Next post"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="size-4" />
           </Button>
         </div>
         {/* Desktop navigation */}
@@ -279,22 +344,22 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={prev}
             disabled={isAtStart}
             aria-label="Previous post"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="size-4" />
           </Button>
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={next}
             disabled={isAtEndDesktop}
             aria-label="Next post"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="size-4" />
           </Button>
         </div>
       </div>
@@ -302,4 +367,15 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
   );
 };
 
-export const PostList = createCompoundComponent(PostListView, "PostList");
+export const PostListContent = (props: PostListProps) => {
+  const context = usePostList();
+  return <PostListView {...context} {...props} />;
+};
+
+const PostListRoot = ({ children, ...props }: PostListProps) => (
+  <PostListContext.Provider value={props}>
+    {children ?? <PostListContent />}
+  </PostListContext.Provider>
+);
+
+export const PostList = PostListRoot;

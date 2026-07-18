@@ -1,92 +1,274 @@
 "use client";
 
 import { Minus, Plus } from "lucide-react";
-import { useState, useRef, useEffect, useMemo } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import type { ChangeEvent, ComponentProps, KeyboardEvent } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
-import { demoAmountPresets } from "./demo/payment";
+interface AmountInputContextValue {
+  amount: number;
+  currencySymbol: string;
+  editing: boolean;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+  label: string;
+  max: number;
+  min: number;
+  onConfirm?: (value: number) => void;
+  presets: number[];
+  setAmount: (value: number) => void;
+  setEditing: (editing: boolean) => void;
+  step: number;
+}
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * AmountInputProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for an amount input with increment/decrement buttons and preset values.
- * Supports direct text editing by clicking on the amount.
- */
-export interface AmountInputProps {
-  data?: {
-    /** Quick-select preset amounts displayed as buttons. */
-    presets?: number[];
-  };
+const AmountInputContext = createContext<AmountInputContextValue | null>(null);
+
+export const useAmountInput = () => {
+  const context = useContext(AmountInputContext);
+
+  if (!context) {
+    throw new Error("AmountInput components must be used within AmountInput");
+  }
+
+  return context;
+};
+
+const DEFAULT_PRESETS = [10, 25, 50, 100];
+
+export interface AmountInputProps extends ComponentProps<"div"> {
   actions?: {
-    /** Called when user confirms the selected amount. */
     onConfirm?: (value: number) => void;
   };
   appearance?: {
-    /**
-     * Minimum allowed value.
-     * @default 0
-     */
-    min?: number;
-    /**
-     * Maximum allowed value.
-     * @default 10000
-     */
-    max?: number;
-    /**
-     * Increment/decrement step size for the +/- buttons.
-     * @default 10
-     */
-    step?: number;
-    /**
-     * Currency code for formatting the amount display.
-     * @default "EUR"
-     */
     currency?: string;
-    /**
-     * Label text displayed above the input.
-     * @default "Amount"
-     */
     label?: string;
+    max?: number;
+    min?: number;
+    step?: number;
   };
   control?: {
-    /**
-     * Controlled value for the amount input.
-     * @default 50
-     */
     value?: number;
+  };
+  data?: {
+    presets?: number[];
   };
 }
 
-const AmountInputView = ({
-  data,
+export const AmountInputDisplay = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const {
+    amount,
+    currencySymbol,
+    editing,
+    inputRef,
+    label,
+    max,
+    min,
+    setAmount,
+    setEditing,
+    step,
+  } = useAmountInput();
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = Number.parseInt(
+      event.target.value.replaceAll(/[^0-9]/g, ""),
+      10
+    );
+    if (!Number.isNaN(value)) {
+      setAmount(value);
+    }
+  };
+
+  const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      setEditing(false);
+    }
+  };
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between",
+        className
+      )}
+      {...props}
+    >
+      {children ?? (
+        <>
+          <span className="text-muted-foreground text-xs sm:text-sm">
+            {label}
+          </span>
+          <div className="flex items-center justify-center gap-2">
+            <button
+              className="flex size-8 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={amount <= min}
+              onClick={() => setAmount(amount - step)}
+              type="button"
+            >
+              <Minus className="size-4" />
+            </button>
+            <div className="min-w-24 text-center sm:min-w-28">
+              {editing ? (
+                <div className="flex items-center justify-center gap-1">
+                  <span className="font-bold text-muted-foreground text-xl sm:text-2xl">
+                    {currencySymbol}
+                  </span>
+                  <input
+                    ref={inputRef}
+                    className="w-16 border-foreground border-b-2 bg-transparent text-center font-bold text-xl outline-none sm:w-20 sm:text-2xl"
+                    onBlur={() => setEditing(false)}
+                    onChange={handleInputChange}
+                    onKeyDown={handleInputKeyDown}
+                    type="text"
+                    value={amount}
+                  />
+                </div>
+              ) : (
+                <button
+                  className="cursor-pointer font-bold text-xl transition-colors hover:text-primary sm:text-2xl"
+                  onClick={() => setEditing(true)}
+                  type="button"
+                >
+                  {currencySymbol}
+                  {amount}
+                </button>
+              )}
+            </div>
+            <button
+              className="flex size-8 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={amount >= max}
+              onClick={() => setAmount(amount + step)}
+              type="button"
+            >
+              <Plus className="size-4" />
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export const AmountInputPresets = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { amount, currencySymbol, presets, setAmount } = useAmountInput();
+
+  return (
+    <div
+      className={cn(
+        "flex flex-wrap justify-center gap-2 sm:justify-start",
+        className
+      )}
+      {...props}
+    >
+      {children ??
+        presets.map((preset) => (
+          <button
+            className={cn(
+              "cursor-pointer rounded-full border px-3 py-1 text-xs transition-colors sm:text-sm",
+              amount === preset
+                ? "border-foreground ring-1 ring-foreground"
+                : "border-border hover:bg-muted"
+            )}
+            key={preset}
+            onClick={() => setAmount(preset)}
+            type="button"
+          >
+            {currencySymbol}
+            {preset}
+          </button>
+        ))}
+    </div>
+  );
+};
+
+export const AmountInputActions = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { amount, onConfirm } = useAmountInput();
+
+  if (!(children || onConfirm)) {
+    return null;
+  }
+
+  return (
+    <div className={className} {...props}>
+      {children ?? (
+        <Button
+          className="w-full sm:w-auto"
+          onClick={() => onConfirm?.(amount)}
+          size="sm"
+        >
+          Confirm
+        </Button>
+      )}
+    </div>
+  );
+};
+
+export const AmountInputControls = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => (
+  <div
+    className={cn(
+      "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2",
+      className
+    )}
+    {...props}
+  >
+    {children ?? (
+      <>
+        <AmountInputPresets />
+        <AmountInputActions />
+      </>
+    )}
+  </div>
+);
+
+const AmountInputRoot = ({
   actions,
   appearance,
+  children,
+  className,
   control,
+  data,
+  ...props
 }: AmountInputProps) => {
-  const resolved: NonNullable<AmountInputProps["data"]> = data ?? {
-    presets: demoAmountPresets,
-  };
-  const presets = resolved.presets ?? [];
-  const onConfirm = actions?.onConfirm;
-  const min = appearance?.min ?? 0;
-  const max = appearance?.max ?? 10_000;
-  const step = appearance?.step ?? 10;
   const currency = appearance?.currency ?? "EUR";
-  const label = appearance?.label ?? "Amount";
-  const value = control?.value ?? 0;
-  const [amount, setAmount] = useState(value);
-  const [isEditing, setIsEditing] = useState(false);
+  const max = appearance?.max ?? 10_000;
+  const min = appearance?.min ?? 0;
+  const [amount, setAmountState] = useState(control?.value ?? 0);
+  const [editing, setEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sync internal state when controlled value changes
   useEffect(() => {
-    setAmount(value);
-  }, [value]);
+    setAmountState(control?.value ?? 0);
+  }, [control?.value]);
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [editing]);
 
   const currencySymbol = useMemo(
     () =>
@@ -96,128 +278,47 @@ const AmountInputView = ({
         style: "currency",
       })
         .formatToParts(0)
-        .find((part) => part.type === "currency")?.value || currency,
+        .find((part) => part.type === "currency")?.value ?? currency,
     [currency]
   );
 
-  const handleChange = (newValue: number) => {
-    const clamped = Math.max(min, Math.min(max, newValue));
-    setAmount(clamped);
+  const setAmount = (value: number) => {
+    setAmountState(Math.max(min, Math.min(max, value)));
   };
 
-  const handlePreset = (preset: number) => {
-    setAmount(preset);
+  const context: AmountInputContextValue = {
+    amount,
+    currencySymbol,
+    editing,
+    inputRef,
+    label: appearance?.label ?? "Amount",
+    max,
+    min,
+    onConfirm: actions?.onConfirm,
+    presets: data?.presets ?? DEFAULT_PRESETS,
+    setAmount,
+    setEditing,
+    step: appearance?.step ?? 10,
   };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = Number.parseInt(e.target.value.replaceAll(/[^0-9]/g, ""), 10);
-    if (!Number.isNaN(val)) {
-      handleChange(val);
-    }
-  };
-
-  const handleInputBlur = () => {
-    setIsEditing(false);
-  };
-
-  const handleInputKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      setIsEditing(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [isEditing]);
 
   return (
-    <div className="w-full rounded-md sm:rounded-lg bg-card p-3 sm:p-2 space-y-3">
-      {/* Amount display with +/- controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <span className="text-xs sm:text-sm text-muted-foreground">
-          {label}
-        </span>
-        <div className="flex items-center justify-center gap-2">
-          <button
-            onClick={() => handleChange(amount - step)}
-            disabled={amount <= min}
-            className="h-8 w-8 rounded-full border border-border flex items-center justify-center hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
-          >
-            <Minus className="h-4 w-4" />
-          </button>
-          <div className="min-w-24 sm:min-w-28 text-center">
-            {isEditing ? (
-              <div className="flex items-center justify-center gap-1">
-                <span className="text-xl sm:text-2xl font-bold text-muted-foreground">
-                  {currencySymbol}
-                </span>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={amount}
-                  onChange={handleInputChange}
-                  onBlur={handleInputBlur}
-                  onKeyDown={handleInputKeyDown}
-                  className="w-16 sm:w-20 text-xl sm:text-2xl font-bold bg-transparent border-b-2 border-primary text-center outline-none"
-                />
-              </div>
-            ) : (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="text-xl sm:text-2xl font-bold hover:text-primary transition-colors cursor-pointer"
-              >
-                {currencySymbol}
-                {amount}
-              </button>
-            )}
-          </div>
-          <button
-            onClick={() => handleChange(amount + step)}
-            disabled={amount >= max}
-            className="h-8 w-8 rounded-full border border-border flex items-center justify-center hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
-          >
-            <Plus className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Presets and confirm */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2">
-        <div className="flex flex-wrap justify-center sm:justify-start gap-2">
-          {presets.map((preset) => (
-            <button
-              key={preset}
-              onClick={() => handlePreset(preset)}
-              className={cn(
-                "rounded-full border px-3 py-1 text-xs sm:text-sm transition-colors cursor-pointer",
-                amount === preset
-                  ? "border-foreground ring-1 ring-foreground"
-                  : "border-border hover:bg-muted"
-              )}
-            >
-              {currencySymbol}
-              {preset}
-            </button>
-          ))}
-        </div>
-        {onConfirm && (
-          <Button
-            size="sm"
-            className="w-full sm:w-auto"
-            onClick={() => onConfirm(amount)}
-          >
-            Confirm
-          </Button>
+    <AmountInputContext.Provider value={context}>
+      <div
+        className={cn(
+          "w-full space-y-3 rounded-md bg-card p-3 sm:rounded-lg sm:p-2",
+          className
+        )}
+        {...props}
+      >
+        {children ?? (
+          <>
+            <AmountInputDisplay />
+            <AmountInputControls />
+          </>
         )}
       </div>
-    </div>
+    </AmountInputContext.Provider>
   );
 };
 
-export const AmountInput = createCompoundComponent(
-  AmountInputView,
-  "AmountInput"
-);
+export const AmountInput = AmountInputRoot;

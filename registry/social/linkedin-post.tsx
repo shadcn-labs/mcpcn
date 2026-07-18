@@ -1,16 +1,18 @@
-/* oxlint-disable no-negated-condition */
 "use client";
 
 import { Repeat2 } from "lucide-react";
-import type { JSX } from "react";
-import React, { useEffect, useRef, useState } from "react";
+import type { ImgHTMLAttributes, JSX, ReactNode } from "react";
+import React, {
+  createContext,
+  createElement,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
-
-import { demoLinkedInPost } from "./demo/social";
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
 
 /** Reaction type for LinkedIn posts */
 type ReactionType =
@@ -21,15 +23,8 @@ type ReactionType =
   | "insightful"
   | "funny";
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * LinkedInPostProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the LinkedInPost component, which displays a LinkedIn-style
- * post with professional author info.
- */
 export interface LinkedInPostProps {
+  children?: ReactNode;
   data?: {
     /** Author's display name. */
     author?: string;
@@ -62,15 +57,38 @@ export interface LinkedInPostProps {
   };
 }
 
+const DEFAULT_POST = {
+  author: "mcpcn",
+  avatar: "M",
+  comments: "56",
+  content:
+    "Excited to announce our latest milestone! We've just crossed 10,000 developers using mcpcn to build agentic UIs.",
+  headline: "mcpcn | Open Source",
+  postUrl: "https://linkedin.com/posts/mcpcn-123",
+  reactions: "1,234",
+  repostUrl: "https://linkedin.com/shareArticle?url=...",
+  reposts: "12",
+  time: "1d",
+  topReactions: ["like", "celebrate", "love"],
+} satisfies NonNullable<LinkedInPostProps["data"]>;
+
+const LinkedInPostContext = createContext<LinkedInPostProps | null>(null);
+
+export const useLinkedInPost = () => {
+  const context = useContext(LinkedInPostContext);
+  if (!context) {
+    throw new Error("LinkedInPost components must be used within LinkedInPost");
+  }
+  return context;
+};
+
 const formatContent = (content: string): React.ReactNode[] => {
-  // Regex to match hashtags and URLs
   const pattern = /(#\w+)|(https?:\/\/[^\s]+)/g;
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
 
   while ((match = pattern.exec(content)) !== null) {
-    // Add text before the match
     if (match.index > lastIndex) {
       parts.push(content.slice(lastIndex, match.index));
     }
@@ -78,7 +96,6 @@ const formatContent = (content: string): React.ReactNode[] => {
     const [, hashtag, url] = match;
 
     if (hashtag) {
-      // Style hashtag
       parts.push(
         <span
           key={match.index}
@@ -89,7 +106,6 @@ const formatContent = (content: string): React.ReactNode[] => {
         </span>
       );
     } else if (url) {
-      // Style link
       parts.push(
         <a
           key={match.index}
@@ -106,8 +122,6 @@ const formatContent = (content: string): React.ReactNode[] => {
 
     ({ lastIndex } = pattern);
   }
-
-  // Add remaining text
   if (lastIndex < content.length) {
     parts.push(content.slice(lastIndex));
   }
@@ -124,7 +138,7 @@ const LinkedInIcon = ({ className }: { className?: string }) => (
 /** Reaction icon components - Official LinkedIn reaction SVGs */
 const reactionIcons: Record<ReactionType, JSX.Element> = {
   celebrate: (
-    <svg viewBox="0 0 48 48" className="h-5 w-5">
+    <svg viewBox="0 0 48 48" className="size-5">
       <circle cx="24" cy="24" r="22" fill="#6dae4f" />
       <path
         d="M45.57 31l-1.42-1.07s-.59-5.63-1.61-6.71a18.45 18.45 0 01-3.81-7.49c-.49-1.67-.83-2.26-2.33-2.29a2.29 2.29 0 00-2 2.52 17.11 17.11 0 00.21 2.25c.55 2.92 1.15 5.31 1.23 5.45L22.3 13.53c-1-.77-2.49-1.11-3.49.22s-.19 2.55.83 3.32l7.07 5.32L28.83 24l-11.32-8.53c-1-.77-2.49-1.11-3.48.22s-.2 2.55.82 3.32l7.07 5.32 4.25 3.19L17 20.6c-1-.76-2.48-1.11-3.48.22s-.19 2.56.82 3.32l7.08 5.33L25 32.13l-7.1-5.33c-1-.76-2.46-1.14-3.42.13a2.37 2.37 0 00.76 3.41l12.67 9.47c2.24 1.67 6.26 1.89 6.2 1.89a19.63 19.63 0 002.44 1.3 10.12 10.12 0 006.36-4 15 15 0 002.66-8z"
@@ -150,7 +164,7 @@ const reactionIcons: Record<ReactionType, JSX.Element> = {
     </svg>
   ),
   funny: (
-    <svg viewBox="0 0 48 48" className="h-5 w-5">
+    <svg viewBox="0 0 48 48" className="size-5">
       <circle cx="24" cy="24" r="22" fill="#44bfd3" />
       <circle
         cx="24"
@@ -197,7 +211,7 @@ const reactionIcons: Record<ReactionType, JSX.Element> = {
     </svg>
   ),
   insightful: (
-    <svg viewBox="0 0 48 48" className="h-5 w-5">
+    <svg viewBox="0 0 48 48" className="size-5">
       <circle cx="24" cy="24" r="22" fill="#f5bb5c" />
       <path
         d="M26.58 41h-5a1.68 1.68 0 01-1.68-1.68v-4.2h8.4v4.2A1.69 1.69 0 0126.58 41z"
@@ -244,7 +258,7 @@ const reactionIcons: Record<ReactionType, JSX.Element> = {
     </svg>
   ),
   like: (
-    <svg viewBox="0 0 48 48" className="h-5 w-5">
+    <svg viewBox="0 0 48 48" className="size-5">
       <circle cx="24" cy="24" r="22" fill="#378fe9" />
       <path
         d="M25.22 19.08H11.76A2.7 2.7 0 009 22a2.85 2.85 0 002.91 2.67h.5A2.43 2.43 0 0010 27.18a2.52 2.52 0 002.31 2.5 2.51 2.51 0 001.05 4.45 2.54 2.54 0 00-.19 1.87 2.69 2.69 0 002.66 2H23a11.51 11.51 0 002.8-.37l4.52-1.32c.27-.08 4.19 0 6 0 3.15-.12 4-14.57 0-14.57 0 0-1.45.05-1.73 0s-.46-.6-1.25-1.45l-.07-.09c-1.15-1.24-2.45-2.85-3.37-3.75-2.24-2.19-4.08-4.07-5.38-6.92-.73-1.62-.81-2.35-2.35-2.35a2.45 2.45 0 00-2.1 2.56 23.77 23.77 0 00.32 2.52 23.64 23.64 0 003.1 6.92"
@@ -262,7 +276,7 @@ const reactionIcons: Record<ReactionType, JSX.Element> = {
     </svg>
   ),
   love: (
-    <svg viewBox="0 0 48 48" className="h-5 w-5">
+    <svg viewBox="0 0 48 48" className="size-5">
       <circle cx="24" cy="24" r="22" fill="#df704d" />
       <path
         d="M23.08 14.6a8.21 8.21 0 00-11.66 0 8.35 8.35 0 000 11.76L24 39l12.58-12.64a8.35 8.35 0 000-11.75 8.13 8.13 0 00-11.63 0l-.94.9z"
@@ -286,7 +300,7 @@ const reactionIcons: Record<ReactionType, JSX.Element> = {
     </svg>
   ),
   support: (
-    <svg viewBox="0 0 48 48" className="h-5 w-5">
+    <svg viewBox="0 0 48 48" className="size-5">
       <circle cx="24" cy="24" r="22" fill="#bba9d1" />
       <path
         d="M42.46 40.81a68.7 68.7 0 01-10.61-1h-.19a60.42 60.42 0 01-7.87-1.64c-2.29-.69-4.54-1.58-6.73-2.44l-1-.38c-2.09-.81-3.75-1.49-5.29-2.14l-.58-.24a21.88 21.88 0 01-2.68-1.27C6.34 31 6 30.06 6.49 29v-.09a1.77 1.77 0 011.74-1h.13a4.69 4.69 0 01.53 0c1.9.21 7.41 2.3 8.5 2.72l3.55.12H21l8 .28c-.62-.57-2.2-1.57-6-2.57-.73-.18-1.4-.39-1.56-.93a2.16 2.16 0 01.7-2.26 2.86 2.86 0 011.69-.39 8.72 8.72 0 012.09.25c.4.1.74.21 1 .31a12.13 12.13 0 002.59.58 27 27 0 014.29.98c4.48 1.2 5.35 3.45 5.92 4.81-.18-.56 0-.15.08-.36l.13-.17h.69c.77 0 2.23-.08 2.25-.08.37 0 2.1-.43 2.1-.08a18.84 18.84 0 01-2 9.41.61.61 0 01-.43.3z"
@@ -322,8 +336,7 @@ const reactionIcons: Record<ReactionType, JSX.Element> = {
 };
 
 const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
-  const resolved: NonNullable<LinkedInPostProps["data"]> =
-    data ?? demoLinkedInPost;
+  const resolved: NonNullable<LinkedInPostProps["data"]> = data ?? DEFAULT_POST;
   const {
     author,
     headline,
@@ -350,7 +363,6 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
   useEffect(() => {
     const el = contentRef.current;
     if (el) {
-      // Check if content is truncated
       setIsTruncated(el.scrollHeight > el.clientHeight);
     }
   }, [content, maxLines]);
@@ -364,7 +376,7 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
       <div className="p-4">
         <div className="flex gap-3">
           {avatar && (
-            <div className="h-12 w-12 rounded-full bg-[#0A66C2] text-white flex items-center justify-center font-semibold shrink-0">
+            <div className="size-12 rounded-full bg-[#0A66C2] text-white flex items-center justify-center font-semibold shrink-0">
               {avatar}
             </div>
           )}
@@ -385,7 +397,7 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
                   className="text-[#0A66C2] hover:text-[#004182] transition-colors"
                   aria-label="View on LinkedIn"
                 >
-                  <LinkedInIcon className="h-5 w-5" />
+                  <LinkedInIcon className="size-5" />
                 </a>
               )}
             </div>
@@ -396,14 +408,14 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
             ref={contentRef}
             className="text-sm whitespace-pre-wrap"
             style={
-              !isExpanded
-                ? {
+              isExpanded
+                ? undefined
+                : {
                     WebkitBoxOrient: "vertical",
                     WebkitLineClamp: maxLines,
                     display: "-webkit-box",
                     overflow: "hidden",
                   }
-                : undefined
             }
           >
             {content ? formatContent(content) : null}
@@ -422,7 +434,7 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
       {/* Image section */}
       {image && (
         <div className="w-full">
-          <RegistryImage
+          <BlockImage
             src={image}
             alt="Post image"
             className="w-full object-cover max-h-[400px]"
@@ -465,7 +477,7 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-2 hover:bg-muted rounded-md transition-colors text-sm text-muted-foreground"
           >
-            <Repeat2 className="h-5 w-5" />
+            <Repeat2 className="size-5" />
             <span>Repost</span>
           </a>
         </div>
@@ -474,7 +486,15 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
   );
 };
 
-export const LinkedInPost = createCompoundComponent(
-  LinkedInPostView,
-  "LinkedInPost"
+export const LinkedInPostContent = (props: LinkedInPostProps) => {
+  const context = useLinkedInPost();
+  return <LinkedInPostView {...context} {...props} />;
+};
+
+const LinkedInPostRoot = ({ children, ...props }: LinkedInPostProps) => (
+  <LinkedInPostContext.Provider value={props}>
+    {children ?? <LinkedInPostContent />}
+  </LinkedInPostContext.Provider>
 );
+
+export const LinkedInPost = LinkedInPostRoot;

@@ -177,7 +177,7 @@ const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
                   </div>
                 ) : null}
               </div>
-              <div className="w-full flex-1 *:data-[slot=alert]:first:mt-0">
+              <div className="w-full flex-1 *:data-[slot=alert]:first:mt-0 *:data-[slot=component-preview]:first:mt-0">
                 {/* {params.slug &&
                 params.slug[0] === "components" &&
                 params.slug[1] &&

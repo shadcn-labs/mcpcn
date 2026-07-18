@@ -62,21 +62,10 @@ Use the following composition to build an `StatusBadge`:
 
 ```text
 StatusBadge
-└── StatusBadge.Content
+├── StatusBadgeContent
+├── StatusBadgeIcon
+└── StatusBadgeLabel
 ```
-
-## Examples
-
-### With a custom heading
-
-This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original component view needs no repeated props.
-
-<ComponentPreview
-  name="status-badge"
-  src="examples/status-badge-demo.tsx"
-  variant="composed"
-  showCode
-/>
 
 ## Integrate with OpenUI
 

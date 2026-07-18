@@ -12,7 +12,7 @@
       "categories": ["form"],
       "meta": {
         "preview": "https://mcpcn.dev/previews/contact-form.png",
-        "version": "1.2.9",
+        "version": "2.1.0",
         "changelog": {
           "1.0.0": "Initial release with name, phone, email, message and file attachment fields",
           "1.1.0": "Made phone, email, and message fields optional with defaults",
@@ -24,31 +24,19 @@
           "1.2.6": "Removed default content data - component only renders explicitly provided data",
           "1.2.7": "Fixed missing popover dependency for shadcn CLI installation",
           "1.2.8": "Extracted country data to separate countries.ts file",
-          "1.2.9": "Show demo data when rendered without props"
+          "1.2.9": "Show demo data when rendered without props",
+          "2.0.0": "Reworked the form into a context-backed compound component",
+          "2.0.1": "Declared the Base UI dependency",
+          "2.1.0": "Replaced the bundled country list with countries.dev"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["button", "input", "label", "popover"],
       "files": [
         {
           "path": "registry/form/contact-form.tsx",
           "type": "registry:block",
           "target": "components/ui/contact-form.tsx"
-        },
-        {
-          "path": "registry/form/countries.ts",
-          "type": "registry:lib",
-          "target": "components/ui/countries.ts"
-        },
-        {
-          "path": "registry/form/demo/form.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/form.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "form",
@@ -77,23 +65,13 @@
           "2.1.1": "Show demo data when rendered without props"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["button", "popover"],
       "files": [
         {
           "path": "registry/form/date-time-picker.tsx",
           "type": "registry:block",
           "target": "components/ui/date-time-picker.tsx"
-        },
-        {
-          "path": "registry/form/demo/form.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/form.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "form",
@@ -119,23 +97,13 @@
           "1.0.7": "Show demo data when rendered without props"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["button", "input", "label", "select"],
       "files": [
         {
           "path": "registry/form/issue-report-form.tsx",
           "type": "registry:block",
           "target": "components/ui/issue-report-form.tsx"
-        },
-        {
-          "path": "registry/form/demo/form.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/form.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "form",
@@ -159,7 +127,7 @@
           "1.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
         "https://mcpcn.dev/r/shared-types.json"
@@ -169,16 +137,6 @@
           "path": "registry/payment/order-confirm.tsx",
           "type": "registry:block",
           "target": "components/ui/order-confirm.tsx"
-        },
-        {
-          "path": "registry/payment/demo/payment.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/payment.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "payment",
@@ -204,7 +162,7 @@
           "2.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
         "https://mcpcn.dev/r/shared-types.json"
@@ -214,16 +172,6 @@
           "path": "registry/payment/payment-confirmed.tsx",
           "type": "registry:block",
           "target": "components/ui/payment-confirmed.tsx"
-        },
-        {
-          "path": "registry/payment/demo/payment.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/payment.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "payment",
@@ -252,7 +200,7 @@
           "2.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
         "https://mcpcn.dev/r/shared-types.json"
@@ -262,16 +210,6 @@
           "path": "registry/list/product-list.tsx",
           "type": "registry:block",
           "target": "components/ui/product-list.tsx"
-        },
-        {
-          "path": "registry/list/demo/list.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/list.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "list",
@@ -303,7 +241,7 @@
           "3.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
         "https://mcpcn.dev/r/shared-types.json"
@@ -313,16 +251,6 @@
           "path": "registry/selection/option-list.tsx",
           "type": "registry:block",
           "target": "components/ui/option-list.tsx"
-        },
-        {
-          "path": "registry/selection/demo/selection.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/selection.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "selection",
@@ -349,7 +277,7 @@
           "2.0.3": "Show demo data when rendered without props"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
         "https://mcpcn.dev/r/shared-types.json"
@@ -359,16 +287,6 @@
           "path": "registry/payment/amount-input.tsx",
           "type": "registry:block",
           "target": "components/ui/amount-input.tsx"
-        },
-        {
-          "path": "registry/payment/demo/payment.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/payment.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "payment",
@@ -398,23 +316,13 @@
           "2.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["button"],
       "files": [
         {
           "path": "registry/selection/tag-select.tsx",
           "type": "registry:block",
           "target": "components/ui/tag-select.tsx"
-        },
-        {
-          "path": "registry/selection/demo/selection.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/selection.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "selection",
@@ -450,16 +358,6 @@
           "path": "registry/selection/quick-reply.tsx",
           "type": "registry:block",
           "target": "components/ui/quick-reply.tsx"
-        },
-        {
-          "path": "registry/selection/demo/selection.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/selection.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "selection",
@@ -494,16 +392,6 @@
           "path": "registry/status/progress-steps.tsx",
           "type": "registry:block",
           "target": "components/ui/progress-steps.tsx"
-        },
-        {
-          "path": "registry/status/demo/status.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/status.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "status",
@@ -535,16 +423,6 @@
           "path": "registry/status/status-badge.tsx",
           "type": "registry:block",
           "target": "components/ui/status-badge.tsx"
-        },
-        {
-          "path": "registry/status/demo/status.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/status.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "status",
@@ -578,16 +456,6 @@
           "path": "registry/miscellaneous/stat-card.tsx",
           "type": "registry:block",
           "target": "components/ui/stat-card.tsx"
-        },
-        {
-          "path": "registry/miscellaneous/demo/miscellaneous.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/miscellaneous.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "miscellaneous",
@@ -617,7 +485,7 @@
           "2.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
         "tooltip",
@@ -633,16 +501,6 @@
           "path": "registry/blogging/post-detail.tsx",
           "type": "registry:block",
           "target": "components/ui/post-detail.tsx"
-        },
-        {
-          "path": "registry/blogging/demo/blogging.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/blogging.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "blogging",
@@ -676,7 +534,7 @@
           "3.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
         "tooltip",
@@ -697,16 +555,6 @@
           "path": "registry/blogging/post-detail.tsx",
           "type": "registry:block",
           "target": "components/ui/post-detail.tsx"
-        },
-        {
-          "path": "registry/blogging/demo/blogging.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/blogging.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "blogging",
@@ -748,7 +596,7 @@
           "2.2.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
         "tooltip",
@@ -764,16 +612,6 @@
           "path": "registry/blogging/post-card.tsx",
           "type": "registry:block",
           "target": "components/ui/post-card.tsx"
-        },
-        {
-          "path": "registry/blogging/demo/blogging.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/blogging.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "blogging",
@@ -806,23 +644,13 @@
           "2.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["button", "popover", "select", "input"],
       "files": [
         {
           "path": "registry/list/table.tsx",
           "type": "registry:block",
           "target": "components/ui/table.tsx"
-        },
-        {
-          "path": "registry/list/demo/list.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/list.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "list",
@@ -852,23 +680,13 @@
           "3.0.6": "Show demo data when rendered without props"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["dropdown-menu"],
       "files": [
         {
           "path": "registry/messaging/message-bubble.tsx",
           "type": "registry:block",
           "target": "components/ui/message-bubble.tsx"
-        },
-        {
-          "path": "registry/messaging/demo/messaging.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/messaging.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "messaging",
@@ -904,7 +722,7 @@
           "4.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "dropdown-menu",
         "https://mcpcn.dev/r/shared-types.json"
@@ -919,16 +737,6 @@
           "path": "registry/messaging/message-bubble.tsx",
           "type": "registry:block",
           "target": "components/ui/message-bubble.tsx"
-        },
-        {
-          "path": "registry/messaging/demo/messaging.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/messaging.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "messaging",
@@ -961,16 +769,6 @@
           "path": "registry/social/x-post.tsx",
           "type": "registry:block",
           "target": "components/ui/x-post.tsx"
-        },
-        {
-          "path": "registry/social/demo/social.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/social.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "social",
@@ -997,23 +795,13 @@
           "1.2.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["dropdown-menu"],
       "files": [
         {
           "path": "registry/social/instagram-post.tsx",
           "type": "registry:block",
           "target": "components/ui/instagram-post.tsx"
-        },
-        {
-          "path": "registry/social/demo/social.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/social.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "social",
@@ -1048,16 +836,6 @@
           "path": "registry/social/linkedin-post.tsx",
           "type": "registry:block",
           "target": "components/ui/linkedin-post.tsx"
-        },
-        {
-          "path": "registry/social/demo/social.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/social.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "social",
@@ -1083,23 +861,13 @@
           "1.2.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["dropdown-menu"],
       "files": [
         {
           "path": "registry/social/youtube-post.tsx",
           "type": "registry:block",
           "target": "components/ui/youtube-post.tsx"
-        },
-        {
-          "path": "registry/social/demo/social.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/social.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "social",
@@ -1135,7 +903,7 @@
           "2.1.2": "Fixed Invalid hook call errors by replacing react-leaflet with vanilla leaflet API"
         }
       },
-      "dependencies": ["lucide-react", "leaflet"],
+      "dependencies": ["@base-ui/react", "lucide-react", "leaflet"],
       "devDependencies": ["@types/leaflet"],
       "registryDependencies": ["button", "checkbox"],
       "files": [
@@ -1143,16 +911,6 @@
           "path": "registry/map/map-carousel.tsx",
           "type": "registry:block",
           "target": "components/ui/map-carousel.tsx"
-        },
-        {
-          "path": "registry/map/demo/map.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/map.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "map",
@@ -1195,16 +953,6 @@
           "path": "registry/events/event-card.tsx",
           "type": "registry:block",
           "target": "components/ui/event-card.tsx"
-        },
-        {
-          "path": "registry/events/demo/events.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/events.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events",
@@ -1245,7 +993,12 @@
           "7.1.1": "Fixed react-leaflet Invalid hook call errors by using React.lazy instead of useEffect dynamic imports"
         }
       },
-      "dependencies": ["lucide-react", "react-leaflet", "leaflet"],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react",
+        "react-leaflet",
+        "leaflet"
+      ],
       "devDependencies": ["@types/leaflet"],
       "registryDependencies": [
         "button",
@@ -1259,16 +1012,6 @@
           "path": "registry/events/event-list.tsx",
           "type": "registry:block",
           "target": "components/ui/event-list.tsx"
-        },
-        {
-          "path": "registry/events/demo/events.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/events.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events",
@@ -1304,7 +1047,12 @@
           "3.1.1": "Fixed react-leaflet Invalid hook call errors by using React.lazy instead of useEffect dynamic imports"
         }
       },
-      "dependencies": ["lucide-react", "react-leaflet", "leaflet"],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react",
+        "react-leaflet",
+        "leaflet"
+      ],
       "devDependencies": ["@types/leaflet"],
       "registryDependencies": [
         "button",
@@ -1316,16 +1064,6 @@
           "path": "registry/events/event-detail.tsx",
           "type": "registry:block",
           "target": "components/ui/event-detail.tsx"
-        },
-        {
-          "path": "registry/events/demo/events.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/events.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events",
@@ -1354,23 +1092,13 @@
           "4.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["button"],
       "files": [
         {
           "path": "registry/events/ticket-tier-select.tsx",
           "type": "registry:block",
           "target": "components/ui/ticket-tier-select.tsx"
-        },
-        {
-          "path": "registry/events/demo/events.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/events.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events",
@@ -1395,23 +1123,13 @@
           "2.1.0": "Added demo data defaults - component renders demo content when no data prop is provided"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["button"],
       "files": [
         {
           "path": "registry/events/event-confirmation.tsx",
           "type": "registry:block",
           "target": "components/ui/event-confirmation.tsx"
-        },
-        {
-          "path": "registry/events/demo/events.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/events.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events",
@@ -1440,23 +1158,13 @@
           "2.2.1": "Fixed import type for verbatimModuleSyntax compatibility"
         }
       },
-      "dependencies": ["lucide-react"],
+      "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": ["button"],
       "files": [
         {
           "path": "registry/miscellaneous/hero.tsx",
           "type": "registry:block",
           "target": "components/ui/hero.tsx"
-        },
-        {
-          "path": "registry/miscellaneous/demo/miscellaneous.ts",
-          "type": "registry:lib",
-          "target": "components/ui/demo/miscellaneous.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "miscellaneous",
@@ -1484,11 +1192,6 @@
           "path": "registry/events/shared.tsx",
           "type": "registry:lib",
           "target": "components/ui/shared.tsx"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "events"
@@ -1505,11 +1208,6 @@
           "path": "registry/shared-types.ts",
           "type": "registry:lib",
           "target": "components/ui/types.ts"
-        },
-        {
-          "path": "registry/_lib/compound-component.tsx",
-          "type": "registry:lib",
-          "target": "components/ui/compound.tsx"
         }
       ],
       "category": "lib"

@@ -1,521 +1,352 @@
-/* oxlint-disable complexity, unicorn/consistent-function-scoping */
 "use client";
 
 import { Calendar, Clock, ExternalLink, Maximize2 } from "lucide-react";
-import { useMemo } from "react";
+import { createContext, createElement, useContext } from "react";
+import type { ComponentProps, ImgHTMLAttributes } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
-import { demoPostDetailData } from "./demo/blogging";
 import type { Post } from "./types";
 
-// DOM-based allowlist HTML sanitizer for post content
-const ALLOWED_TAGS = new Set([
-  "p",
-  "br",
-  "b",
-  "i",
-  "em",
-  "strong",
-  "a",
-  "ul",
-  "ol",
-  "li",
-  "h1",
-  "h2",
-  "h3",
-  "h4",
-  "h5",
-  "h6",
-  "blockquote",
-  "code",
-  "pre",
-  "span",
-  "div",
-  "img",
-  "figure",
-  "figcaption",
-  "hr",
-]);
-const ALLOWED_ATTRS: Record<string, Set<string>> = {
-  "*": new Set(["class", "id"]),
-  a: new Set(["href", "target", "rel", "title"]),
-  img: new Set(["src", "alt", "width", "height"]),
-};
-const DANGEROUS_URL = /^\s*(javascript|data):/i;
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
 
-const sanitizeNode = (node: Node): void => {
-  const children = [...node.childNodes];
-  for (const child of children) {
-    // Text node.
-    if (child.nodeType === 3) {
-      continue;
-    }
-    // Element node.
-    if (child.nodeType !== 1) {
-      child.remove();
-      continue;
-    }
-    const el = child as Element;
-    const tag = el.tagName.toLowerCase();
-    if (!ALLOWED_TAGS.has(tag)) {
-      // Unwrap: keep text content, discard the tag
-      while (el.firstChild) {
-        el.before(el.firstChild);
-      }
-      el.remove();
-      continue;
-    }
-    // Strip disallowed attributes
-    const tagAllowed = ALLOWED_ATTRS[tag];
-    const globalAllowed = ALLOWED_ATTRS["*"];
-    for (const attr of el.attributes) {
-      const name = attr.name.toLowerCase();
-      if (!tagAllowed?.has(name) && !globalAllowed?.has(name)) {
-        el.removeAttribute(attr.name);
-      }
-    }
-    // Block dangerous URL schemes on href/src
-    for (const urlAttr of ["href", "src"]) {
-      const val = el.getAttribute(urlAttr);
-      if (val && DANGEROUS_URL.test(val)) {
-        el.removeAttribute(urlAttr);
-      }
-    }
-    sanitizeNode(el);
+interface PostDetailContextValue {
+  content?: string;
+  displayMode: "fullscreen" | "inline" | "pip";
+  onBack?: () => void;
+  onReadMore?: () => void;
+  onReadRelated?: (post: Post) => void;
+  post: Post;
+  relatedPosts: Post[];
+  showAuthor: boolean;
+  showCover: boolean;
+}
+
+const PostDetailContext = createContext<PostDetailContextValue | null>(null);
+
+export const usePostDetail = () => {
+  const context = useContext(PostDetailContext);
+  if (!context) {
+    throw new Error("PostDetail components must be used within PostDetail");
   }
+  return context;
 };
 
-const sanitizeHtml = (html: string): string => {
-  if (typeof document === "undefined") {
-    return html;
-  }
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  sanitizeNode(doc.body);
-  return doc.body.innerHTML;
+const DEFAULT_POST: Post = {
+  author: {
+    avatar: "https://i.pravatar.cc/150?u=sarah",
+    name: "Sarah Chen",
+  },
+  category: "Tutorial",
+  coverImage:
+    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800",
+  excerpt:
+    "Learn how to build conversational interfaces for AI-powered applications.",
+  publishedAt: "2024-01-15",
+  readTime: "5 min read",
+  tags: ["Tutorial", "Components", "AI", "React", "TypeScript"],
+  title: "Getting Started with Agentic UI Components",
 };
 
-const TagList = ({
-  tags,
-  maxVisible = 2,
-  size = "default",
-}: {
-  tags: string[];
-  maxVisible?: number;
-  size?: "small" | "default";
-}) => {
-  const visibleTags = tags.slice(0, maxVisible);
-  const remainingTags = tags.slice(maxVisible);
-  const hasMore = remainingTags.length > 0;
+const DEFAULT_CONTENT = `
+  <p>Building modern AI-powered applications requires a new approach to UI design. Traditional web components don't always translate well to conversational interfaces, where context and flow are paramount.</p>
+  <p>Our Agentic UI component library provides purpose-built components that work seamlessly within chat interfaces.</p>
+  <h2>Key Features</h2>
+  <p>Each component supports inline, fullscreen, and picture-in-picture display modes while adapting to mobile devices and themes.</p>
+`;
 
-  const tagClass =
-    size === "small"
-      ? "rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium"
-      : "rounded-full bg-muted px-3 py-1 text-xs font-medium";
+const DEFAULT_RELATED: Post[] = [
+  {
+    excerpt: "Best practices for intuitive UI components in chat environments.",
+    readTime: "8 min read",
+    title: "Designing for Conversational Interfaces",
+    url: "https://example.com/posts/designing-conversational-interfaces",
+  },
+  {
+    excerpt: "Use Model Context Protocol for seamless backend communication.",
+    readTime: "12 min read",
+    title: "MCP Integration Patterns",
+    url: "https://example.com/posts/mcp-integration-patterns",
+  },
+];
 
-  return (
-    <>
-      {visibleTags.map((tag) => (
-        <span key={tag} className={tagClass}>
-          {tag}
-        </span>
-      ))}
-      {hasMore && (
-        <TooltipProvider delayDuration={0}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className={`${tagClass} cursor-default`}>
-                +{remainingTags.length}
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{remainingTags.join(", ")}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )}
-    </>
-  );
-};
+const formatDate = (date: string) =>
+  new Date(date).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * PostDetailProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the PostDetail component, a full post detail view with Medium-style typography.
- */
-export interface PostDetailProps {
-  data?: {
-    /** The main blog post to display. */
-    post?: Post;
-    /** HTML content of the post body. */
-    content?: string;
-    /** Related posts to show at the bottom of the article. */
-    relatedPosts?: Post[];
-  };
+export interface PostDetailProps extends ComponentProps<"article"> {
   actions?: {
-    /** Called when the back button is clicked. */
     onBack?: () => void;
-    /** Called when the read more button is clicked (inline mode). */
     onReadMore?: () => void;
-    /** Called when a related post is clicked. */
     onReadRelated?: (post: Post) => void;
   };
   appearance?: {
-    /**
-     * Whether to show the cover image.
-     * @default true
-     */
-    showCover?: boolean;
-    /**
-     * Whether to show author information.
-     * @default true
-     */
-    showAuthor?: boolean;
-    /**
-     * Display mode for the component.
-     * - inline: Compact card view with truncated content
-     * - pip: Picture-in-picture view with truncated content
-     * - fullscreen: Full article view with complete content
-     * @default "fullscreen"
-     */
     displayMode?: "inline" | "pip" | "fullscreen";
+    showAuthor?: boolean;
+    showCover?: boolean;
+  };
+  data?: {
+    content?: string;
+    post?: Post;
+    relatedPosts?: Post[];
   };
 }
 
-const PostDetailView = ({ data, actions, appearance }: PostDetailProps) => {
-  const resolved: NonNullable<PostDetailProps["data"]> =
-    data ?? demoPostDetailData;
-  const { post } = resolved;
-  const rawContent = resolved.content;
-  const content = useMemo(
-    () => (rawContent ? sanitizeHtml(rawContent) : undefined),
-    [rawContent]
-  );
-  const relatedPosts = resolved.relatedPosts ?? [];
-  const onReadMore = actions?.onReadMore;
-  const showCover = appearance?.showCover ?? true;
-  const showAuthor = appearance?.showAuthor ?? true;
-
-  const displayMode = appearance?.displayMode ?? "inline";
-
-  const handleReadMore = () => {
-    onReadMore?.();
-  };
-
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-
-  // Inline mode - card view with truncated content
-  if (displayMode === "inline") {
-    return (
-      <div className="flex flex-col sm:flex-row gap-4 rounded-lg border bg-card p-3">
-        {showCover && post?.coverImage && (
-          <div className="aspect-video sm:aspect-square sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-md">
-            <RegistryImage
-              src={post.coverImage}
-              alt={post?.title || ""}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        )}
-
-        <div className="flex flex-1 flex-col justify-between min-w-0">
-          <div>
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1 min-w-0">
-                {post?.category && (
-                  <p className="mb-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                    {post.category}
-                  </p>
-                )}
-
-                {post?.title && (
-                  <h1 className="line-clamp-2 text-sm font-bold leading-tight">
-                    {post.title}
-                  </h1>
-                )}
-              </div>
-              <button
-                onClick={handleReadMore}
-                className="shrink-0 p-1 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground cursor-pointer"
-                aria-label="Expand to fullscreen"
-              >
-                <Maximize2 className="h-4 w-4" />
-              </button>
-            </div>
-
-            {post?.excerpt && (
-              <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                {post.excerpt}
-              </p>
-            )}
-
-            {post?.tags && post.tags.length > 0 && (
-              <div className="mt-1.5 flex flex-wrap gap-1">
-                <TagList tags={post.tags} maxVisible={2} size="small" />
-              </div>
-            )}
-          </div>
-
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              {showAuthor && post?.author?.avatar && (
-                <RegistryImage
-                  src={post.author.avatar}
-                  alt={post?.author?.name || ""}
-                  className="h-4 w-4 rounded-full"
-                />
-              )}
-              {showAuthor && post?.author?.name && (
-                <span>{post.author.name}</span>
-              )}
-              {post?.publishedAt && (
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {formatDate(post.publishedAt)}
-                </span>
-              )}
-              {post?.readTime && (
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  {post.readTime}
-                </span>
-              )}
-            </div>
-
-            <Button size="sm" onClick={handleReadMore}>
-              Read
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
+export const PostDetailCover = ({
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { post, showCover } = usePostDetail();
+  if (!showCover) {
+    return null;
   }
-
-  // PiP mode - horizontal layout with image on left, similar to post-card horizontal
-  if (displayMode === "pip") {
-    return (
-      <div className="flex flex-col sm:flex-row gap-4 rounded-lg border bg-card p-3">
-        {showCover && post?.coverImage && (
-          <div className="aspect-video sm:aspect-square sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-md">
-            <RegistryImage
-              src={post.coverImage}
-              alt={post?.title || ""}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        )}
-
-        <div className="flex flex-1 flex-col justify-between min-w-0">
-          <div>
-            {post?.category && (
-              <p className="mb-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                {post.category}
-              </p>
-            )}
-
-            {post?.title && (
-              <h1 className="line-clamp-2 text-sm font-bold leading-tight">
-                {post.title}
-              </h1>
-            )}
-
-            {post?.excerpt && (
-              <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                {post.excerpt}
-              </p>
-            )}
-
-            {post?.tags && post.tags.length > 0 && (
-              <div className="mt-1.5 flex flex-wrap gap-1">
-                <TagList tags={post.tags} maxVisible={2} size="small" />
-              </div>
-            )}
-          </div>
-
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              {showAuthor && post?.author?.avatar && (
-                <RegistryImage
-                  src={post.author.avatar}
-                  alt={post?.author?.name || ""}
-                  className="h-4 w-4 rounded-full"
-                />
-              )}
-              {showAuthor && post?.author?.name && (
-                <span>{post.author.name}</span>
-              )}
-              {post?.publishedAt && (
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {formatDate(post.publishedAt)}
-                </span>
-              )}
-              {post?.readTime && (
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  {post.readTime}
-                </span>
-              )}
-            </div>
-            <Button size="sm" onClick={handleReadMore}>
-              Read
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Fullscreen mode
   return (
-    <div className="min-h-screen fs-mode bg-background">
-      <article className="mx-auto w-full max-w-[680px] px-6 py-10">
-        {showCover && post?.coverImage && (
-          <div className="aspect-video w-full overflow-hidden rounded-lg mb-8">
-            <RegistryImage
-              src={post.coverImage}
-              alt={post?.title || ""}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        )}
-        {post?.category && (
-          <p className="mb-2 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-            {post.category}
-          </p>
-        )}
-
-        {post?.title && (
-          <h1 className="text-[32px] font-bold leading-[1.25] tracking-tight md:text-[42px]">
-            {post.title}
-          </h1>
-        )}
-
-        {post?.tags && post.tags.length > 0 && (
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <TagList tags={post.tags} maxVisible={2} size="default" />
-          </div>
-        )}
-
-        {showAuthor && post?.author && (
-          <div className="mt-8 flex items-center gap-4 border-b pb-8">
-            {post.author.avatar && (
-              <RegistryImage
-                src={post.author.avatar}
-                alt={post.author.name || ""}
-                className="h-12 w-12 rounded-full"
-              />
-            )}
-            <div>
-              {post.author.name && (
-                <p className="font-medium">{post.author.name}</p>
-              )}
-              {post?.publishedAt ||
-                (post?.readTime && (
-                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                    {post?.publishedAt && (
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3.5 w-3.5" />
-                        {formatDate(post.publishedAt)}
-                      </span>
-                    )}
-                    {post?.readTime && (
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3.5 w-3.5" />
-                        {post.readTime}
-                      </span>
-                    )}
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
-
-        {/* Medium-style content */}
-        <div className="mt-10">
-          {post?.excerpt && (
-            <p className="text-[21px] leading-[1.8] text-muted-foreground mb-8">
-              {post.excerpt}
-            </p>
-          )}
-          {content && (
-            <div
-              className="
-                                                    text-[21px] leading-[1.8] tracking-[-0.003em]
-                                                    [&>p]:mb-8
-                                                    [&>h2]:text-[26px] [&>h2]:font-bold [&>h2]:mt-12 [&>h2]:mb-4 [&>h2]:leading-[1.3]
-                                                    [&>h3]:text-[22px] [&>h3]:font-bold [&>h3]:mt-10 [&>h3]:mb-3 [&>h3]:leading-[1.3]
-                                                    [&>ul]:mb-8 [&>ul]:pl-6 [&>ul>li]:mb-2
-                                                    [&>ol]:mb-8 [&>ol]:pl-6 [&>ol>li]:mb-2
-                                                    [&>blockquote]:border-l-4 [&>blockquote]:border-foreground [&>blockquote]:pl-6 [&>blockquote]:my-8 [&>blockquote]:italic
-                                                  "
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
-          )}
-        </div>
-
-        {relatedPosts && relatedPosts.length > 0 && (
-          <div className="mt-16 border-t pt-10">
-            <h3 className="mb-6 text-lg font-semibold">Related Posts</h3>
-            <div className="space-y-4">
-              {relatedPosts.map((related) => (
-                <a
-                  key={related.title || related.url}
-                  href={related.url || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center gap-4 rounded-lg p-3 text-left transition-colors hover:bg-muted cursor-pointer"
-                >
-                  {related.coverImage && (
-                    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg">
-                      <RegistryImage
-                        src={related.coverImage}
-                        alt={related.title || ""}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="min-w-0 flex-1">
-                    {related.title && (
-                      <p className="font-medium">{related.title}</p>
-                    )}
-                    {related.excerpt && (
-                      <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
-                        {related.excerpt}
-                      </p>
-                    )}
-                    {related.readTime && (
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {related.readTime}
-                      </p>
-                    )}
-                  </div>
-                  <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-      </article>
+    <div className={cn("overflow-hidden bg-muted", className)} {...props}>
+      {post.coverImage ? (
+        <BlockImage
+          alt={post.title ?? "Post cover"}
+          className="size-full object-cover"
+          src={post.coverImage}
+        />
+      ) : (
+        <div className="size-full bg-muted" />
+      )}
     </div>
   );
 };
 
-export const PostDetail = createCompoundComponent(PostDetailView, "PostDetail");
+export const PostDetailAuthor = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { post, showAuthor } = usePostDetail();
+  if (!showAuthor) {
+    return null;
+  }
+  return (
+    <div className={cn("flex items-center gap-3", className)} {...props}>
+      {children ?? (
+        <>
+          {post.author?.avatar && (
+            <BlockImage
+              alt={post.author.name ?? "Author"}
+              className="size-9 rounded-full object-cover"
+              src={post.author.avatar}
+            />
+          )}
+          <div>
+            {post.author?.name && (
+              <p className="font-medium text-sm">{post.author.name}</p>
+            )}
+            <div className="flex flex-wrap items-center gap-3 text-muted-foreground text-xs">
+              {post.publishedAt && (
+                <span className="flex items-center gap-1">
+                  <Calendar className="size-3.5" />
+                  {formatDate(post.publishedAt)}
+                </span>
+              )}
+              {post.readTime && (
+                <span className="flex items-center gap-1">
+                  <Clock className="size-3.5" />
+                  {post.readTime}
+                </span>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export const PostDetailHeader = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"header">) => {
+  const { post } = usePostDetail();
+  return (
+    <header className={className} {...props}>
+      {children ?? (
+        <>
+          {post.category && (
+            <p className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
+              {post.category}
+            </p>
+          )}
+          {post.title && (
+            <h1 className="mt-2 font-bold text-2xl leading-tight sm:text-4xl">
+              {post.title}
+            </h1>
+          )}
+          {post.excerpt && (
+            <p className="mt-3 text-muted-foreground sm:text-lg">
+              {post.excerpt}
+            </p>
+          )}
+          <PostDetailAuthor className="mt-5" />
+        </>
+      )}
+    </header>
+  );
+};
+
+export const PostDetailBody = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { content } = usePostDetail();
+  if (children) {
+    return (
+      <div className={className} {...props}>
+        {children}
+      </div>
+    );
+  }
+  if (!content) {
+    return null;
+  }
+  return (
+    <div
+      className={cn(
+        "prose prose-neutral max-w-none dark:prose-invert prose-headings:font-semibold prose-p:text-muted-foreground",
+        className
+      )}
+      dangerouslySetInnerHTML={{ __html: content }}
+      {...props}
+    />
+  );
+};
+
+export const PostDetailRelated = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { onReadRelated, relatedPosts } = usePostDetail();
+  if (!(children || relatedPosts.length > 0)) {
+    return null;
+  }
+  return (
+    <div className={cn("border-t pt-6", className)} {...props}>
+      {children ?? (
+        <>
+          <h2 className="mb-4 font-semibold text-lg">Related posts</h2>
+          <div className="space-y-2">
+            {relatedPosts.map((post, index) => (
+              <button
+                className="flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-muted"
+                key={`${post.title ?? "post"}-${index}`}
+                onClick={() => onReadRelated?.(post)}
+                type="button"
+              >
+                <div className="min-w-0 flex-1">
+                  {post.title && <p className="font-medium">{post.title}</p>}
+                  {post.excerpt && (
+                    <p className="mt-1 line-clamp-1 text-muted-foreground text-sm">
+                      {post.excerpt}
+                    </p>
+                  )}
+                  {post.readTime && (
+                    <p className="mt-1 text-muted-foreground text-xs">
+                      {post.readTime}
+                    </p>
+                  )}
+                </div>
+                <ExternalLink className="size-4 shrink-0 text-muted-foreground" />
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+const CompactPostDetail = () => {
+  const { displayMode, onReadMore, post } = usePostDetail();
+  return (
+    <div className="overflow-hidden rounded-xl border bg-card">
+      <PostDetailCover className="aspect-video w-full" />
+      <div className="p-4">
+        {post.category && (
+          <p className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
+            {post.category}
+          </p>
+        )}
+        {post.title && (
+          <h2 className="mt-1 line-clamp-2 font-semibold text-xl">
+            {post.title}
+          </h2>
+        )}
+        {post.excerpt && (
+          <p className="mt-2 line-clamp-3 text-muted-foreground text-sm">
+            {post.excerpt}
+          </p>
+        )}
+        <PostDetailAuthor className="mt-4" />
+        <Button className="mt-4 w-full" onClick={onReadMore} size="sm">
+          {displayMode === "pip" ? "Open article" : "Read article"}
+          <Maximize2 className="ml-2 size-4" />
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const FullPostDetail = () => (
+  <div className="rounded-xl border bg-card">
+    <PostDetailCover className="aspect-[21/9] w-full rounded-t-xl" />
+    <div className="mx-auto max-w-3xl space-y-8 px-5 py-8 sm:px-8">
+      <PostDetailHeader />
+      <PostDetailBody />
+      <PostDetailRelated />
+    </div>
+  </div>
+);
+
+export const PostDetailContent = () => {
+  const { displayMode } = usePostDetail();
+  return displayMode === "fullscreen" ? (
+    <FullPostDetail />
+  ) : (
+    <CompactPostDetail />
+  );
+};
+
+const PostDetailRoot = ({
+  actions,
+  appearance,
+  children,
+  className,
+  data,
+  ...props
+}: PostDetailProps) => {
+  const context: PostDetailContextValue = {
+    content: data?.content ?? DEFAULT_CONTENT,
+    displayMode: appearance?.displayMode ?? "inline",
+    onBack: actions?.onBack,
+    onReadMore: actions?.onReadMore,
+    onReadRelated: actions?.onReadRelated,
+    post: data?.post ?? DEFAULT_POST,
+    relatedPosts: data?.relatedPosts ?? DEFAULT_RELATED,
+    showAuthor: appearance?.showAuthor ?? true,
+    showCover: appearance?.showCover ?? true,
+  };
+  return (
+    <PostDetailContext.Provider value={context}>
+      <article className={className} {...props}>
+        {children ?? <PostDetailContent />}
+      </article>
+    </PostDetailContext.Provider>
+  );
+};
+
+export const PostDetail = PostDetailRoot;

@@ -1,13 +1,9 @@
-/* oxlint-disable complexity */
 "use client";
 
-import { Bookmark, MoreHorizontal, Share, EyeOff, Flag } from "lucide-react";
-import { useState } from "react";
+import { Bookmark, EyeOff, Flag, MoreHorizontal, Share } from "lucide-react";
+import { createContext, createElement, useContext, useState } from "react";
+import type { ComponentProps, ImgHTMLAttributes } from "react";
 
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,191 +11,221 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
-import { demoYouTubePost } from "./demo/social";
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * YouTubePostProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the YouTubePost component, which displays a YouTube video embed
- * with thumbnail preview and click-to-play functionality.
- */
-export interface YouTubePostProps {
-  data?: {
-    /** YouTube channel name. */
-    channel?: string;
-    /** Channel avatar letter fallback or image URL. */
-    avatar?: string;
-    /** Video title. */
-    title?: string;
-    /** Formatted view count (e.g., "1M views"). */
-    views?: string;
-    /** Time since video was published (e.g., "2 weeks ago"). */
-    time?: string;
-    /** Video duration in MM:SS or HH:MM:SS format. */
-    duration?: string;
-    /** URL of the video thumbnail image. */
-    thumbnail?: string;
-    /** Formatted subscriber count for the channel. */
-    subscribers?: string;
-    /** Whether the channel has a verified badge. */
-    verified?: boolean;
-    /** YouTube video ID used for embedding the player. */
-    videoId?: string;
-  };
+interface YouTubePostData {
+  avatar?: string;
+  channel?: string;
+  duration?: string;
+  subscribers?: string;
+  thumbnail?: string;
+  time?: string;
+  title?: string;
+  verified?: boolean;
+  videoId?: string;
+  views?: string;
 }
 
-const YouTubePostView = ({ data }: YouTubePostProps) => {
-  const resolved: NonNullable<YouTubePostProps["data"]> =
-    data ?? demoYouTubePost;
-  const channel = resolved?.channel;
-  const avatar = resolved?.avatar;
-  const title = resolved?.title;
-  const views = resolved?.views;
-  const time = resolved?.time;
-  const duration = resolved?.duration;
-  const thumbnail = resolved?.thumbnail;
-  const verified = resolved?.verified;
-  const videoId = resolved?.videoId;
+interface YouTubePostContextValue {
+  data: YouTubePostData;
+  isPlaying: boolean;
+  play: () => void;
+}
 
-  const [isPlaying, setIsPlaying] = useState(false);
+const DEFAULT_POST: YouTubePostData = {
+  avatar: "M",
+  channel: "mcpcn",
+  duration: "15:42",
+  thumbnail:
+    "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800",
+  time: "3 days ago",
+  title: "Building Agentic UIs with mcpcn",
+  views: "12K",
+};
 
-  if (!title && !thumbnail && !videoId) {
+const YouTubePostContext = createContext<YouTubePostContextValue | null>(null);
+
+export const useYouTubePost = () => {
+  const context = useContext(YouTubePostContext);
+  if (!context) {
+    throw new Error("YouTubePost components must be used within YouTubePost");
+  }
+  return context;
+};
+
+export interface YouTubePostProps extends ComponentProps<"article"> {
+  data?: YouTubePostData;
+}
+
+const PlayButton = () => (
+  <svg
+    className="h-10 w-14 transition-transform hover:scale-105"
+    viewBox="0 0 1024 721"
+  >
+    <path
+      d="M1013 156.3s-10-70.4-40.6-101.4C933.6 14.2 890 14 870.1 11.6 727.1 1.3 512.7 1.3 512.7 1.3h-.4s-214.4 0-357.4 10.3C135 14 91.4 14.2 52.6 54.9 22 85.9 12 156.3 12 156.3S1.8 238.9 1.8 321.6v77.5C1.8 481.8 12 564.4 12 564.4s10 70.4 40.6 101.4c38.9 40.7 89.9 39.4 112.6 43.7 81.7 7.8 347.3 10.3 347.3 10.3s214.6-.3 357.6-10.7c20-2.4 63.5-2.6 102.3-43.3 30.6-31 40.6-101.4 40.6-101.4s10.2-82.7 10.2-165.3v-77.5c0-82.7-10.2-165.3-10.2-165.3zM407 493V206l276 144-276 143z"
+      fill="#f00"
+    />
+    <path d="m407 493 276-143-276-144v287z" fill="#fff" />
+  </svg>
+);
+
+export const YouTubePostPlayer = ({
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data, isPlaying, play } = useYouTubePost();
+  if (!(data.thumbnail || data.videoId)) {
     return null;
   }
-
   return (
-    <div className="rounded-xl border bg-card overflow-hidden">
-      {/* Thumbnail / Video */}
-      {thumbnail ||
-        (videoId && (
-          <div className="relative aspect-video bg-black">
-            {isPlaying && videoId ? (
-              <iframe
-                className="w-full h-full"
-                src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-                title="YouTube video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            ) : (
-              <>
-                {thumbnail && (
-                  <RegistryImage
-                    src={thumbnail}
-                    alt={
-                      title ? `Video thumbnail: ${title}` : "Video thumbnail"
-                    }
-                    className="w-full h-full object-cover"
-                  />
-                )}
-
-                {/* YouTube play button overlay */}
-                {videoId && (
-                  <button
-                    className="absolute inset-0 flex items-center justify-center"
-                    onClick={() => setIsPlaying(true)}
-                    aria-label="Play video"
-                  >
-                    <svg
-                      className="h-10 w-14 cursor-pointer hover:scale-105 transition-transform"
-                      viewBox="0 0 1024 721"
-                    >
-                      <path
-                        fill="#FF0000"
-                        d="M1013,156.3c0,0-10-70.4-40.6-101.4C933.6,14.2,890,14,870.1,11.6C727.1,1.3,512.7,1.3,512.7,1.3h-0.4c0,0-214.4,0-357.4,10.3C135,14,91.4,14.2,52.6,54.9C22,85.9,12,156.3,12,156.3S1.8,238.9,1.8,321.6v77.5C1.8,481.8,12,564.4,12,564.4s10,70.4,40.6,101.4c38.9,40.7,89.9,39.4,112.6,43.7c81.7,7.8,347.3,10.3,347.3,10.3s214.6-0.3,357.6-10.7c20-2.4,63.5-2.6,102.3-43.3c30.6-31,40.6-101.4,40.6-101.4s10.2-82.7,10.2-165.3v-77.5C1023.2,238.9,1013,156.3,1013,156.3z M407,493V206l276,144L407,493z"
-                      />
-                      <path fill="#FFFFFF" d="M407,493l276-143L407,206V493z" />
-                    </svg>
-                  </button>
-                )}
-
-                {/* Duration badge */}
-                {duration && (
-                  <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-1.5 py-0.5 rounded font-medium">
-                    {duration}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        ))}
-
-      {/* Video info */}
-      {channel ||
-        (title && (
-          <div className="p-3">
-            <div className="flex gap-3">
-              {avatar && (
-                <div className="h-9 w-9 rounded-full bg-red-600 text-white flex items-center justify-center font-semibold text-sm shrink-0">
-                  {avatar}
-                </div>
-              )}
-              <div className="flex-1 min-w-0">
-                {title && (
-                  <h3 className="font-semibold text-sm line-clamp-2 leading-tight">
-                    {title}
-                  </h3>
-                )}
-                {channel && (
-                  <div className="mt-1.5 flex items-center gap-1 text-xs text-muted-foreground">
-                    <span>{channel}</span>
-                    {verified && (
-                      <svg
-                        className="h-3.5 w-3.5"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                      </svg>
-                    )}
-                  </div>
-                )}
-                {views ||
-                  (time && (
-                    <p className="text-xs text-muted-foreground">
-                      {views}
-                      {views && time && " • "}
-                      {time}
-                    </p>
-                  ))}
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="text-muted-foreground hover:text-foreground shrink-0 transition-colors cursor-pointer">
-                    <MoreHorizontal className="h-5 w-5" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
-                    <Bookmark className="mr-2 h-4 w-4" />
-                    Save to Watch later
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Share className="mr-2 h-4 w-4" />
-                    Share
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <EyeOff className="mr-2 h-4 w-4" />
-                    Not interested
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Flag className="mr-2 h-4 w-4" />
-                    Report
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+    <div className={cn("relative aspect-video bg-black", className)} {...props}>
+      {isPlaying && data.videoId ? (
+        <iframe
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="size-full"
+          src={`https://www.youtube.com/embed/${data.videoId}?autoplay=1`}
+          title="YouTube video"
+        />
+      ) : (
+        <>
+          {data.thumbnail && (
+            <BlockImage
+              alt={
+                data.title
+                  ? `Video thumbnail: ${data.title}`
+                  : "Video thumbnail"
+              }
+              className="size-full object-cover"
+              src={data.thumbnail}
+            />
+          )}
+          {data.videoId && (
+            <button
+              aria-label="Play video"
+              className="absolute inset-0 flex cursor-pointer items-center justify-center"
+              onClick={play}
+              type="button"
+            >
+              <PlayButton />
+            </button>
+          )}
+          {data.duration && (
+            <div className="absolute right-2 bottom-2 rounded bg-black/80 px-1.5 py-0.5 font-medium text-white text-xs">
+              {data.duration}
             </div>
-          </div>
-        ))}
+          )}
+        </>
+      )}
     </div>
   );
 };
 
-export const YouTubePost = createCompoundComponent(
-  YouTubePostView,
-  "YouTubePost"
+const YouTubePostMenu = () => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <button
+        className="shrink-0 cursor-pointer text-muted-foreground transition-colors hover:text-foreground"
+        type="button"
+      >
+        <MoreHorizontal className="size-5" />
+      </button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem>
+        <Bookmark className="mr-2 size-4" />
+        Save to Watch later
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <Share className="mr-2 size-4" />
+        Share
+      </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>
+        <EyeOff className="mr-2 size-4" />
+        Not interested
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <Flag className="mr-2 size-4" />
+        Report
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
 );
+
+export const YouTubePostInfo = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data } = useYouTubePost();
+  return (
+    <div className={cn("p-3", className)} {...props}>
+      {children ?? (
+        <div className="flex gap-3">
+          {data.avatar && (
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-red-600 font-semibold text-sm text-white">
+              {data.avatar}
+            </div>
+          )}
+          <div className="min-w-0 flex-1">
+            {data.title && (
+              <h3 className="line-clamp-2 font-semibold text-sm leading-tight">
+                {data.title}
+              </h3>
+            )}
+            {data.channel && (
+              <div className="mt-1.5 flex items-center gap-1 text-muted-foreground text-xs">
+                <span>{data.channel}</span>
+                {data.verified && <span>✓</span>}
+              </div>
+            )}
+            {(data.views || data.time) && (
+              <p className="text-muted-foreground text-xs">
+                {data.views}
+                {data.views && data.time && " • "}
+                {data.time}
+              </p>
+            )}
+          </div>
+          <YouTubePostMenu />
+        </div>
+      )}
+    </div>
+  );
+};
+
+const YouTubePostRoot = ({
+  children,
+  className,
+  data,
+  ...props
+}: YouTubePostProps) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const context: YouTubePostContextValue = {
+    data: data ?? DEFAULT_POST,
+    isPlaying,
+    play: () => setIsPlaying(true),
+  };
+  return (
+    <YouTubePostContext.Provider value={context}>
+      <article
+        className={cn("overflow-hidden rounded-xl border bg-card", className)}
+        {...props}
+      >
+        {children ?? (
+          <>
+            <YouTubePostPlayer />
+            <YouTubePostInfo />
+          </>
+        )}
+      </article>
+    </YouTubePostContext.Provider>
+  );
+};
+
+export const YouTubePost = YouTubePostRoot;

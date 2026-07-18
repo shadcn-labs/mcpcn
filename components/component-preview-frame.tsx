@@ -69,7 +69,10 @@ export const ComponentPreviewFrame = ({
   }
 
   return (
-    <div className={cn("not-prose my-6", className)}>
+    <div
+      data-slot="component-preview"
+      className={cn("not-prose my-6", className)}
+    >
       <div
         aria-label="Preview layout"
         className="mb-2 flex items-center gap-1"

@@ -62,21 +62,10 @@ Use the following composition to build an `XPost`:
 
 ```text
 XPost
-└── XPost.Content
+├── XPostActions
+├── XPostContent
+└── XPostHeader
 ```
-
-## Examples
-
-### With a custom heading
-
-This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original component view needs no repeated props.
-
-<ComponentPreview
-  name="x-post"
-  src="examples/x-post-demo.tsx"
-  variant="composed"
-  showCode
-/>
 
 ## Integrate with OpenUI
 

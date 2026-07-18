@@ -1,4 +1,3 @@
-/* oxlint-disable no-negated-condition */
 "use client";
 
 import {
@@ -8,30 +7,27 @@ import {
   ShoppingCart,
   Star,
 } from "lucide-react";
-import { useCallback, useState } from "react";
+import {
+  createContext,
+  createElement,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
+import type { ImgHTMLAttributes, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
-import { demoProducts } from "./demo/list";
-// Import types from shared types file to avoid circular dependencies
 import type { Product } from "./types";
-// Re-export for backward compatibility
+
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
+
 export type { Product } from "./types";
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * ProductListProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for configuring a versatile product list component with list, grid,
- * carousel, and picker variants.
- */
 export interface ProductListProps {
+  children?: ReactNode;
   data?: {
     /** Array of products to display in the list. */
     products?: Product[];
@@ -70,7 +66,53 @@ export interface ProductListProps {
   };
 }
 
-// Horizontal card for list variant
+const DEFAULT_PRODUCTS: Product[] = [
+  {
+    badge: "New",
+    description: "Nike",
+    image: "https://mcpcn.dev/demo/shoe-1.png",
+    inStock: true,
+    name: "Air Force 1 '07",
+    price: 119,
+    rating: 4.9,
+  },
+  {
+    description: "Nike",
+    image: "https://mcpcn.dev/demo/shoe-2.png",
+    inStock: true,
+    name: "Air Max 90",
+    price: 140,
+    rating: 4.8,
+  },
+  {
+    badge: "-10%",
+    description: "Nike",
+    image: "https://mcpcn.dev/demo/shoe-4.png",
+    inStock: true,
+    name: "Air Max Plus",
+    originalPrice: 190,
+    price: 170,
+    rating: 4.7,
+  },
+  {
+    description: "Nike",
+    image: "https://mcpcn.dev/demo/shoe-3.png",
+    inStock: true,
+    name: "Dunk Low",
+    price: 115,
+    rating: 4.6,
+  },
+];
+
+const ProductListContext = createContext<ProductListProps | null>(null);
+
+export const useProductList = () => {
+  const context = useContext(ProductListContext);
+  if (!context) {
+    throw new Error("ProductList components must be used within ProductList");
+  }
+  return context;
+};
 const ProductHorizontalCard = ({
   product,
   selected,
@@ -93,15 +135,15 @@ const ProductHorizontalCard = ({
       !product.inStock && "opacity-50 !cursor-not-allowed"
     )}
   >
-    <div className="relative h-16 w-16 flex-shrink-0 rounded-md overflow-hidden">
+    <div className="relative size-16 flex-shrink-0 rounded-md overflow-hidden">
       {product.image ? (
-        <RegistryImage
+        <BlockImage
           src={product.image}
           alt={product.name}
-          className="h-full w-full object-contain bg-muted/30"
+          className="size-full object-contain bg-muted/30"
         />
       ) : (
-        <div className="h-full w-full bg-muted" />
+        <div className="size-full bg-muted" />
       )}
       {product.badge && (
         <span
@@ -138,11 +180,9 @@ const ProductHorizontalCard = ({
         )}
       </div>
     </div>
-    <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+    <ChevronRight className="size-4 flex-shrink-0 text-muted-foreground" />
   </button>
 );
-
-// List variant
 const ListVariant = ({
   products,
   selected,
@@ -166,8 +206,6 @@ const ListVariant = ({
     ))}
   </div>
 );
-
-// Grid variant
 const GridVariant = ({
   products,
   selected,
@@ -206,7 +244,7 @@ const GridVariant = ({
           >
             <div className="relative">
               {product.image ? (
-                <RegistryImage
+                <BlockImage
                   src={product.image}
                   alt={product.name}
                   className="aspect-square lg:h-28 lg:aspect-auto w-full object-contain bg-muted/30"
@@ -253,7 +291,7 @@ const GridVariant = ({
                 </div>
                 {product.rating && (
                   <div className="hidden sm:flex items-center gap-0.5 text-xs text-muted-foreground">
-                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                    <Star className="size-3 fill-yellow-400 text-yellow-400" />
                     {product.rating}
                   </div>
                 )}
@@ -270,8 +308,6 @@ const GridVariant = ({
     </div>
   );
 };
-
-// Carousel variant
 const CarouselVariant = ({
   products,
   selected,
@@ -295,8 +331,6 @@ const CarouselVariant = ({
       setCurrentIndex(currentIndex - 1);
     }
   };
-
-  // Horizontal card for mobile/tablet
   const HorizontalCard = ({
     product,
     index,
@@ -317,12 +351,12 @@ const CarouselVariant = ({
         !product.inStock && "opacity-50 !cursor-not-allowed"
       )}
     >
-      <div className="relative h-16 w-16 flex-shrink-0 rounded overflow-hidden bg-muted/30">
+      <div className="relative size-16 flex-shrink-0 rounded overflow-hidden bg-muted/30">
         {product.image && (
-          <RegistryImage
+          <BlockImage
             src={product.image}
             alt={product.name}
-            className="h-full w-full object-contain"
+            className="size-full object-contain"
           />
         )}
         {product.badge && (
@@ -355,8 +389,6 @@ const CarouselVariant = ({
       </div>
     </button>
   );
-
-  // Dots component
   const Dots = ({
     count,
     active,
@@ -445,11 +477,11 @@ const CarouselVariant = ({
               disabled={currentIndex === 0}
               aria-label="Previous product"
               className={cn(
-                "absolute left-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm border shadow-sm flex items-center justify-center cursor-pointer",
+                "absolute left-2 top-1/2 -translate-y-1/2 z-10 size-8 rounded-full bg-background/80 backdrop-blur-sm border shadow-sm flex items-center justify-center cursor-pointer",
                 currentIndex === 0 ? "opacity-0" : "hover:bg-background"
               )}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="size-4" />
             </button>
 
             <button
@@ -462,11 +494,11 @@ const CarouselVariant = ({
               disabled={isAtEnd}
               aria-label="Next product"
               className={cn(
-                "absolute right-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm border shadow-sm flex items-center justify-center cursor-pointer",
+                "absolute right-2 top-1/2 -translate-y-1/2 z-10 size-8 rounded-full bg-background/80 backdrop-blur-sm border shadow-sm flex items-center justify-center cursor-pointer",
                 isAtEnd ? "opacity-0" : "hover:bg-background"
               )}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="size-4" />
             </button>
 
             <div className="overflow-hidden py-1 -mx-1">
@@ -490,10 +522,10 @@ const CarouselVariant = ({
                   >
                     <div className="relative h-28 w-full bg-muted/30 rounded-t-[11px] overflow-hidden">
                       {product.image && (
-                        <RegistryImage
+                        <BlockImage
                           src={product.image}
                           alt={product.name}
-                          className="h-full w-full object-contain"
+                          className="size-full object-contain"
                         />
                       )}
                       {product.badge && (
@@ -536,8 +568,6 @@ const CarouselVariant = ({
     </div>
   );
 };
-
-// Picker variant (multi-select with add to cart)
 const PickerVariant = ({
   products,
   formatCurrency,
@@ -619,22 +649,22 @@ const PickerVariant = ({
             {/* Checkbox */}
             <div
               className={cn(
-                "flex h-4 w-4 flex-shrink-0 items-center justify-center rounded border transition-colors",
+                "flex size-4 flex-shrink-0 items-center justify-center rounded border transition-colors",
                 selectedIndexes.has(index)
                   ? "bg-foreground border-foreground text-background"
                   : "border-border"
               )}
             >
-              {selectedIndexes.has(index) && <Check className="h-3 w-3" />}
+              {selectedIndexes.has(index) && <Check className="size-3" />}
             </div>
 
             {/* Image */}
-            <div className="h-12 w-12 flex-shrink-0 rounded overflow-hidden bg-muted/30">
+            <div className="size-12 flex-shrink-0 rounded overflow-hidden bg-muted/30">
               {product.image && (
-                <RegistryImage
+                <BlockImage
                   src={product.image}
                   alt={product.name}
-                  className="h-full w-full object-contain"
+                  className="size-full object-contain"
                 />
               )}
             </div>
@@ -678,14 +708,14 @@ const PickerVariant = ({
                   type="button"
                   onClick={handleSelectAll}
                   className={cn(
-                    "flex h-4 w-4 items-center justify-center rounded border transition-colors",
+                    "flex size-4 items-center justify-center rounded border transition-colors",
                     allSelected
                       ? "bg-foreground border-foreground text-background"
                       : "border-border hover:border-foreground/50"
                   )}
                   aria-label="Select all products"
                 >
-                  {allSelected && <Check className="h-3 w-3" />}
+                  {allSelected && <Check className="size-3" />}
                 </button>
               </th>
               <th className="px-3 py-3 text-left font-medium text-muted-foreground">
@@ -711,25 +741,23 @@ const PickerVariant = ({
                 <td className="px-3 py-3">
                   <div
                     className={cn(
-                      "flex h-4 w-4 items-center justify-center rounded border transition-colors",
+                      "flex size-4 items-center justify-center rounded border transition-colors",
                       selectedIndexes.has(index)
                         ? "bg-foreground border-foreground text-background"
                         : "border-border"
                     )}
                   >
-                    {selectedIndexes.has(index) && (
-                      <Check className="h-3 w-3" />
-                    )}
+                    {selectedIndexes.has(index) && <Check className="size-3" />}
                   </div>
                 </td>
                 <td className="px-3 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 flex-shrink-0 rounded overflow-hidden bg-muted/30">
+                    <div className="size-10 flex-shrink-0 rounded overflow-hidden bg-muted/30">
                       {product.image && (
-                        <RegistryImage
+                        <BlockImage
                           src={product.image}
                           alt={product.name}
-                          className="h-full w-full object-contain"
+                          className="size-full object-contain"
                         />
                       )}
                     </div>
@@ -772,7 +800,7 @@ const PickerVariant = ({
           {selectedIndexes.size > 0 ? (
             <span>
               {selectedIndexes.size} item
-              {selectedIndexes.size !== 1 ? "s" : ""} selected
+              {selectedIndexes.size === 1 ? "" : "s"} selected
               {" · "}
               <span className="font-medium text-foreground">
                 {formatCurrency(totalPrice)}
@@ -787,7 +815,7 @@ const PickerVariant = ({
           disabled={selectedIndexes.size === 0}
           size="sm"
         >
-          <ShoppingCart className="h-4 w-4 mr-1.5" />
+          <ShoppingCart className="size-4 mr-1.5" />
           {buttonLabel}
         </Button>
       </div>
@@ -802,7 +830,7 @@ const ProductListView = ({
   control,
 }: ProductListProps) => {
   const resolved: NonNullable<ProductListProps["data"]> = data ?? {
-    products: demoProducts,
+    products: DEFAULT_PRODUCTS,
   };
   const products = resolved.products ?? [];
   const onSelectProduct = actions?.onSelectProduct;
@@ -872,7 +900,15 @@ const ProductListView = ({
   );
 };
 
-export const ProductList = createCompoundComponent(
-  ProductListView,
-  "ProductList"
+export const ProductListContent = (props: ProductListProps) => {
+  const context = useProductList();
+  return <ProductListView {...context} {...props} />;
+};
+
+const ProductListRoot = ({ children, ...props }: ProductListProps) => (
+  <ProductListContext.Provider value={props}>
+    {children ?? <ProductListContent />}
+  </ProductListContext.Provider>
 );
+
+export const ProductList = ProductListRoot;

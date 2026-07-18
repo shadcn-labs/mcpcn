@@ -1,161 +1,253 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import type { ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
-import { demoOptions } from "./demo/selection";
-// Import types from shared types file to avoid circular dependencies
 import type { Option } from "./types";
-// Re-export for backward compatibility
+
 export type { Option } from "./types";
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * OptionListProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the OptionList component, which displays selectable options with
- * support for single or multiple selection modes.
- */
-export interface OptionListProps {
-  data?: {
-    /** Array of selectable options to display. */
-    options?: Option[];
-  };
+interface OptionListContextValue {
+  hasSelection: boolean;
+  isSelected: (index: number) => boolean;
+  multiple: boolean;
+  onSubmit?: (selected: Option[]) => void;
+  options: Option[];
+  select: (option: Option, index: number) => void;
+  submit: () => void;
+}
+
+const OptionListContext = createContext<OptionListContextValue | null>(null);
+
+export const useOptionList = () => {
+  const context = useContext(OptionListContext);
+
+  if (!context) {
+    throw new Error("OptionList components must be used within OptionList");
+  }
+
+  return context;
+};
+
+const DEFAULT_OPTIONS: Option[] = [
+  { description: "3-5 business days", label: "Standard shipping" },
+  { description: "1-2 business days", label: "Express shipping" },
+  { description: "Available in 2h", label: "Store pickup" },
+];
+
+export interface OptionListProps extends ComponentProps<"div"> {
   actions?: {
-    /** Called when the user confirms their selection. Returns selected option(s). */
     onSubmit?: (selected: Option[]) => void;
   };
   appearance?: {
-    /**
-     * Enable multiple selection mode.
-     * @default false
-     */
     multiple?: boolean;
   };
   control?: {
-    /** Controlled selected index for single selection mode. */
     selectedOptionIndex?: number;
-    /** Controlled selected indexes for multiple selection mode. */
     selectedOptionIndexes?: number[];
+  };
+  data?: {
+    options?: Option[];
   };
 }
 
-const OptionListView = ({
-  data,
-  actions,
-  appearance,
-  control,
-}: OptionListProps) => {
-  const resolved: NonNullable<OptionListProps["data"]> = data ?? {
-    options: demoOptions,
-  };
-  const options = resolved.options ?? [];
-  const onSubmit = actions?.onSubmit;
-  const multiple = appearance?.multiple ?? false;
-  const selectedOptionIndex = control?.selectedOptionIndex;
-  const selectedOptionIndexes = control?.selectedOptionIndexes;
-  const [selected, setSelected] = useState<number | number[]>(
-    multiple ? (selectedOptionIndexes ?? []) : (selectedOptionIndex ?? -1)
-  );
+interface OptionListItemProps extends Omit<
+  ComponentProps<"button">,
+  "onClick"
+> {
+  index: number;
+  option: Option;
+}
 
-  // Sync internal state when controlled props change
-  useEffect(() => {
-    if (multiple) {
-      setSelected(selectedOptionIndexes ?? []);
-    } else if (selectedOptionIndex !== undefined) {
-      setSelected(selectedOptionIndex);
-    }
-  }, [multiple, selectedOptionIndex, selectedOptionIndexes]);
+const getSelectedIndexes = (
+  multiple: boolean,
+  control?: OptionListProps["control"]
+) => {
+  if (multiple) {
+    return control?.selectedOptionIndexes ?? [];
+  }
 
-  const handleSelect = (option: Option, index: number) => {
-    if (option.disabled) {
-      return;
-    }
+  if (control?.selectedOptionIndex === undefined) {
+    return [];
+  }
 
-    if (multiple) {
-      const currentSelected = selected as number[];
-      const newSelected = currentSelected.includes(index)
-        ? currentSelected.filter((i) => i !== index)
-        : [...currentSelected, index];
-      setSelected(newSelected);
-    } else {
-      setSelected(index);
-    }
-  };
+  return [control.selectedOptionIndex];
+};
 
-  const handleSubmit = () => {
-    if (multiple) {
-      const selectedIndexes = selected as number[];
-      onSubmit?.(options.filter((_, i) => selectedIndexes.includes(i)));
-    } else {
-      const selectedIndex = selected as number;
-      if (selectedIndex >= 0) {
-        onSubmit?.([options[selectedIndex]]);
-      }
-    }
-  };
-
-  const isSelected = (index: number) => {
-    if (multiple) {
-      return (selected as number[]).includes(index);
-    }
-    return selected === index;
-  };
-
-  const hasSelection = multiple
-    ? (selected as number[]).length > 0
-    : (selected as number) >= 0;
+export const OptionListItem = ({
+  children,
+  className,
+  index,
+  option,
+  ...props
+}: OptionListItemProps) => {
+  const { isSelected, multiple, select } = useOptionList();
+  const selected = isSelected(index);
 
   return (
-    <div className="w-full bg-card rounded-lg p-4 space-y-3">
-      <div className="flex flex-wrap gap-2">
-        {options.map((option, index) => (
-          <button
-            key={option.label || index}
-            onClick={() => handleSelect(option, index)}
-            disabled={option.disabled}
-            className={cn(
-              "inline-flex items-center gap-1.5 sm:gap-2 rounded-full border px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm transition-colors cursor-pointer",
-              isSelected(index)
-                ? "border-foreground bg-foreground text-background"
-                : "border-border bg-background hover:bg-muted",
-              option.disabled && "opacity-50 !cursor-not-allowed"
-            )}
-          >
-            {option.icon}
-            {option.label && <span>{option.label}</span>}
-            {option.description && (
-              <span
-                className={cn(
-                  "text-[10px] sm:text-xs",
-                  isSelected(index)
-                    ? "text-background/70"
-                    : "text-muted-foreground"
-                )}
-              >
-                · {option.description}
-              </span>
-            )}
-            {isSelected(index) && multiple && (
-              <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            )}
-          </button>
+    <button
+      className={cn(
+        "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition-colors sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm",
+        selected
+          ? "border-foreground bg-foreground text-background"
+          : "border-border bg-background hover:bg-muted",
+        option.disabled && "!cursor-not-allowed opacity-50",
+        className
+      )}
+      disabled={option.disabled}
+      onClick={() => select(option, index)}
+      type="button"
+      {...props}
+    >
+      {children ?? (
+        <>
+          {option.icon}
+          {option.label && <span>{option.label}</span>}
+          {option.description && (
+            <span
+              className={cn(
+                "text-[10px] sm:text-xs",
+                selected ? "text-background/70" : "text-muted-foreground"
+              )}
+            >
+              · {option.description}
+            </span>
+          )}
+          {selected && multiple && <Check className="size-3 sm:size-3.5" />}
+        </>
+      )}
+    </button>
+  );
+};
+
+export const OptionListOptions = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { options } = useOptionList();
+
+  return (
+    <div className={cn("flex flex-wrap gap-2", className)} {...props}>
+      {children ??
+        options.map((option, index) => (
+          <OptionListItem
+            index={index}
+            key={`${option.label ?? "option"}-${index}`}
+            option={option}
+          />
         ))}
-      </div>
-      {onSubmit && (
-        <div className="flex justify-end">
-          <Button size="sm" onClick={handleSubmit} disabled={!hasSelection}>
-            Confirm
-          </Button>
-        </div>
+    </div>
+  );
+};
+
+export const OptionListActions = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { hasSelection, onSubmit, submit } = useOptionList();
+
+  if (!(children || onSubmit)) {
+    return null;
+  }
+
+  return (
+    <div className={cn("flex justify-end", className)} {...props}>
+      {children ?? (
+        <Button disabled={!hasSelection} onClick={submit} size="sm">
+          Confirm
+        </Button>
       )}
     </div>
   );
 };
 
-export const OptionList = createCompoundComponent(OptionListView, "OptionList");
+export const OptionListContent = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => (
+  <div className={cn("space-y-3", className)} {...props}>
+    {children ?? (
+      <>
+        <OptionListOptions />
+        <OptionListActions />
+      </>
+    )}
+  </div>
+);
+
+const OptionListRoot = ({
+  actions,
+  appearance,
+  children,
+  className,
+  control,
+  data,
+  ...props
+}: OptionListProps) => {
+  const multiple = appearance?.multiple ?? false;
+  const options = data?.options ?? DEFAULT_OPTIONS;
+  const selectedOptionIndex = control?.selectedOptionIndex;
+  const selectedOptionIndexes = control?.selectedOptionIndexes;
+  const selectedControl = { selectedOptionIndex, selectedOptionIndexes };
+  const [selected, setSelected] = useState<Set<number>>(
+    () => new Set(getSelectedIndexes(multiple, selectedControl))
+  );
+
+  useEffect(() => {
+    setSelected(
+      new Set(
+        getSelectedIndexes(multiple, {
+          selectedOptionIndex,
+          selectedOptionIndexes,
+        })
+      )
+    );
+  }, [multiple, selectedOptionIndex, selectedOptionIndexes]);
+
+  const select = (option: Option, index: number) => {
+    if (option.disabled) {
+      return;
+    }
+
+    setSelected((current) => {
+      const next = new Set(multiple ? current : []);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  };
+
+  const context: OptionListContextValue = {
+    hasSelection: selected.size > 0,
+    isSelected: (index) => selected.has(index),
+    multiple,
+    onSubmit: actions?.onSubmit,
+    options,
+    select,
+    submit: () =>
+      actions?.onSubmit?.(options.filter((_, index) => selected.has(index))),
+  };
+
+  return (
+    <OptionListContext.Provider value={context}>
+      <div
+        className={cn("w-full rounded-lg bg-card p-4", className)}
+        {...props}
+      >
+        {children ?? <OptionListContent />}
+      </div>
+    </OptionListContext.Provider>
+  );
+};
+
+export const OptionList = OptionListRoot;

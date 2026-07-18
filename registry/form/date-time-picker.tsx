@@ -1,4 +1,3 @@
-/* oxlint-disable complexity */
 "use client";
 
 import {
@@ -8,18 +7,16 @@ import {
   Globe,
   Search,
 } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createCompoundComponent } from "@/components/ui/compound";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-
-import { demoDateTimePickerData } from "./demo/form";
 
 /** Timezone configuration using IANA timezone identifiers for correct DST handling */
 const timezones = [
@@ -84,15 +81,8 @@ const getTimeForTimezone = (iana: string) => {
   }
 };
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * DateTimePickerProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the DateTimePicker component with calendar view, available time
- * slots, and timezone selection.
- */
 export interface DateTimePickerProps {
+  children?: ReactNode;
   data?: {
     /** Title displayed at the top of the picker. */
     title?: string;
@@ -134,6 +124,46 @@ export interface DateTimePickerProps {
     selectedTime?: string | null;
   };
 }
+
+const getDefaultDates = () => {
+  const dates: Date[] = [];
+  const now = new Date();
+  for (let month = 0; month <= 1; month += 1) {
+    for (let day = 1; day <= 28; day += 2) {
+      const date = new Date(now.getFullYear(), now.getMonth() + month, day);
+      if (![0, 6].includes(date.getDay())) {
+        dates.push(date);
+      }
+    }
+  }
+  return dates;
+};
+
+const DEFAULT_PICKER = {
+  availableDates: getDefaultDates(),
+  availableTimeSlots: [
+    "9:00am",
+    "10:00am",
+    "11:30am",
+    "1:00pm",
+    "2:30pm",
+    "4:00pm",
+  ],
+  timezone: "Eastern Time - US & Canada",
+  title: "Select a Date & Time",
+} satisfies NonNullable<DateTimePickerProps["data"]>;
+
+const DateTimePickerContext = createContext<DateTimePickerProps | null>(null);
+
+export const useDateTimePicker = () => {
+  const context = useContext(DateTimePickerContext);
+  if (!context) {
+    throw new Error(
+      "DateTimePicker components must be used within DateTimePicker"
+    );
+  }
+  return context;
+};
 
 const ALL_DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
@@ -181,28 +211,42 @@ const isSameDay = (date1: Date, date2: Date) =>
   date1.getMonth() === date2.getMonth() &&
   date1.getDate() === date2.getDate();
 
-const DateTimePickerView = ({
-  data,
+const resolveDateTimePicker = ({
   actions,
   appearance,
   control,
+  data,
 }: DateTimePickerProps) => {
-  const resolved: NonNullable<DateTimePickerProps["data"]> =
-    data ?? demoDateTimePickerData;
-  const { title } = resolved;
-  const availableDates = resolved.availableDates ?? [];
-  const availableTimeSlots = resolved.availableTimeSlots ?? [];
-  const { timezone } = resolved;
-  const { onNext } = actions ?? {};
+  const resolved = data ?? DEFAULT_PICKER;
+  return {
+    availableDates: resolved.availableDates ?? [],
+    availableTimeSlots: resolved.availableTimeSlots ?? [],
+    controlledDate: control?.selectedDate,
+    controlledTime: control?.selectedTime,
+    onNext: actions?.onNext,
+    showTimezone: appearance?.showTimezone ?? true,
+    showTitle: appearance?.showTitle ?? true,
+    timezone: resolved.timezone,
+    title: resolved.title,
+    weekStartsOn: appearance?.weekStartsOn ?? "sunday",
+  };
+};
+
+const DateTimePickerView = (props: DateTimePickerProps) => {
   const {
-    showTitle = true,
-    showTimezone = true,
-    weekStartsOn = "sunday",
-  } = appearance ?? {};
+    availableDates,
+    availableTimeSlots,
+    controlledDate,
+    controlledTime,
+    onNext,
+    showTimezone,
+    showTitle,
+    timezone,
+    title,
+    weekStartsOn,
+  } = resolveDateTimePicker(props);
   const orderedDays = getOrderedDays(weekStartsOn);
   const weekStartOffset = WEEK_START_OFFSETS[weekStartsOn];
-  const { selectedDate: controlledDate, selectedTime: controlledTime } =
-    control ?? {};
 
   const [currentMonth, setCurrentMonth] = useState(() => {
     const now = new Date();
@@ -220,7 +264,6 @@ const DateTimePickerView = ({
   const [timezoneSearch, setTimezoneSearch] = useState("");
   const [timezoneDropdownOpen, setTimezoneDropdownOpen] = useState(false);
   const timezoneSearchRef = useRef<HTMLInputElement>(null);
-  // Mobile view mode: 'calendar' or 'time'
   const [mobileView, setMobileView] = useState<"calendar" | "time">("calendar");
 
   const filteredTimezones = timezones.filter((tz) =>
@@ -241,16 +284,12 @@ const DateTimePickerView = ({
 
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth();
-
-  // Calculate calendar grid
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const daysInPrevMonth = new Date(year, month, 0).getDate();
 
   const calendarDays: { day: number; isCurrentMonth: boolean; date: Date }[] =
     [];
-
-  // Previous month days (adjusted for week start)
   const leadingDays = (firstDayOfMonth - weekStartOffset + 7) % 7;
   for (let i = leadingDays - 1; i >= 0; i -= 1) {
     const day = daysInPrevMonth - i;
@@ -260,8 +299,6 @@ const DateTimePickerView = ({
       isCurrentMonth: false,
     });
   }
-
-  // Current month days
   for (let day = 1; day <= daysInMonth; day += 1) {
     calendarDays.push({
       date: new Date(year, month, day),
@@ -269,8 +306,6 @@ const DateTimePickerView = ({
       isCurrentMonth: true,
     });
   }
-
-  // Next month days to fill the grid (6 rows max)
   const totalCells = Math.ceil(calendarDays.length / 7) * 7;
   const remainingDays = totalCells - calendarDays.length;
   for (let day = 1; day <= remainingDays; day += 1) {
@@ -298,7 +333,6 @@ const DateTimePickerView = ({
     }
     setSelectedDate(date);
     setSelectedTime(null);
-    // On mobile, switch to time view when date is selected
     setMobileView("time");
   };
 
@@ -339,7 +373,7 @@ const DateTimePickerView = ({
               aria-label="Previous month"
               className="p-1 hover:bg-muted rounded transition-colors"
             >
-              <ChevronLeft className="h-5 w-5 text-muted-foreground" />
+              <ChevronLeft className="size-5 text-muted-foreground" />
             </button>
             <span className="text-base font-medium text-foreground min-w-[140px] text-center">
               {MONTHS[month]} {year}
@@ -349,7 +383,7 @@ const DateTimePickerView = ({
               aria-label="Next month"
               className="p-1 hover:bg-muted rounded transition-colors"
             >
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              <ChevronRight className="size-5 text-muted-foreground" />
             </button>
           </div>
 
@@ -382,7 +416,7 @@ const DateTimePickerView = ({
                   }
                   disabled={!item.isCurrentMonth || !isAvailable}
                   className={cn(
-                    "relative h-10 w-10 rounded-full text-sm transition-all duration-200 flex items-center justify-center mx-auto",
+                    "relative size-10 rounded-full text-sm transition-all duration-200 flex items-center justify-center mx-auto",
                     !item.isCurrentMonth && "text-muted-foreground/30",
                     item.isCurrentMonth &&
                       !isAvailable &&
@@ -398,7 +432,7 @@ const DateTimePickerView = ({
                 >
                   {item.day}
                   {isToday && !isSelected && (
-                    <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-foreground" />
+                    <span className="absolute bottom-1 left-1/2 -translate-x-1/2 size-1 rounded-full bg-foreground" />
                   )}
                 </button>
               );
@@ -420,14 +454,14 @@ const DateTimePickerView = ({
                     aria-label="Select timezone"
                     className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    <Globe className="h-4 w-4" />
+                    <Globe className="size-4" />
                     <span>
                       {selectedTimezone.name} (
                       {getTimeForTimezone(selectedTimezone.iana)})
                     </span>
                     <ChevronRight
                       className={cn(
-                        "h-3 w-3 transition-transform",
+                        "size-3 transition-transform",
                         timezoneDropdownOpen ? "rotate-90" : "rotate-0"
                       )}
                     />
@@ -436,7 +470,7 @@ const DateTimePickerView = ({
                 <PopoverContent className="w-[320px] p-0" align="start">
                   <div className="p-2 border-b">
                     <div className="relative">
-                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                       <input
                         ref={timezoneSearchRef}
                         type="text"
@@ -479,11 +513,9 @@ const DateTimePickerView = ({
         <div
           className={cn(
             "overflow-hidden transition-all duration-300 ease-out",
-            // Mobile: show/hide based on mobileView, full width
             mobileView === "time"
               ? "block w-full md:w-[200px]"
               : "hidden md:block",
-            // Desktop: animate width based on selectedDate
             selectedDate
               ? "md:w-[200px] md:opacity-100 md:ml-8"
               : "md:w-0 md:opacity-0 md:ml-0"
@@ -495,7 +527,7 @@ const DateTimePickerView = ({
               onClick={handleBackToCalendar}
               className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 md:hidden"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="size-4" />
               <span>Back to calendar</span>
             </button>
 
@@ -539,7 +571,15 @@ const DateTimePickerView = ({
   );
 };
 
-export const DateTimePicker = createCompoundComponent(
-  DateTimePickerView,
-  "DateTimePicker"
+export const DateTimePickerContent = (props: DateTimePickerProps) => {
+  const context = useDateTimePicker();
+  return <DateTimePickerView {...context} {...props} />;
+};
+
+const DateTimePickerRoot = ({ children, ...props }: DateTimePickerProps) => (
+  <DateTimePickerContext.Provider value={props}>
+    {children ?? <DateTimePickerContent />}
+  </DateTimePickerContext.Provider>
 );
+
+export const DateTimePicker = DateTimePickerRoot;

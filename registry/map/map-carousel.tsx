@@ -1,6 +1,6 @@
-/* oxlint-disable no-negated-condition, unicorn/consistent-function-scoping */
 "use client";
 
+import type * as Leaflet from "leaflet";
 import {
   ChevronDown,
   MapPin,
@@ -8,17 +8,23 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  createElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import type { ImgHTMLAttributes, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
-import { demoMapLocations, demoMapCenter, demoMapZoom } from "./demo/map";
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
 
 /**
  * Represents a location/hotel to display on the map.
@@ -41,7 +47,6 @@ export interface Location {
   priceLabel?: string;
   priceSubtext?: string;
   rating?: number;
-  // [lat, lng]
   coordinates: [number, number];
   link?: string;
 }
@@ -56,8 +61,6 @@ export type MapStyle =
   | "positron"
   | "dark-matter"
   | "openstreetmap";
-
-// Filter configuration for fullscreen variant
 /**
  * Configuration for a single filter section.
  * @interface FilterSectionConfig
@@ -91,16 +94,8 @@ const createEmptyFilterState = (
   return state;
 };
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * MapCarouselProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for configuring an interactive map with a horizontal carousel of
- * location cards. Clicking a marker or card selects that location.
- * Supports inline (map with carousel) and fullscreen (split-screen) modes.
- */
 export interface MapCarouselProps {
+  children?: ReactNode;
   data?: {
     /** Array of locations to display on the map with price markers. */
     locations?: Location[];
@@ -149,7 +144,58 @@ export interface MapCarouselProps {
   };
 }
 
-// Hotel card component
+const DEFAULT_LOCATIONS: Location[] = [
+  {
+    coordinates: [37.7935, -122.3938],
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400",
+    name: "The Embarcadero Grand",
+    price: 329,
+    priceLabel: "$329 per night",
+    priceSubtext: "USD · Includes taxes and fees",
+    rating: 9.1,
+    subtitle: "Embarcadero",
+  },
+  {
+    coordinates: [37.7925, -122.4138],
+    image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400",
+    name: "Hotel Nob Hill",
+    price: 275,
+    priceLabel: "$275 per night",
+    priceSubtext: "USD · Includes taxes and fees",
+    rating: 8.7,
+    subtitle: "Nob Hill",
+  },
+  {
+    coordinates: [37.8025, -122.4382],
+    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400",
+    name: "Marina Bay Suites",
+    price: 389,
+    priceLabel: "$389 per night",
+    priceSubtext: "USD · Includes taxes and fees",
+    rating: 9.4,
+    subtitle: "Marina District",
+  },
+  {
+    coordinates: [37.7599, -122.4148],
+    image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400",
+    name: "Mission Street Inn",
+    price: 189,
+    priceLabel: "$189 per night",
+    priceSubtext: "USD · Includes taxes and fees",
+    rating: 8.2,
+    subtitle: "Mission District",
+  },
+];
+
+const MapCarouselContext = createContext<MapCarouselProps | null>(null);
+
+export const useMapCarousel = () => {
+  const context = useContext(MapCarouselContext);
+  if (!context) {
+    throw new Error("MapCarousel components must be used within MapCarousel");
+  }
+  return context;
+};
 const HotelCard = ({
   location,
   isSelected,
@@ -178,7 +224,7 @@ const HotelCard = ({
     {/* Image */}
     {location.image && (
       <div className="relative shrink-0">
-        <RegistryImage
+        <BlockImage
           src={location.image}
           alt={location.name || "Location image"}
           className="w-24 h-20 rounded-lg object-cover pointer-events-none"
@@ -218,8 +264,6 @@ const HotelCard = ({
     </div>
   </button>
 );
-
-// Location card for fullscreen list view
 const LocationListCard = ({
   location,
   isSelected,
@@ -245,11 +289,11 @@ const LocationListCard = ({
   >
     {/* Thumbnail */}
     {location.image && (
-      <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-muted">
-        <RegistryImage
+      <div className="size-20 flex-shrink-0 overflow-hidden rounded-md bg-muted">
+        <BlockImage
           src={location.image}
           alt={location.name || "Location image"}
-          className="h-full w-full object-cover"
+          className="size-full object-cover"
         />
       </div>
     )}
@@ -279,8 +323,6 @@ const LocationListCard = ({
     </div>
   </button>
 );
-
-// Filter section component with expandable checkbox list
 const FilterSection = ({
   title,
   options,
@@ -319,7 +361,7 @@ const FilterSection = ({
         <span>{title}</span>
         <ChevronDown
           className={cn(
-            "h-4 w-4 text-muted-foreground transition-transform duration-200",
+            "size-4 text-muted-foreground transition-transform duration-200",
             expanded && "rotate-180"
           )}
         />
@@ -340,7 +382,7 @@ const FilterSection = ({
                 <Checkbox
                   checked={selected.includes(option)}
                   onCheckedChange={() => toggleOption(option)}
-                  className="h-4 w-4"
+                  className="size-4"
                 />
                 <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                   {option}
@@ -363,8 +405,6 @@ const FilterSection = ({
     </div>
   );
 };
-
-// Filter panel that slides over the location list
 const FilterPanel = ({
   isOpen,
   onClose,
@@ -421,11 +461,11 @@ const FilterPanel = ({
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={onClose}
             aria-label="Close filters"
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </Button>
         </div>
 
@@ -463,22 +503,18 @@ const FilterPanel = ({
     </>
   );
 };
-
-// Map placeholder shown during SSR or when Leaflet isn't loaded
 const MapPlaceholder = ({ height }: { height?: string }) => (
   <div
     className="bg-muted/30 flex items-center justify-center"
     style={{ height: height || "100%" }}
   >
     <div className="flex flex-col items-center gap-2 text-muted-foreground">
-      <MapPin className="h-8 w-8" />
+      <MapPin className="size-8" />
       <span className="text-sm">Loading map...</span>
     </div>
   </div>
 );
 
-// Vanilla Leaflet map – bypasses react-leaflet entirely to avoid dual-React hook errors.
-// Uses the leaflet JS API directly via refs so only the consumer's React copy exists.
 interface LeafletMapConfig {
   center: [number, number];
   zoom: number;
@@ -499,18 +535,14 @@ const VanillaLeafletMap = ({
   style,
 }: LeafletMapConfig) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mapInstanceRef = useRef<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const leafletRef = useRef<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const markersRef = useRef<any[]>([]);
+  const mapInstanceRef = useRef<Leaflet.Map | null>(null);
+  const leafletRef = useRef<typeof Leaflet | null>(null);
+  const markersRef = useRef<Leaflet.Marker[]>([]);
   const callbackRef = useRef(onSelectLocation);
   const [ready, setReady] = useState(false);
 
   callbackRef.current = onSelectLocation;
 
-  // Initialize the Leaflet map once on mount
   useEffect(() => {
     if (!containerRef.current || mapInstanceRef.current) {
       return;
@@ -555,9 +587,8 @@ const VanillaLeafletMap = ({
       mapInstanceRef.current = null;
       leafletRef.current = null;
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [center, tileConfig.attribution, tileConfig.url, zoom]);
 
-  // Sync markers whenever locations or selection change
   useEffect(() => {
     const L = leafletRef.current;
     const map = mapInstanceRef.current;
@@ -584,7 +615,7 @@ const VanillaLeafletMap = ({
           box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1);
           z-index: ${isSelected ? "1000" : "1"};
           ${isSelected ? "background-color: #18181b; color: white;" : "background-color: white; color: #18181b;"}
-        ">${location.price !== undefined ? `$${location.price}` : (location.name ?? "Location")}</div>`,
+        ">${location.price === undefined ? (location.name ?? "Location") : `$${location.price}`}</div>`,
         iconAnchor: [30, 12],
         iconSize: [60, 24],
       });
@@ -621,31 +652,26 @@ const VanillaLeafletMap = ({
  */
 const getTileConfig = (style: MapStyle) => {
   const configs: Record<MapStyle, { url: string; attribution: string }> = {
-    // Dark Matter - Dark theme
     "dark-matter": {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
       url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
     },
-    // OpenStreetMap - Standard, detailed
     openstreetmap: {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     },
-    // Positron - Light, minimal, clean
     positron: {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
       url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
     },
-    // Voyager - Colorful, detailed, Apple Maps-like (recommended default)
     voyager: {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
       url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
     },
-    // Voyager with labels under roads - cleaner look
     "voyager-smooth": {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -657,13 +683,12 @@ const getTileConfig = (style: MapStyle) => {
 
 const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
   const resolvedData: NonNullable<MapCarouselProps["data"]> = data ?? {
-    center: demoMapCenter,
-    locations: demoMapLocations,
-    zoom: demoMapZoom,
+    center: [37.7749, -122.4194],
+    locations: DEFAULT_LOCATIONS,
+    zoom: 12,
   };
   const {
     locations = [],
-    // San Francisco
     center = [37.7899, -122.4034],
     zoom = 14,
     mapStyle = "voyager",
@@ -683,40 +708,29 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [hasDragged, setHasDragged] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
-
-  // Filter state for fullscreen mode - initialized from filter configs
+  const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const emptyFilterState = createEmptyFilterState(filterConfigs);
   const [showFilters, setShowFilters] = useState(false);
   const [filterState, setFilterState] = useState<FilterState>(emptyFilterState);
   const [appliedFilterState, setAppliedFilterState] =
     useState<FilterState>(emptyFilterState);
-
-  // Refs for fullscreen scroll functionality
   const listContainerRef = useRef<HTMLDivElement>(null);
   const locationItemRefs = useRef<Map<number, HTMLDivElement>>(new Map());
-
-  // Filter locations based on applied filters using dynamic matchFn
   const filterLocations = useCallback(
     (
       locationsToFilter: Location[],
       filtersToApply: FilterState
     ): Location[] => {
-      // If no filter configs, return all locations
       if (filterConfigs.length === 0) {
         return locationsToFilter;
       }
 
       return locationsToFilter.filter((location) => {
-        // Check each filter section
         for (const config of filterConfigs) {
           const selectedValues = filtersToApply[config.id] || [];
-          // Skip if no values selected for this filter
           if (selectedValues.length === 0) {
             continue;
           }
-
-          // Use the matchFn if provided, otherwise skip this filter
           if (config.matchFn && !config.matchFn(location, selectedValues)) {
             return false;
           }
@@ -726,8 +740,6 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
     },
     [filterConfigs]
   );
-
-  // Scroll to location in list when selected from map
   const scrollToLocation = useCallback((locationIndex: number) => {
     const locationElement = locationItemRefs.current.get(locationIndex);
     if (locationElement && listContainerRef.current) {
@@ -743,14 +755,10 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
       });
     }
   }, []);
-
-  // Handle location selection
   const handleSelectLocation = useCallback(
     (location: Location, index: number) => {
       setSelectedIndex(index);
       onSelectLocation?.(location);
-
-      // Scroll to the selected card (inline mode)
       const cardElement = cardRefs.current.get(index);
       if (cardElement && carouselRef.current) {
         const container = carouselRef.current;
@@ -767,13 +775,6 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
     },
     [onSelectLocation]
   );
-
-  // Handle expand button click — display mode changes handled by host wrapper
-  const handleExpand = () => {
-    // No-op: display mode is managed by the HostAPIProvider
-  };
-
-  // Drag handlers for carousel
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (!carouselRef.current) {
       return;
@@ -807,8 +808,6 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
   const handleMouseLeave = useCallback(() => {
     setIsDragging(false);
   }, []);
-
-  // Touch handlers for mobile
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (!carouselRef.current) {
       return;
@@ -837,8 +836,6 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
   const handleTouchEnd = useCallback(() => {
     setIsDragging(false);
   }, []);
-
-  // Handle card click (only if not dragging)
   const handleCardClick = useCallback(
     (location: Location, index: number) => {
       if (hasDragged) {
@@ -851,8 +848,6 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
     },
     [hasDragged, handleSelectLocation]
   );
-
-  // Fullscreen mode - split-screen with cards on left, map on right
   if (displayMode === "fullscreen") {
     const handleLocationHover = (locationIndex: number | null) => {
       setSelectedIndex(locationIndex);
@@ -886,18 +881,13 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
       setFilterState(emptyFilterState);
       setAppliedFilterState(emptyFilterState);
     };
-
-    // Get filtered locations
     const filteredLocations = filterLocations(locations, appliedFilterState);
-    // Get preview count for filter panel
     const previewFilteredCount = filterLocations(locations, filterState).length;
-    // Count of active filters
     const activeFiltersCount = Object.values(appliedFilterState).flat().length;
-    // Check if filters are configured
     const hasFilters = filterConfigs.length > 0;
 
     return (
-      <div className="flex w-full h-full min-h-[600px] bg-background">
+      <div className="flex size-full min-h-[600px] bg-background">
         {/* Left Panel - Location List */}
         <div className="w-[380px] flex-shrink-0 border-r flex flex-col relative">
           {/* Header */}
@@ -915,7 +905,7 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
                 className="gap-2 flex-shrink-0"
                 onClick={handleFilterButtonClick}
               >
-                <SlidersHorizontal className="h-4 w-4" />
+                <SlidersHorizontal className="size-4" />
                 <span className="hidden sm:inline">Filters</span>
                 {activeFiltersCount > 0 && (
                   <span className="bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded-full">
@@ -992,8 +982,6 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
       </div>
     );
   }
-
-  // Inline and PiP modes - Map with carousel at bottom
   return (
     <div
       className="relative w-full rounded-xl border bg-card overflow-hidden"
@@ -1004,11 +992,10 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
         <Button
           variant="secondary"
           size="icon"
-          className="h-8 w-8 bg-background/90 backdrop-blur-sm shadow-md"
-          onClick={handleExpand}
+          className="size-8 bg-background/90 backdrop-blur-sm shadow-md"
           aria-label="Expand to fullscreen"
         >
-          <Maximize2 className="h-4 w-4" />
+          <Maximize2 className="size-4" />
         </Button>
       </div>
 
@@ -1051,10 +1038,7 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
               key={index}
               ref={(el) => {
                 if (el) {
-                  cardRefs.current.set(
-                    index,
-                    el as unknown as HTMLButtonElement
-                  );
+                  cardRefs.current.set(index, el);
                 }
               }}
             >
@@ -1071,7 +1055,15 @@ const MapCarouselView = ({ data, actions, appearance }: MapCarouselProps) => {
   );
 };
 
-export const MapCarousel = createCompoundComponent(
-  MapCarouselView,
-  "MapCarousel"
+export const MapCarouselContent = (props: MapCarouselProps) => {
+  const context = useMapCarousel();
+  return <MapCarouselView {...context} {...props} />;
+};
+
+const MapCarouselRoot = ({ children, ...props }: MapCarouselProps) => (
+  <MapCarouselContext.Provider value={props}>
+    {children ?? <MapCarouselContent />}
+  </MapCarouselContext.Provider>
 );
+
+export const MapCarousel = MapCarouselRoot;

@@ -62,21 +62,9 @@ Use the following composition to build an `YouTubePost`:
 
 ```text
 YouTubePost
-└── YouTubePost.Content
+├── YouTubePostInfo
+└── YouTubePostPlayer
 ```
-
-## Examples
-
-### With a custom heading
-
-This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original component view needs no repeated props.
-
-<ComponentPreview
-  name="youtube-post"
-  src="examples/youtube-post-demo.tsx"
-  variant="composed"
-  showCode
-/>
 
 ## Integrate with OpenUI
 

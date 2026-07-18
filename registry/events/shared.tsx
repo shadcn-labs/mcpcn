@@ -9,18 +9,15 @@ import { cn } from "@/lib/utils";
 
 import type { EventSignal } from "./types";
 
-// Internal types for react-leaflet component attributes (not exported component props)
 export interface LeafletMarkerAttrs {
   position: [number, number];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon?: any;
+  icon?: Leaflet.DivIcon | Leaflet.Icon;
   zIndexOffset?: number;
   eventHandlers?: {
     click?: () => void;
   };
 }
 
-// Props for the lazy-loaded leaflet map component
 export interface LazyLeafletMapConfig {
   center: [number, number];
   zoom: number;
@@ -34,23 +31,18 @@ export interface LazyLeafletMapConfig {
   }) => React.ReactNode;
 }
 
-/**
- * Lazy-loaded Leaflet map component using React.lazy.
- * Avoids Invalid hook call errors from dynamic import module boundaries.
- */
+const EmptyLeafletMap: ComponentType<LazyLeafletMapConfig> = () => null;
+
 export const LazyLeafletMap = lazy<ComponentType<LazyLeafletMapConfig>>(
   async () => {
-    // Guard against SSR - react-leaflet/leaflet require window
     if (typeof window === "undefined") {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return { default: (() => null) as any };
+      return { default: EmptyLeafletMap };
     }
 
     const { MapContainer, TileLayer, Marker } = await import("react-leaflet");
     const leafletModule = await import("leaflet");
     const L = leafletModule.default;
 
-    // Inject Leaflet CSS with deduplication
     const LEAFLET_CSS_ID = "leaflet-css-1-9-4";
     if (
       typeof document !== "undefined" &&
@@ -92,15 +84,13 @@ export const LazyLeafletMap = lazy<ComponentType<LazyLeafletMapConfig>>(
   }
 );
 
-// Format number with commas (consistent across server/client)
 export const formatNumber = (num: number): string =>
   num.toString().replaceAll(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-// Map placeholder shown during SSR or when Leaflet isn't loaded
 export const MapPlaceholder = () => (
   <div className="flex h-full items-center justify-center bg-muted/30">
     <div className="flex flex-col items-center gap-2 text-muted-foreground">
-      <MapPin className="h-8 w-8" />
+      <MapPin className="size-8" />
       <span className="text-sm">Loading map...</span>
     </div>
   </div>

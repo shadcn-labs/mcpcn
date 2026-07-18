@@ -68,21 +68,11 @@ Use the following composition to build an `TicketTierSelect`:
 
 ```text
 TicketTierSelect
-└── TicketTierSelect.Content
+├── TicketTierContent
+├── TicketTierItem
+├── TicketTierOptions
+└── TicketOrderSummary
 ```
-
-## Examples
-
-### With a custom heading
-
-This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original component view needs no repeated props.
-
-<ComponentPreview
-  name="ticket-tier-select"
-  src="examples/ticket-tier-select-demo.tsx"
-  variant="composed"
-  showCode
-/>
 
 ## Integrate with OpenUI
 

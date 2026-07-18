@@ -1,22 +1,19 @@
-/* oxlint-disable complexity */
 "use client";
 
 import {
-  Heart,
-  MessageCircle,
-  Send,
   Bookmark,
-  MoreHorizontal,
-  Flag,
-  UserMinus,
-  Link,
   Code,
+  Flag,
+  Heart,
+  Link,
+  MessageCircle,
+  MoreHorizontal,
+  Send,
+  UserMinus,
 } from "lucide-react";
+import { createContext, createElement, useContext } from "react";
+import type { ComponentProps, ImgHTMLAttributes } from "react";
 
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,165 +21,240 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
-import { demoInstagramPost } from "./demo/social";
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * InstagramPostProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the InstagramPost component, which displays an Instagram-style
- * post with image, caption, and engagement actions.
- */
-export interface InstagramPostProps {
-  data?: {
-    /** Author's Instagram username. */
-    author?: string;
-    /** Avatar letter fallback or image URL for the profile picture. */
-    avatar?: string;
-    /** URL of the post image to display. */
-    image?: string;
-    /** Formatted like count (e.g., "2,847"). */
-    likes?: string;
-    /** Post caption text content. */
-    caption?: string;
-    /** Time since posted (e.g., "2 hours ago"). */
-    time?: string;
-    /** Whether the author has a verified badge. */
-    verified?: boolean;
-  };
+interface InstagramPostData {
+  author?: string;
+  avatar?: string;
+  caption?: string;
+  image?: string;
+  likes?: string;
+  time?: string;
+  verified?: boolean;
 }
 
-const InstagramPostView = ({ data }: InstagramPostProps) => {
-  const resolved: NonNullable<InstagramPostProps["data"]> =
-    data ?? demoInstagramPost;
-  const author = resolved?.author;
-  const avatar = resolved?.avatar;
-  const image = resolved?.image;
-  const likes = resolved?.likes;
-  const caption = resolved?.caption;
-  const time = resolved?.time;
-  const verified = resolved?.verified;
+const DEFAULT_POST: InstagramPostData = {
+  author: "mcpcn",
+  avatar: "M",
+  caption: "Building the future of agentic UIs, one component at a time.",
+  image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+  likes: "2,847",
+  time: "2h",
+  verified: true,
+};
 
-  if (!author && !image && !caption) {
-    return null;
+const InstagramPostContext = createContext<InstagramPostData | null>(null);
+
+export const useInstagramPost = () => {
+  const context = useContext(InstagramPostContext);
+  if (!context) {
+    throw new Error(
+      "InstagramPost components must be used within InstagramPost"
+    );
   }
+  return context;
+};
 
+export interface InstagramPostProps extends ComponentProps<"article"> {
+  data?: InstagramPostData;
+}
+
+const InstagramPostMenu = () => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <button
+        className="cursor-pointer text-foreground transition-colors hover:text-muted-foreground"
+        type="button"
+      >
+        <MoreHorizontal className="size-5" />
+      </button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem>
+        <Flag className="mr-2 size-4" />
+        Report
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <UserMinus className="mr-2 size-4" />
+        Unfollow
+      </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>
+        <Link className="mr-2 size-4" />
+        Copy link
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <Code className="mr-2 size-4" />
+        Embed
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
+
+export const InstagramPostHeader = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const data = useInstagramPost();
   return (
-    <div className="rounded-xl border bg-card overflow-hidden">
-      {author ||
-        (avatar && (
-          <div className="flex items-center justify-between p-3">
-            <div className="flex items-center gap-2">
-              {avatar && (
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] p-0.5">
-                  <div className="h-full w-full rounded-full bg-card flex items-center justify-center text-xs font-semibold">
-                    {avatar}
-                  </div>
+    <div
+      className={cn("flex items-center justify-between p-3", className)}
+      {...props}
+    >
+      {children ?? (
+        <>
+          <div className="flex items-center gap-2">
+            {data.avatar && (
+              <div className="size-8 rounded-full bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] p-0.5">
+                <div className="flex size-full items-center justify-center rounded-full bg-card font-semibold text-xs">
+                  {data.avatar}
                 </div>
+              </div>
+            )}
+            <div className="flex items-center gap-1">
+              {data.author && (
+                <span className="font-semibold text-sm">{data.author}</span>
               )}
-              <div className="flex items-center gap-1">
-                {author && (
-                  <span className="font-semibold text-sm">{author}</span>
-                )}
-                {verified && (
-                  <svg
-                    className="h-3.5 w-3.5 text-blue-500"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484z" />
-                  </svg>
-                )}
-              </div>
+              {data.verified && (
+                <span className="flex size-3.5 items-center justify-center rounded-full bg-blue-500 text-[9px] text-white">
+                  ✓
+                </span>
+              )}
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="text-foreground hover:text-muted-foreground transition-colors cursor-pointer">
-                  <MoreHorizontal className="h-5 w-5" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Flag className="mr-2 h-4 w-4" />
-                  Report
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <UserMinus className="mr-2 h-4 w-4" />
-                  Unfollow
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Link className="mr-2 h-4 w-4" />
-                  Copy link
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Code className="mr-2 h-4 w-4" />
-                  Embed
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
-        ))}
-      {image && (
-        <div className="aspect-square bg-muted">
-          <RegistryImage
-            src={image}
-            alt={author ? `Instagram post by ${author}` : "Instagram post"}
-            className="w-full h-full object-cover"
-          />
-        </div>
+          <InstagramPostMenu />
+        </>
       )}
-      {likes ||
-        caption ||
-        (time && (
-          <div className="p-3 space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <button
-                  aria-label="Like"
-                  className="hover:text-muted-foreground transition-colors cursor-pointer"
-                >
-                  <Heart className="h-6 w-6" />
-                </button>
-                <button
-                  aria-label="Comment"
-                  className="hover:text-muted-foreground transition-colors cursor-pointer"
-                >
-                  <MessageCircle className="h-6 w-6" />
-                </button>
-                <button
-                  aria-label="Share"
-                  className="hover:text-muted-foreground transition-colors cursor-pointer"
-                >
-                  <Send className="h-6 w-6" />
-                </button>
-              </div>
-              <button
-                aria-label="Save"
-                className="hover:text-muted-foreground transition-colors cursor-pointer"
-              >
-                <Bookmark className="h-6 w-6" />
-              </button>
-            </div>
-            {likes && <p className="font-semibold text-sm">{likes} likes</p>}
-            {author ||
-              (caption && (
-                <p className="text-sm">
-                  {author && <span className="font-semibold">{author}</span>}
-                  {author && caption && " "}
-                  {caption}
-                </p>
-              ))}
-            {time && <p className="text-xs text-muted-foreground">{time}</p>}
-          </div>
-        ))}
     </div>
   );
 };
 
-export const InstagramPost = createCompoundComponent(
-  InstagramPostView,
-  "InstagramPost"
+export const InstagramPostMedia = ({
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const data = useInstagramPost();
+  if (!data.image) {
+    return null;
+  }
+  return (
+    <div className={cn("aspect-square bg-muted", className)} {...props}>
+      <BlockImage
+        alt={
+          data.author ? `Instagram post by ${data.author}` : "Instagram post"
+        }
+        className="size-full object-cover"
+        src={data.image}
+      />
+    </div>
+  );
+};
+
+export const InstagramPostActions = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => (
+  <div
+    className={cn("flex items-center justify-between", className)}
+    {...props}
+  >
+    {children ?? (
+      <>
+        <div className="flex items-center gap-4">
+          <button
+            aria-label="Like"
+            className="cursor-pointer transition-colors hover:text-muted-foreground"
+            type="button"
+          >
+            <Heart className="size-6" />
+          </button>
+          <button
+            aria-label="Comment"
+            className="cursor-pointer transition-colors hover:text-muted-foreground"
+            type="button"
+          >
+            <MessageCircle className="size-6" />
+          </button>
+          <button
+            aria-label="Share"
+            className="cursor-pointer transition-colors hover:text-muted-foreground"
+            type="button"
+          >
+            <Send className="size-6" />
+          </button>
+        </div>
+        <button
+          aria-label="Save"
+          className="cursor-pointer transition-colors hover:text-muted-foreground"
+          type="button"
+        >
+          <Bookmark className="size-6" />
+        </button>
+      </>
+    )}
+  </div>
 );
+
+export const InstagramPostContent = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const data = useInstagramPost();
+  return (
+    <div className={cn("space-y-2 p-3", className)} {...props}>
+      {children ?? (
+        <>
+          <InstagramPostActions />
+          {data.likes && (
+            <p className="font-semibold text-sm">{data.likes} likes</p>
+          )}
+          {(data.author || data.caption) && (
+            <p className="text-sm">
+              {data.author && (
+                <span className="font-semibold">{data.author}</span>
+              )}
+              {data.author && data.caption && " "}
+              {data.caption}
+            </p>
+          )}
+          {data.time && (
+            <p className="text-muted-foreground text-xs">{data.time}</p>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+const InstagramPostRoot = ({
+  children,
+  className,
+  data,
+  ...props
+}: InstagramPostProps) => {
+  const value = data ?? DEFAULT_POST;
+  return (
+    <InstagramPostContext.Provider value={value}>
+      <article
+        className={cn("overflow-hidden rounded-xl border bg-card", className)}
+        {...props}
+      >
+        {children ?? (
+          <>
+            <InstagramPostHeader />
+            <InstagramPostMedia />
+            <InstagramPostContent />
+          </>
+        )}
+      </article>
+    </InstagramPostContext.Provider>
+  );
+};
+
+export const InstagramPost = InstagramPostRoot;

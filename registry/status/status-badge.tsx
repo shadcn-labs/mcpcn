@@ -1,23 +1,18 @@
 "use client";
 
 import {
+  AlertCircle,
   Check,
   Clock,
-  AlertCircle,
-  XCircle,
   Loader2,
   Truck,
+  XCircle,
 } from "lucide-react";
+import { createContext, useContext } from "react";
+import type { ComponentProps, ElementType } from "react";
 
-import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
-import { demoStatusBadge } from "./demo/status";
-
-/**
- * Available status types for the badge.
- * @typedef {"success" | "pending" | "processing" | "warning" | "error" | "shipped" | "delivered" | "cancelled"} StatusType
- */
 export type StatusType =
   | "success"
   | "pending"
@@ -28,126 +23,170 @@ export type StatusType =
   | "delivered"
   | "cancelled";
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * StatusBadgeProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the StatusBadge component.
- * Displays a status indicator with configurable appearance.
- */
-export interface StatusBadgeProps {
-  data?: {
-    /** The status to display (success, pending, processing, warning, error, shipped, delivered, cancelled). */
-    status?: StatusType;
-  };
-  appearance?: {
-    /** Custom label text that overrides the default status label. */
-    label?: string;
-    /**
-     * Whether to show the status icon.
-     * @default true
-     */
-    showIcon?: boolean;
-    /**
-     * Badge size variant.
-     * @default "md"
-     */
-    size?: "sm" | "md" | "lg";
-  };
+interface StatusConfig {
+  className: string;
+  defaultLabel: string;
+  icon: ElementType;
 }
 
-const statusConfig: Record<
-  StatusType,
-  { icon: React.ElementType; className: string; defaultLabel: string }
-> = {
+const STATUS_CONFIG: Record<StatusType, StatusConfig> = {
   cancelled: {
-    className: "bg-muted text-muted-foreground border-border",
+    className: "border-border bg-muted text-muted-foreground",
     defaultLabel: "Cancelled",
     icon: XCircle,
   },
   delivered: {
-    className: "bg-foreground text-background border-foreground",
+    className: "border-foreground bg-foreground text-background",
     defaultLabel: "Delivered",
     icon: Check,
   },
   error: {
-    className: "bg-destructive/10 text-destructive border-destructive/20",
+    className: "border-destructive/20 bg-destructive/10 text-destructive",
     defaultLabel: "Error",
     icon: XCircle,
   },
   pending: {
-    className: "bg-muted text-muted-foreground border-border",
+    className: "border-border bg-muted text-muted-foreground",
     defaultLabel: "Pending",
     icon: Clock,
   },
   processing: {
-    className: "bg-muted text-foreground border-border",
+    className: "border-border bg-muted text-foreground",
     defaultLabel: "Processing",
     icon: Loader2,
   },
   shipped: {
-    className: "bg-muted text-foreground border-border",
+    className: "border-border bg-muted text-foreground",
     defaultLabel: "Shipped",
     icon: Truck,
   },
   success: {
-    className: "bg-muted text-foreground border-border",
+    className: "border-border bg-muted text-foreground",
     defaultLabel: "Success",
     icon: Check,
   },
   warning: {
-    className: "bg-muted text-foreground border-border",
+    className: "border-border bg-muted text-foreground",
     defaultLabel: "Warning",
     icon: AlertCircle,
   },
 };
 
-const sizeClasses = {
-  lg: "px-3 py-1.5 text-sm gap-2",
-  md: "px-2.5 py-1 text-sm gap-1.5",
-  sm: "px-2 py-0.5 text-xs gap-1",
+const SIZE_CLASSES = {
+  lg: "gap-2 px-3 py-1.5 text-sm",
+  md: "gap-1.5 px-2.5 py-1 text-sm",
+  sm: "gap-1 px-2 py-0.5 text-xs",
 };
 
-const iconSizes = {
-  lg: "h-4 w-4",
-  md: "h-3.5 w-3.5",
-  sm: "h-3 w-3",
+const ICON_SIZES = {
+  lg: "size-4",
+  md: "size-3.5",
+  sm: "size-3",
 };
 
-const StatusBadgeView = ({ data, appearance }: StatusBadgeProps) => {
-  const resolved: NonNullable<StatusBadgeProps["data"]> =
-    data ?? demoStatusBadge;
-  const status = resolved?.status ?? "pending";
-  const label = appearance?.label;
-  const showIcon = appearance?.showIcon ?? true;
-  const size = appearance?.size ?? "md";
-  const config = statusConfig[status];
+interface StatusBadgeContextValue {
+  config: StatusConfig;
+  label: string;
+  showIcon: boolean;
+  size: keyof typeof SIZE_CLASSES;
+  status: StatusType;
+}
+
+const StatusBadgeContext = createContext<StatusBadgeContextValue | null>(null);
+
+export const useStatusBadge = () => {
+  const context = useContext(StatusBadgeContext);
+
+  if (!context) {
+    throw new Error("StatusBadge components must be used within StatusBadge");
+  }
+
+  return context;
+};
+
+export interface StatusBadgeProps extends ComponentProps<"span"> {
+  appearance?: {
+    label?: string;
+    showIcon?: boolean;
+    size?: "sm" | "md" | "lg";
+  };
+  data?: {
+    status?: StatusType;
+  };
+}
+
+export const StatusBadgeIcon = ({
+  className,
+  ...props
+}: ComponentProps<"svg">) => {
+  const { config, size, status } = useStatusBadge();
   const Icon = config.icon;
-  const displayLabel = label || config.defaultLabel;
 
   return (
-    <span
+    <Icon
       className={cn(
-        "inline-flex items-center rounded-full border font-medium",
-        config.className,
-        sizeClasses[size]
+        ICON_SIZES[size],
+        status === "processing" && "animate-spin",
+        className
       )}
-    >
-      {showIcon && (
-        <Icon
-          className={cn(
-            iconSizes[size],
-            status === "processing" && "animate-spin"
-          )}
-        />
-      )}
-      {displayLabel}
-    </span>
+      {...props}
+    />
   );
 };
 
-export const StatusBadge = createCompoundComponent(
-  StatusBadgeView,
-  "StatusBadge"
-);
+export const StatusBadgeLabel = ({
+  children,
+  ...props
+}: ComponentProps<"span">) => {
+  const { label } = useStatusBadge();
+
+  return <span {...props}>{children ?? label}</span>;
+};
+
+export const StatusBadgeContent = () => {
+  const { showIcon } = useStatusBadge();
+
+  return (
+    <>
+      {showIcon && <StatusBadgeIcon />}
+      <StatusBadgeLabel />
+    </>
+  );
+};
+
+const StatusBadgeRoot = ({
+  appearance,
+  children,
+  className,
+  data,
+  ...props
+}: StatusBadgeProps) => {
+  const status = data?.status ?? "processing";
+  const config = STATUS_CONFIG[status];
+  const size = appearance?.size ?? "md";
+  const context: StatusBadgeContextValue = {
+    config,
+    label: appearance?.label ?? config.defaultLabel,
+    showIcon: appearance?.showIcon ?? true,
+    size,
+    status,
+  };
+
+  return (
+    <StatusBadgeContext.Provider value={context}>
+      <span
+        className={cn(
+          "inline-flex items-center rounded-full border font-medium",
+          config.className,
+          SIZE_CLASSES[size],
+          className
+        )}
+        {...props}
+      >
+        {children ?? <StatusBadgeContent />}
+      </span>
+    </StatusBadgeContext.Provider>
+  );
+};
+
+export const StatusBadge = StatusBadgeRoot;

@@ -62,21 +62,13 @@ Use the following composition to build an `EventCard`:
 
 ```text
 EventCard
-└── EventCard.Content
+├── EventCardContent
+├── EventCardFooter
+├── EventCardImage
+├── EventCardMeta
+├── EventCardSignal
+└── EventCardTags
 ```
-
-## Examples
-
-### With a custom heading
-
-This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original component view needs no repeated props.
-
-<ComponentPreview
-  name="event-card"
-  src="examples/event-card-demo.tsx"
-  variant="composed"
-  showCode
-/>
 
 ## Integrate with OpenUI
 

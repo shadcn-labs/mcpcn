@@ -1,11 +1,10 @@
-/* oxlint-disable complexity */
 "use client";
 
 import { ChevronDown, ChevronUp, Paperclip, Send, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
+import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createCompoundComponent } from "@/components/ui/compound";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -17,17 +16,8 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
-import { demoIssueReportFormData } from "./demo/form";
-
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * IssueReportFormProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the IssueReportForm component for IT support, help desk, or
- * internal ticketing systems.
- */
 export interface IssueReportFormProps {
+  children?: ReactNode;
   data?: {
     /** Form title displayed at the top. */
     title?: string;
@@ -105,13 +95,107 @@ export interface IssueFormData {
   additionalComments?: string;
 }
 
+const DEFAULT_ISSUE_FORM = {
+  attemptedActions: [
+    "Restarted the application",
+    "Cleared browser cache",
+    "Restarted computer",
+    "Checked internet connection",
+    "Contacted a colleague",
+  ],
+  categories: {
+    Access: ["Account", "Permissions", "Password Reset"],
+    Hardware: ["Computer", "Monitor", "Keyboard", "Mouse", "Printer"],
+    Network: ["Wi-Fi", "Ethernet", "VPN Access"],
+    Software: ["Business App", "Email", "VPN", "Browser", "OS"],
+  },
+  frequencies: [
+    { label: "Constant", value: "constant" },
+    { label: "Frequent", value: "frequent" },
+    { label: "Occasional", value: "occasional" },
+    { label: "Happened once", value: "once" },
+  ],
+  impacts: [
+    { label: "Critical - Work stopped", value: "critical" },
+    { label: "High - Major feature broken", value: "high" },
+    { label: "Medium - Workaround available", value: "medium" },
+    { label: "Low - Minor inconvenience", value: "low" },
+  ],
+  locations: ["New York - HQ", "San Francisco", "London", "Remote"],
+  teams: ["Engineering", "Product", "Design", "Marketing", "Operations"],
+  title: "Report an Issue",
+  urgencies: [
+    { label: "Immediate", value: "immediate" },
+    { label: "Today", value: "today" },
+    { label: "This week", value: "this-week" },
+    { label: "No rush", value: "no-rush" },
+  ],
+} satisfies NonNullable<IssueReportFormProps["data"]>;
+
+const IssueReportFormContext = createContext<IssueReportFormProps | null>(null);
+
+export const useIssueReportForm = () => {
+  const context = useContext(IssueReportFormContext);
+  if (!context) {
+    throw new Error(
+      "IssueReportForm components must be used within IssueReportForm"
+    );
+  }
+  return context;
+};
+
+const SectionChevron = ({ open }: { open: boolean }) =>
+  open ? (
+    <ChevronUp className="size-4 text-muted-foreground" />
+  ) : (
+    <ChevronDown className="size-4 text-muted-foreground" />
+  );
+
+const IssueFormTitle = ({ title }: { title?: string }) =>
+  title ? (
+    <div className="flex items-center gap-2 mb-4">
+      <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+    </div>
+  ) : null;
+
+interface IssueAttachmentsProps {
+  files: File[];
+  onRemove: (index: number) => void;
+}
+
+const IssueAttachments = ({ files, onRemove }: IssueAttachmentsProps) => {
+  if (files.length === 0) {
+    return null;
+  }
+  return (
+    <div className="flex flex-wrap gap-1.5 mb-2">
+      {files.map((file, index) => (
+        <div
+          key={`${file.name}-${index}`}
+          className="flex items-center gap-1 px-2 py-1 bg-muted rounded text-xs"
+        >
+          <Paperclip className="size-3" />
+          <span className="max-w-[100px] truncate">{file.name}</span>
+          <button
+            onClick={() => onRemove(index)}
+            aria-label="Remove file"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <X className="size-3" />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const IssueReportFormView = ({
   data,
   actions,
   appearance,
 }: IssueReportFormProps) => {
   const resolved: NonNullable<IssueReportFormProps["data"]> =
-    data ?? demoIssueReportFormData;
+    data ?? DEFAULT_ISSUE_FORM;
   const { title } = resolved;
   const teams = resolved.teams ?? [];
   const locations = resolved.locations ?? [];
@@ -203,11 +287,7 @@ const IssueReportFormView = ({
 
   return (
     <div className="w-full bg-card rounded-xl p-4">
-      {showTitle && title && (
-        <div className="flex items-center gap-2 mb-4">
-          <h2 className="text-lg font-semibold text-foreground">{title}</h2>
-        </div>
-      )}
+      {showTitle && <IssueFormTitle title={title} />}
 
       <div className="space-y-3">
         {/* Declarant Info - Always visible */}
@@ -357,11 +437,7 @@ const IssueReportFormView = ({
             className="w-full px-3 py-2 flex items-center justify-between text-sm font-medium text-foreground bg-muted/50 hover:bg-muted transition-colors"
           >
             <span>Impact & Urgency</span>
-            {expandedSection === "details" ? (
-              <ChevronUp className="h-4 w-4 text-muted-foreground" />
-            ) : (
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-            )}
+            <SectionChevron open={expandedSection === "details"} />
           </button>
           <div
             className={cn(
@@ -452,11 +528,7 @@ const IssueReportFormView = ({
             className="w-full px-3 py-2 flex items-center justify-between text-sm font-medium text-foreground bg-muted/50 hover:bg-muted transition-colors"
           >
             <span>Additional Context</span>
-            {expandedSection === "context" ? (
-              <ChevronUp className="h-4 w-4 text-muted-foreground" />
-            ) : (
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-            )}
+            <SectionChevron open={expandedSection === "context"} />
           </button>
           <div
             className={cn(
@@ -543,26 +615,10 @@ const IssueReportFormView = ({
             onChange={handleFileSelect}
             className="hidden"
           />
-          {(formData.attachments ?? []).length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-2">
-              {(formData.attachments ?? []).map((file, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-1 px-2 py-1 bg-muted rounded text-xs"
-                >
-                  <Paperclip className="h-3 w-3" />
-                  <span className="max-w-[100px] truncate">{file.name}</span>
-                  <button
-                    onClick={() => removeFile(index)}
-                    aria-label="Remove file"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+          <IssueAttachments
+            files={formData.attachments ?? []}
+            onRemove={removeFile}
+          />
         </div>
 
         {/* Actions */}
@@ -573,7 +629,7 @@ const IssueReportFormView = ({
             onClick={() => fileInputRef.current?.click()}
             className="h-9 w-full sm:w-auto"
           >
-            <Paperclip className="h-4 w-4 mr-1.5" />
+            <Paperclip className="size-4 mr-1.5" />
             Attach a file
           </Button>
           <Button
@@ -581,7 +637,7 @@ const IssueReportFormView = ({
             size="sm"
             className="h-9 w-full sm:w-auto"
           >
-            <Send className="h-4 w-4 mr-1.5" />
+            <Send className="size-4 mr-1.5" />
             Submit
           </Button>
         </div>
@@ -590,7 +646,15 @@ const IssueReportFormView = ({
   );
 };
 
-export const IssueReportForm = createCompoundComponent(
-  IssueReportFormView,
-  "IssueReportForm"
+export const IssueReportFormContent = (props: IssueReportFormProps) => {
+  const context = useIssueReportForm();
+  return <IssueReportFormView {...context} {...props} />;
+};
+
+const IssueReportFormRoot = ({ children, ...props }: IssueReportFormProps) => (
+  <IssueReportFormContext.Provider value={props}>
+    {children ?? <IssueReportFormContent />}
+  </IssueReportFormContext.Provider>
 );
+
+export const IssueReportForm = IssueReportFormRoot;

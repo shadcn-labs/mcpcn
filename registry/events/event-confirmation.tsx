@@ -1,15 +1,12 @@
 "use client";
 
 import { CheckCircle, Mail, MessageCircle } from "lucide-react";
-import type { SVGProps } from "react";
+import { createContext, createElement, useContext } from "react";
+import type { ImgHTMLAttributes, ReactNode, SVGProps } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
-
-import { demoEventConfirmation } from "./demo/events";
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
 
 const Facebook = (props: SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
@@ -23,15 +20,8 @@ const Twitter = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * EventConfirmationProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the EventConfirmation component. Displays booking success message,
- * ticket delivery info, organizer follow card, and social sharing options.
- */
 export interface EventConfirmationProps {
+  children?: ReactNode;
   data?: {
     /** Order/confirmation number. */
     orderNumber?: string;
@@ -63,9 +53,33 @@ export interface EventConfirmationProps {
   };
 }
 
+const DEFAULT_CONFIRMATION = {
+  eventDate: "Jan 20, 2024",
+  eventLocation: "Central Park, New York",
+  eventTitle: "Summer Music Festival",
+  orderNumber: "EVT-12345",
+  organizer: { name: "Live Nation" },
+  recipientEmail: "customer@example.com",
+  ticketCount: 2,
+} satisfies NonNullable<EventConfirmationProps["data"]>;
+
+const EventConfirmationContext = createContext<EventConfirmationProps | null>(
+  null
+);
+
+export const useEventConfirmation = () => {
+  const context = useContext(EventConfirmationContext);
+  if (!context) {
+    throw new Error(
+      "EventConfirmation components must be used within EventConfirmation"
+    );
+  }
+  return context;
+};
+
 const EventConfirmationView = ({ data, actions }: EventConfirmationProps) => {
   const resolved: NonNullable<EventConfirmationProps["data"]> =
-    data ?? demoEventConfirmation;
+    data ?? DEFAULT_CONFIRMATION;
   const orderNumber = resolved?.orderNumber;
   const eventTitle = resolved?.eventTitle;
   const ticketCount = resolved?.ticketCount;
@@ -80,8 +94,8 @@ const EventConfirmationView = ({ data, actions }: EventConfirmationProps) => {
       {/* Success header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-            <CheckCircle className="h-6 w-6 text-green-600" />
+          <div className="flex size-10 items-center justify-center rounded-full bg-green-100">
+            <CheckCircle className="size-6 text-green-600" />
           </div>
           <div>
             <h1 className="text-xl font-semibold">Thanks for your order!</h1>
@@ -145,13 +159,13 @@ const EventConfirmationView = ({ data, actions }: EventConfirmationProps) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {organizer.image ? (
-                <RegistryImage
+                <BlockImage
                   src={organizer.image}
                   alt={organizer.name}
-                  className="h-12 w-12 rounded-full object-cover"
+                  className="size-12 rounded-full object-cover"
                 />
               ) : (
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-100">
+                <div className="flex size-12 items-center justify-center rounded-full bg-orange-100">
                   <span className="text-lg font-semibold text-orange-600">
                     {organizer.name.charAt(0)}
                   </span>
@@ -178,38 +192,49 @@ const EventConfirmationView = ({ data, actions }: EventConfirmationProps) => {
       <div className="flex items-center gap-4">
         <button
           onClick={() => onShare?.("facebook")}
-          className="flex h-10 w-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
+          className="flex size-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
           aria-label="Share on Facebook"
         >
-          <Facebook className="h-5 w-5" />
+          <Facebook className="size-5" />
         </button>
         <button
           onClick={() => onShare?.("messenger")}
-          className="flex h-10 w-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
+          className="flex size-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
           aria-label="Share on Messenger"
         >
-          <MessageCircle className="h-5 w-5" />
+          <MessageCircle className="size-5" />
         </button>
         <button
           onClick={() => onShare?.("twitter")}
-          className="flex h-10 w-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
+          className="flex size-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
           aria-label="Share on Twitter"
         >
-          <Twitter className="h-5 w-5" />
+          <Twitter className="size-5" />
         </button>
         <button
           onClick={() => onShare?.("email")}
-          className="flex h-10 w-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
+          className="flex size-10 items-center justify-center rounded-full border hover:bg-muted transition-colors"
           aria-label="Share via Email"
         >
-          <Mail className="h-5 w-5" />
+          <Mail className="size-5" />
         </button>
       </div>
     </div>
   );
 };
 
-export const EventConfirmation = createCompoundComponent(
-  EventConfirmationView,
-  "EventConfirmation"
+export const EventConfirmationContent = (props: EventConfirmationProps) => {
+  const context = useEventConfirmation();
+  return <EventConfirmationView {...context} {...props} />;
+};
+
+const EventConfirmationRoot = ({
+  children,
+  ...props
+}: EventConfirmationProps) => (
+  <EventConfirmationContext.Provider value={props}>
+    {children ?? <EventConfirmationContent />}
+  </EventConfirmationContext.Provider>
 );
+
+export const EventConfirmation = EventConfirmationRoot;

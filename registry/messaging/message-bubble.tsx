@@ -1,13 +1,15 @@
-/* oxlint-disable complexity, no-negated-condition */
 "use client";
 
 import { Check, CheckCheck, Smile } from "lucide-react";
-import { useRef, useState } from "react";
-
 import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
+  createContext,
+  createElement,
+  useContext,
+  useRef,
+  useState,
+} from "react";
+import type { ImgHTMLAttributes, ReactNode } from "react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,12 +17,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
-import {
-  demoTextMessages,
-  demoImageMessages,
-  demoReactionMessage,
-  demoVoiceMessage,
-} from "./demo/messaging";
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
 
 /**
  * Internal avatar component options.
@@ -40,11 +38,11 @@ const Avatar = ({ src, fallback, className }: InternalAvatarOptions) => {
 
   if (src && !imgError) {
     return (
-      <RegistryImage
+      <BlockImage
         src={src}
         alt={fallback}
         onError={() => setImgError(true)}
-        className={cn("h-8 w-8 rounded-full object-cover shrink-0", className)}
+        className={cn("size-8 rounded-full object-cover shrink-0", className)}
       />
     );
   }
@@ -52,7 +50,7 @@ const Avatar = ({ src, fallback, className }: InternalAvatarOptions) => {
   return (
     <div
       className={cn(
-        "h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold shrink-0",
+        "size-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold shrink-0",
         className
       )}
     >
@@ -61,15 +59,27 @@ const Avatar = ({ src, fallback, className }: InternalAvatarOptions) => {
   );
 };
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * MessageBubbleProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for configuring a text message bubble in chat interfaces with avatar,
- * delivery status, and own/other message styling.
- */
+interface MessageMetadataProps {
+  isOwn: boolean;
+  status?: "sent" | "delivered" | "read";
+  time?: string;
+}
+
+const MessageMetadata = ({ isOwn, status, time }: MessageMetadataProps) => (
+  <div className={cn("mt-1 flex items-center gap-1", isOwn && "justify-end")}>
+    {time && <span className="text-[10px] text-muted-foreground">{time}</span>}
+    {isOwn && status && (
+      <span className="text-muted-foreground">
+        {status === "sent" && <Check className="size-3" />}
+        {status === "delivered" && <CheckCheck className="size-3" />}
+        {status === "read" && <CheckCheck className="size-3 text-foreground" />}
+      </span>
+    )}
+  </div>
+);
+
 export interface MessageBubbleProps {
+  children?: ReactNode;
   data?: {
     /** Message text content to display. */
     content?: string;
@@ -95,13 +105,32 @@ export interface MessageBubbleProps {
   };
 }
 
+const DEFAULT_TEXT_MESSAGE = {
+  avatarFallback: "S",
+  avatarUrl: "https://i.pravatar.cc/150?u=sarah",
+  content: "Hey! How are you doing today?",
+  time: "Dec 8, 10:30 AM",
+} satisfies NonNullable<MessageBubbleProps["data"]>;
+
+const MessageBubbleContext = createContext<MessageBubbleProps | null>(null);
+
+export const useMessageBubble = () => {
+  const context = useContext(MessageBubbleContext);
+  if (!context) {
+    throw new Error(
+      "MessageBubble components must be used within MessageBubble"
+    );
+  }
+  return context;
+};
+
 const MessageBubbleView = ({
   data,
   appearance,
   control,
 }: MessageBubbleProps) => {
   const resolved: NonNullable<MessageBubbleProps["data"]> =
-    data ?? demoTextMessages[0];
+    data ?? DEFAULT_TEXT_MESSAGE;
   const { content } = resolved;
   const { avatarFallback } = resolved;
   const { avatarUrl } = resolved;
@@ -126,40 +155,25 @@ const MessageBubbleView = ({
             <p className="text-sm">{content}</p>
           </div>
         )}
-        <div
-          className={cn("flex items-center gap-1 mt-1", isOwn && "justify-end")}
-        >
-          {time && (
-            <span className="text-[10px] text-muted-foreground">{time}</span>
-          )}
-          {isOwn && status && (
-            <span className="text-muted-foreground">
-              {status === "sent" && <Check className="h-3 w-3" />}
-              {status === "delivered" && <CheckCheck className="h-3 w-3" />}
-              {status === "read" && (
-                <CheckCheck className="h-3 w-3 text-foreground" />
-              )}
-            </span>
-          )}
-        </div>
+        <MessageMetadata isOwn={isOwn} status={status} time={time} />
       </div>
     </div>
   );
 };
 
-export const MessageBubble = createCompoundComponent(
-  MessageBubbleView,
-  "MessageBubble"
+export const MessageBubbleContent = (props: MessageBubbleProps) => {
+  const context = useMessageBubble();
+  return <MessageBubbleView {...context} {...props} />;
+};
+
+const MessageBubbleRoot = ({ children, ...props }: MessageBubbleProps) => (
+  <MessageBubbleContext.Provider value={props}>
+    {children ?? <MessageBubbleContent />}
+  </MessageBubbleContext.Provider>
 );
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * ImageMessageBubbleProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for configuring an image message bubble that displays a shared photo
- * with optional caption and message metadata.
- */
+export const MessageBubble = MessageBubbleRoot;
+
 export interface ImageMessageBubbleProps {
   data?: {
     /** URL of the image to display. */
@@ -188,13 +202,22 @@ export interface ImageMessageBubbleProps {
   };
 }
 
+const DEFAULT_IMAGE_MESSAGE = {
+  avatarFallback: "A",
+  avatarUrl: "https://i.pravatar.cc/150?u=alex",
+  content: "Check out this view!",
+  image:
+    "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400&h=300&fit=crop",
+  time: "Dec 8, 2:45 PM",
+} satisfies NonNullable<ImageMessageBubbleProps["data"]>;
+
 export const ImageMessageBubble = ({
   data,
   appearance,
   control,
 }: ImageMessageBubbleProps) => {
   const resolved: NonNullable<ImageMessageBubbleProps["data"]> =
-    data ?? demoImageMessages[0];
+    data ?? DEFAULT_IMAGE_MESSAGE;
   const { image } = resolved;
   const { content } = resolved;
   const { avatarFallback } = resolved;
@@ -215,7 +238,7 @@ export const ImageMessageBubble = ({
               isOwn ? "rounded-br-md" : "rounded-bl-md"
             )}
           >
-            <RegistryImage
+            <BlockImage
               src={image}
               alt={content || "Shared image in chat"}
               className="w-full max-w-[280px] h-auto object-cover"
@@ -232,35 +255,12 @@ export const ImageMessageBubble = ({
             )}
           </div>
         )}
-        <div
-          className={cn("flex items-center gap-1 mt-1", isOwn && "justify-end")}
-        >
-          {time && (
-            <span className="text-[10px] text-muted-foreground">{time}</span>
-          )}
-          {isOwn && status && (
-            <span className="text-muted-foreground">
-              {status === "sent" && <Check className="h-3 w-3" />}
-              {status === "delivered" && <CheckCheck className="h-3 w-3" />}
-              {status === "read" && (
-                <CheckCheck className="h-3 w-3 text-foreground" />
-              )}
-            </span>
-          )}
-        </div>
+        <MessageMetadata isOwn={isOwn} status={status} time={time} />
       </div>
     </div>
   );
 };
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * MessageWithReactionsProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for configuring a message bubble with emoji reaction support,
- * allowing users to add, toggle, and view reactions on messages.
- */
 export interface MessageWithReactionsProps {
   data?: {
     /** Message text content to display. */
@@ -289,6 +289,17 @@ export interface MessageWithReactionsProps {
   };
 }
 
+const DEFAULT_REACTION_MESSAGE = {
+  avatarFallback: "T",
+  content: "We just hit 10,000 users!",
+  reactions: [
+    { count: 5, emoji: "🎉" },
+    { count: 3, emoji: "❤️" },
+    { count: 2, emoji: "👏" },
+  ],
+  time: "Dec 8, 4:20 PM",
+} satisfies NonNullable<MessageWithReactionsProps["data"]>;
+
 /**
  * Available emoji options for reactions.
  * @constant
@@ -312,7 +323,7 @@ export const MessageWithReactions = ({
   appearance,
 }: MessageWithReactionsProps) => {
   const resolved: NonNullable<MessageWithReactionsProps["data"]> =
-    data ?? demoReactionMessage;
+    data ?? DEFAULT_REACTION_MESSAGE;
   const { content } = resolved;
   const { avatarFallback } = resolved;
   const { avatarUrl } = resolved;
@@ -321,7 +332,6 @@ export const MessageWithReactions = ({
   const { onReact } = actions ?? {};
   const { isOwn = false } = appearance ?? {};
   const [reactions, setReactions] = useState(initialReactions);
-  // Track which emojis the current user has reacted with
   const [userReactions, setUserReactions] = useState<Set<string>>(new Set());
 
   const handleReact = (emoji: string) => {
@@ -329,11 +339,9 @@ export const MessageWithReactions = ({
     const existingIndex = reactions.findIndex((r) => r.emoji === emoji);
 
     if (hasUserReacted) {
-      // User already reacted - toggle off (decrement)
       if (existingIndex !== -1) {
         const updated = [...reactions];
         if (updated[existingIndex].count <= 1) {
-          // Remove reaction entirely if count would become 0
           updated.splice(existingIndex, 1);
         } else {
           updated[existingIndex] = {
@@ -343,25 +351,22 @@ export const MessageWithReactions = ({
         }
         setReactions(updated);
       }
-      // Remove from user's reactions
       setUserReactions((prev) => {
         const next = new Set(prev);
         next.delete(emoji);
         return next;
       });
     } else {
-      // User hasn't reacted - add reaction
-      if (existingIndex !== -1) {
+      if (existingIndex === -1) {
+        setReactions([...reactions, { count: 1, emoji }]);
+      } else {
         const updated = [...reactions];
         updated[existingIndex] = {
           ...updated[existingIndex],
           count: updated[existingIndex].count + 1,
         };
         setReactions(updated);
-      } else {
-        setReactions([...reactions, { count: 1, emoji }]);
       }
-      // Add to user's reactions
       setUserReactions((prev) => new Set(prev).add(emoji));
     }
     onReact?.(emoji);
@@ -423,9 +428,9 @@ export const MessageWithReactions = ({
             <DropdownMenuTrigger asChild>
               <button
                 aria-label="Add reaction"
-                className="inline-flex items-center justify-center h-6 w-6 bg-card border rounded-full hover:bg-muted transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center size-6 bg-card border rounded-full hover:bg-muted transition-colors cursor-pointer"
               >
-                <Smile className="h-3.5 w-3.5 text-muted-foreground" />
+                <Smile className="size-3.5 text-muted-foreground" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="p-2">
@@ -435,7 +440,7 @@ export const MessageWithReactions = ({
                     key={emoji}
                     onClick={() => handleReact(emoji)}
                     aria-label={`React with ${emoji}`}
-                    className="h-8 w-8 flex items-center justify-center text-lg hover:bg-muted rounded transition-colors cursor-pointer"
+                    className="size-8 flex items-center justify-center text-lg hover:bg-muted rounded transition-colors cursor-pointer"
                   >
                     {emoji}
                   </button>
@@ -456,14 +461,6 @@ export const MessageWithReactions = ({
   );
 };
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * VoiceMessageBubbleProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for configuring a voice/audio message bubble with playback controls,
- * progress bar, and duration display.
- */
 export interface VoiceMessageBubbleProps {
   data?: {
     /** Total duration display string (e.g., "0:42"). */
@@ -492,13 +489,20 @@ export interface VoiceMessageBubbleProps {
   };
 }
 
+const DEFAULT_VOICE_MESSAGE = {
+  avatarFallback: "M",
+  avatarUrl: "https://i.pravatar.cc/150?u=mickael",
+  duration: "0:42",
+  time: "Dec 8, 3:15 PM",
+} satisfies NonNullable<VoiceMessageBubbleProps["data"]>;
+
 export const VoiceMessageBubble = ({
   data,
   appearance,
   control,
 }: VoiceMessageBubbleProps) => {
   const resolved: NonNullable<VoiceMessageBubbleProps["data"]> =
-    data ?? demoVoiceMessage;
+    data ?? DEFAULT_VOICE_MESSAGE;
   const { duration } = resolved;
   const { avatarFallback } = resolved;
   const { avatarUrl } = resolved;
@@ -568,19 +572,19 @@ export const VoiceMessageBubble = ({
               isPlaying ? "Pause voice message" : "Play voice message"
             }
             className={cn(
-              "h-8 w-8 rounded-full flex items-center justify-center shrink-0 transition-colors cursor-pointer",
+              "size-8 rounded-full flex items-center justify-center shrink-0 transition-colors cursor-pointer",
               isOwn
                 ? "bg-primary-foreground/20 hover:bg-primary-foreground/30"
                 : "bg-foreground/10 hover:bg-foreground/20"
             )}
           >
             {isPlaying ? (
-              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="size-4" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
               </svg>
             ) : (
               <svg
-                className="h-4 w-4 ml-0.5"
+                className="size-4 ml-0.5"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
@@ -600,22 +604,7 @@ export const VoiceMessageBubble = ({
             </span>
           </div>
         </div>
-        <div
-          className={cn("flex items-center gap-1 mt-1", isOwn && "justify-end")}
-        >
-          {time && (
-            <span className="text-[10px] text-muted-foreground">{time}</span>
-          )}
-          {isOwn && status && (
-            <span className="text-muted-foreground">
-              {status === "sent" && <Check className="h-3 w-3" />}
-              {status === "delivered" && <CheckCheck className="h-3 w-3" />}
-              {status === "read" && (
-                <CheckCheck className="h-3 w-3 text-foreground" />
-              )}
-            </span>
-          )}
-        </div>
+        <MessageMetadata isOwn={isOwn} status={status} time={time} />
       </div>
     </div>
   );

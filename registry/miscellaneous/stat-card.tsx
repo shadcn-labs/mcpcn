@@ -1,130 +1,169 @@
-/* oxlint-disable unicorn/consistent-function-scoping */
 "use client";
 
-import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Minus, TrendingDown, TrendingUp } from "lucide-react";
+import { createContext, useContext } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
-import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
-import { demoStats } from "./demo/miscellaneous";
-
-/**
- * Represents a single statistic card with trend data.
- * @interface StatCard
- * @property {string} [label] - Label for the stat (e.g., "Sales", "Orders")
- * @property {string | number} [value] - The stat value to display
- * @property {number} [change] - Percentage change value
- * @property {string} [changeLabel] - Additional context for the change
- * @property {React.ReactNode} [icon] - Optional icon for the stat
- * @property {"up" | "down" | "neutral"} [trend] - Trend direction
- */
 export interface StatCard {
-  label?: string;
-  value?: string | number;
   change?: number;
   changeLabel?: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
+  label?: string;
   trend?: "up" | "down" | "neutral";
+  value?: number | string;
 }
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * StatCardProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the StatCard component, which displays a grid of statistic cards
- * with values, trend indicators, and optional icons.
- */
-export interface StatCardProps {
+interface StatCardContextValue {
+  stats: StatCard[];
+}
+
+const StatCardContext = createContext<StatCardContextValue | null>(null);
+
+export const useStatCard = () => {
+  const context = useContext(StatCardContext);
+
+  if (!context) {
+    throw new Error("StatCard components must be used within StatCard");
+  }
+
+  return context;
+};
+
+const DEFAULT_STATS: StatCard[] = [
+  { change: 12.5, label: "Revenue", value: "$12,345" },
+  { change: -3.2, label: "Orders", value: "1,234" },
+  { change: 8.1, label: "Customers", value: "567" },
+];
+
+export interface StatCardProps extends ComponentProps<"div"> {
   data?: {
-    /** Array of stat cards to display in the grid. */
     stats?: StatCard[];
   };
 }
 
-const StatCardView = ({ data }: StatCardProps) => {
-  const resolved: NonNullable<StatCardProps["data"]> = data ?? {
-    stats: demoStats,
-  };
-  const stats = resolved.stats ?? [];
-  const getTrendIcon = (trend?: "up" | "down" | "neutral") => {
-    switch (trend) {
-      case "up": {
-        return <TrendingUp className="h-3.5 w-3.5" />;
-      }
-      case "down": {
-        return <TrendingDown className="h-3.5 w-3.5" />;
-      }
-      default: {
-        return <Minus className="h-3.5 w-3.5" />;
-      }
-    }
-  };
+interface StatCardItemProps extends ComponentProps<"div"> {
+  stat: StatCard;
+}
 
-  const getTrendColor = (trend?: "up" | "down" | "neutral") => {
-    switch (trend) {
-      case "up": {
-        return "text-green-600";
-      }
-      case "down": {
-        return "text-red-600";
-      }
-      default: {
-        return "text-muted-foreground";
-      }
-    }
-  };
+const TREND_CLASSES = {
+  down: "text-red-600",
+  neutral: "text-muted-foreground",
+  up: "text-green-600",
+};
+
+const TrendIcon = ({ trend = "neutral" }: Pick<StatCard, "trend">) => {
+  if (trend === "up") {
+    return <TrendingUp className="size-3.5" />;
+  }
+
+  if (trend === "down") {
+    return <TrendingDown className="size-3.5" />;
+  }
+
+  return <Minus className="size-3.5" />;
+};
+
+export const StatCardItem = ({
+  children,
+  className,
+  stat,
+  ...props
+}: StatCardItemProps) => {
+  const trend = stat.trend ?? "neutral";
 
   return (
-    <div className="w-full">
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="rounded-md sm:rounded-lg border bg-card p-2 sm:p-3 space-y-0.5 sm:space-y-1"
-          >
-            {stat.label ||
-              (stat.icon && (
-                <div className="flex items-center justify-between">
-                  {stat.label && (
-                    <span className="text-[10px] sm:text-xs text-muted-foreground">
-                      {stat.label}
-                    </span>
+    <div
+      className={cn(
+        "space-y-0.5 rounded-md border bg-card p-2 sm:space-y-1 sm:rounded-lg sm:p-3",
+        className
+      )}
+      {...props}
+    >
+      {children ?? (
+        <>
+          {(stat.label || stat.icon) && (
+            <div className="flex items-center justify-between">
+              {stat.label && (
+                <span className="text-[10px] text-muted-foreground sm:text-xs">
+                  {stat.label}
+                </span>
+              )}
+              {stat.icon}
+            </div>
+          )}
+          {(stat.value !== undefined || stat.change !== undefined) && (
+            <div className="flex flex-wrap items-baseline gap-1 sm:gap-2">
+              {stat.value !== undefined && (
+                <span className="font-bold text-base sm:text-xl">
+                  {stat.value}
+                </span>
+              )}
+              {stat.change !== undefined && (
+                <span
+                  className={cn(
+                    "flex shrink-0 items-center gap-0.5 font-medium text-[10px] sm:text-xs",
+                    TREND_CLASSES[trend]
                   )}
-                  {stat.icon}
-                </div>
-              ))}
-            {stat.value !== undefined ||
-              (stat.change !== undefined && (
-                <div className="flex flex-wrap items-baseline gap-1 sm:gap-2">
-                  {stat.value !== undefined && (
-                    <span className="text-base sm:text-xl font-bold">
-                      {stat.value}
-                    </span>
-                  )}
-                  {stat.change !== undefined && (
-                    <span
-                      className={cn(
-                        "flex items-center gap-0.5 text-[10px] sm:text-xs font-medium shrink-0",
-                        getTrendColor(stat.trend)
-                      )}
-                    >
-                      {getTrendIcon(stat.trend)}
-                      {Math.abs(stat.change)}%
-                    </span>
-                  )}
-                </div>
-              ))}
-            {stat.changeLabel && (
-              <span className="text-[10px] sm:text-xs text-muted-foreground">
-                {stat.changeLabel}
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
+                >
+                  <TrendIcon trend={trend} />
+                  {Math.abs(stat.change)}%
+                </span>
+              )}
+            </div>
+          )}
+          {stat.changeLabel && (
+            <span className="text-[10px] text-muted-foreground sm:text-xs">
+              {stat.changeLabel}
+            </span>
+          )}
+        </>
+      )}
     </div>
   );
 };
 
-export const StatCard = createCompoundComponent(StatCardView, "StatCard");
+export const StatCardList = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { stats } = useStatCard();
+
+  return (
+    <div
+      className={cn(
+        "grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4",
+        className
+      )}
+      {...props}
+    >
+      {children ??
+        stats.map((stat, index) => (
+          <StatCardItem key={`${stat.label ?? "stat"}-${index}`} stat={stat} />
+        ))}
+    </div>
+  );
+};
+
+const StatCardRoot = ({
+  children,
+  className,
+  data,
+  ...props
+}: StatCardProps) => {
+  const context: StatCardContextValue = {
+    stats: data?.stats ?? DEFAULT_STATS,
+  };
+
+  return (
+    <StatCardContext.Provider value={context}>
+      <div className={cn("w-full", className)} {...props}>
+        {children ?? <StatCardList />}
+      </div>
+    </StatCardContext.Provider>
+  );
+};
+
+export const StatCard = StatCardRoot;

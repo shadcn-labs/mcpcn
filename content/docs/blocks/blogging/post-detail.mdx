@@ -62,21 +62,13 @@ Use the following composition to build an `PostDetail`:
 
 ```text
 PostDetail
-└── PostDetail.Content
+├── PostDetailAuthor
+├── PostDetailBody
+├── PostDetailContent
+├── PostDetailCover
+├── PostDetailHeader
+└── PostDetailRelated
 ```
-
-## Examples
-
-### With a custom heading
-
-This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original component view needs no repeated props.
-
-<ComponentPreview
-  name="post-detail"
-  src="examples/post-detail-demo.tsx"
-  variant="composed"
-  showCode
-/>
 
 ## Integrate with OpenUI
 

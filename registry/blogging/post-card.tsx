@@ -1,363 +1,323 @@
-/* oxlint-disable complexity, unicorn/consistent-function-scoping */
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
+import { createContext, createElement, useContext } from "react";
+import type { ComponentProps, ImgHTMLAttributes } from "react";
 
-import { demoPost } from "./demo/blogging";
-// Import types from shared types file to avoid circular dependencies
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 import type { Post } from "./types";
-// Re-export for backward compatibility
+
 export type { Post } from "./types";
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * PostCardProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the PostCard component, a blog post card with multiple layout variants.
- */
-export interface PostCardProps {
-  data?: {
-    /** The blog post to display. */
-    post?: Post;
-  };
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
+
+interface PostCardContextValue {
+  onReadMore?: (post: Post) => void;
+  post: Post;
+  showAuthor: boolean;
+  showCategory: boolean;
+  showImage: boolean;
+  variant: "compact" | "covered" | "default" | "horizontal";
+}
+
+const PostCardContext = createContext<PostCardContextValue | null>(null);
+
+export const usePostCard = () => {
+  const context = useContext(PostCardContext);
+  if (!context) {
+    throw new Error("PostCard components must be used within PostCard");
+  }
+  return context;
+};
+
+const DEFAULT_POST: Post = {
+  author: {
+    avatar: "https://i.pravatar.cc/150?u=sarah",
+    name: "Sarah Chen",
+  },
+  category: "Tutorial",
+  coverImage:
+    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800",
+  excerpt:
+    "Learn how to build conversational interfaces with our comprehensive component library designed for AI-powered applications.",
+  publishedAt: "2024-01-15",
+  readTime: "5 min read",
+  tags: ["Tutorial", "Components"],
+  title: "Getting Started with Agentic UI Components",
+};
+
+const formatDate = (date: string) =>
+  new Date(date).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
+export interface PostCardProps extends ComponentProps<"article"> {
   actions?: {
-    /** Called when the read more button is clicked. */
     onReadMore?: (post: Post) => void;
   };
   appearance?: {
-    /**
-     * Card layout variant.
-     * @default "default"
-     */
-    variant?: "default" | "compact" | "horizontal" | "covered";
-    /**
-     * Whether to show the cover image.
-     * @default true
-     */
-    showImage?: boolean;
-    /**
-     * Whether to show author information.
-     * @default true
-     */
     showAuthor?: boolean;
-    /**
-     * Whether to show the category label.
-     * @default true
-     */
     showCategory?: boolean;
+    showImage?: boolean;
+    variant?: "default" | "compact" | "horizontal" | "covered";
+  };
+  data?: {
+    post?: Post;
   };
 }
 
-const PostCardView = ({ data, actions, appearance }: PostCardProps) => {
-  const resolved: NonNullable<PostCardProps["data"]> = data ?? {
-    post: demoPost,
-  };
-  const { post } = resolved;
-  if (!post) {
+export const PostCardImage = ({
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { post, showImage } = usePostCard();
+  if (!showImage) {
     return null;
   }
-  const onReadMore = actions?.onReadMore;
-  const variant = appearance?.variant ?? "default";
-  const showImage = appearance?.showImage ?? true;
-  const showAuthor = appearance?.showAuthor ?? true;
-  const showCategory = appearance?.showCategory ?? true;
+  return (
+    <div className={cn("overflow-hidden bg-muted", className)} {...props}>
+      {post.coverImage ? (
+        <BlockImage
+          alt={post.title ?? ""}
+          className="size-full object-cover"
+          src={post.coverImage}
+        />
+      ) : (
+        <div className="size-full bg-muted" />
+      )}
+    </div>
+  );
+};
 
-  // Handle "Read more" click - only call callback if provided, otherwise do nothing
-  // This lets users decide to use an external link or open fullscreen mode
-  const handleReadMore = () => {
-    if (onReadMore) {
-      onReadMore(post);
-    }
-  };
-
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-
-  if (variant === "covered") {
-    return (
-      <div className="relative overflow-hidden rounded-lg border">
-        <div className="min-h-[280px] sm:aspect-[16/9] sm:min-h-0 w-full">
-          {post.coverImage ? (
-            <RegistryImage
-              src={post.coverImage}
-              alt={post.title || ""}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 h-full w-full bg-muted" />
-          )}
-        </div>
-        {/* Minimal overlay - solid color instead of gradient per ChatGPT guidelines */}
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
-          <div>
-            {showCategory && post.category && (
-              <p className="text-[10px] font-medium uppercase tracking-wide text-white/70">
-                {post.category}
-              </p>
-            )}
-            {post.title && (
-              <h2 className="mt-1 text-lg font-semibold leading-tight">
-                {post.title}
-              </h2>
-            )}
-            {post.excerpt && (
-              <p className="mt-1 line-clamp-2 text-sm text-white/80">
-                {post.excerpt}
-              </p>
-            )}
-            {post.tags && post.tags.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-1">
-                {post.tags.slice(0, 2).map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-md bg-white/20 px-2 py-0.5 text-xs"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              {showAuthor && (
-                <div className="flex items-center gap-2">
-                  {post.author?.avatar && (
-                    <RegistryImage
-                      src={post.author.avatar}
-                      alt={post.author?.name || ""}
-                      className="h-6 w-6 rounded-full ring-1 ring-white/30"
-                    />
-                  )}
-                  <div className="text-xs">
-                    {post.author?.name && (
-                      <p className="font-medium">{post.author.name}</p>
-                    )}
-                    {post.publishedAt && (
-                      <p className="text-white/60">
-                        {formatDate(post.publishedAt)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
-              <Button
-                size="sm"
-                variant="secondary"
-                className="w-full sm:w-auto"
-                onClick={handleReadMore}
-              >
-                Read article
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+export const PostCardCategory = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"p">) => {
+  const { post, showCategory } = usePostCard();
+  if (!(showCategory && (children || post.category))) {
+    return null;
   }
+  return (
+    <p
+      className={cn(
+        "font-medium text-[10px] text-muted-foreground uppercase tracking-wide",
+        className
+      )}
+      {...props}
+    >
+      {children ?? post.category}
+    </p>
+  );
+};
 
-  if (variant === "horizontal") {
-    return (
-      <div className="flex flex-col sm:flex-row gap-4 rounded-lg border bg-card p-3">
-        {showImage && post.coverImage && (
-          <div className="aspect-video sm:aspect-square sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-md">
-            <RegistryImage
-              src={post.coverImage}
-              alt={post.title || ""}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        )}
-        <div className="flex flex-1 flex-col justify-between">
-          <div>
-            {showCategory && post.category && (
-              <p className="mb-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                {post.category}
-              </p>
-            )}
-            {post.title && (
-              <h3 className="line-clamp-2 text-sm font-medium leading-tight">
-                {post.title}
-              </h3>
-            )}
-            {post.excerpt && (
-              <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                {post.excerpt}
-              </p>
-            )}
-            {post.tags && post.tags.length > 0 && (
-              <div className="mt-1.5 flex flex-wrap gap-1">
-                {post.tags.slice(0, 2).map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              {showAuthor && post.author?.avatar && (
-                <RegistryImage
-                  src={post.author.avatar}
-                  alt={post.author?.name || ""}
-                  className="h-4 w-4 rounded-full"
-                />
-              )}
-              {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
-              {post.readTime && (
-                <>
-                  <span>·</span>
-                  <span>{post.readTime}</span>
-                </>
-              )}
-            </div>
-            <Button
-              size="sm"
-              className="w-full sm:w-auto"
-              onClick={handleReadMore}
-            >
-              Read
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
+export const PostCardTags = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { post } = usePostCard();
+  const tags = post.tags?.slice(0, 2) ?? [];
+  if (!(children || tags.length > 0)) {
+    return null;
   }
+  return (
+    <div className={cn("flex flex-wrap gap-1", className)} {...props}>
+      {children ??
+        tags.map((tag) => (
+          <span
+            className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground text-xs"
+            key={tag}
+          >
+            {tag}
+          </span>
+        ))}
+    </div>
+  );
+};
 
-  if (variant === "compact") {
-    return (
-      <div className="flex h-full flex-col justify-between rounded-lg border bg-card p-3">
-        <div>
-          {showCategory && post.category && (
-            <p className="mb-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-              {post.category}
-            </p>
+export const PostCardAuthor = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { post, showAuthor } = usePostCard();
+  if (!showAuthor) {
+    return null;
+  }
+  return (
+    <div className={cn("flex items-center gap-2", className)} {...props}>
+      {children ?? (
+        <>
+          {post.author?.avatar && (
+            <BlockImage
+              alt={post.author.name ?? ""}
+              className="size-6 rounded-full object-cover"
+              src={post.author.avatar}
+            />
           )}
-          {post.title && (
-            <h3 className="line-clamp-2 text-sm font-medium">{post.title}</h3>
-          )}
-          {post.excerpt && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {post.excerpt}
-            </p>
-          )}
-          {post.tags && post.tags.length > 0 && (
-            <div className="mt-1.5 flex flex-wrap gap-1">
-              {post.tags.slice(0, 2).map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-        <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            {showAuthor && post.author?.avatar && (
-              <RegistryImage
-                src={post.author.avatar}
-                alt={post.author?.name || ""}
-                className="h-5 w-5 rounded-full"
-              />
+          <div className="text-xs">
+            {post.author?.name && (
+              <p className="font-medium">{post.author.name}</p>
             )}
             {post.publishedAt && (
-              <span className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground">
                 {formatDate(post.publishedAt)}
-              </span>
+              </p>
             )}
           </div>
-          <Button size="sm" onClick={handleReadMore}>
-            Read more
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  // Default variant
-  return (
-    <div className="flex h-full flex-col overflow-hidden rounded-lg border bg-card">
-      {showImage && post.coverImage && (
-        <div className="aspect-video overflow-hidden">
-          <RegistryImage
-            src={post.coverImage}
-            alt={post.title || ""}
-            className="h-full w-full object-cover transition-transform hover:scale-105"
-          />
-        </div>
+        </>
       )}
-      <div className="flex flex-1 flex-col justify-between p-4">
-        <div>
-          {showCategory && post.category && (
-            <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-              {post.category}
-            </p>
-          )}
+    </div>
+  );
+};
+
+export const PostCardAction = ({
+  children,
+  ...props
+}: ComponentProps<typeof Button>) => {
+  const { onReadMore, post } = usePostCard();
+  return (
+    <Button onClick={() => onReadMore?.(post)} size="sm" {...props}>
+      {children ?? "Read"}
+    </Button>
+  );
+};
+
+export const PostCardText = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { post } = usePostCard();
+  return (
+    <div className={className} {...props}>
+      {children ?? (
+        <>
+          <PostCardCategory />
           {post.title && (
-            <h3 className="line-clamp-2 font-medium">{post.title}</h3>
+            <h3 className="line-clamp-2 font-medium text-sm leading-tight">
+              {post.title}
+            </h3>
           )}
           {post.excerpt && (
-            <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+            <p className="mt-1 line-clamp-2 text-muted-foreground text-xs">
               {post.excerpt}
             </p>
           )}
-          {post.tags && post.tags.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1">
-              {post.tags.slice(0, 2).map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          {showAuthor && (
-            <div className="flex items-center gap-2">
-              {post.author?.avatar && (
-                <RegistryImage
-                  src={post.author.avatar}
-                  alt={post.author?.name || ""}
-                  className="h-6 w-6 rounded-full"
-                />
-              )}
-              <div className="text-xs">
-                {post.author?.name && (
-                  <p className="font-medium">{post.author.name}</p>
-                )}
-                {post.publishedAt && (
-                  <p className="text-muted-foreground">
-                    {formatDate(post.publishedAt)}
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
-          <Button size="sm" onClick={handleReadMore}>
-            Read
-          </Button>
+          <PostCardTags className="mt-1.5" />
+        </>
+      )}
+    </div>
+  );
+};
+
+const CoveredPostCard = () => {
+  const { post } = usePostCard();
+  return (
+    <div className="relative overflow-hidden rounded-lg border">
+      <PostCardImage className="min-h-[280px] w-full sm:aspect-[16/9] sm:min-h-0" />
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
+        <PostCardCategory className="text-white/70" />
+        {post.title && (
+          <h2 className="mt-1 font-semibold text-lg leading-tight">
+            {post.title}
+          </h2>
+        )}
+        {post.excerpt && (
+          <p className="mt-1 line-clamp-2 text-sm text-white/80">
+            {post.excerpt}
+          </p>
+        )}
+        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <PostCardAuthor className="[&_p:last-child]:text-white/60" />
+          <PostCardAction className="w-full sm:w-auto" variant="secondary">
+            Read article
+          </PostCardAction>
         </div>
       </div>
     </div>
   );
 };
 
-export const PostCard = createCompoundComponent(PostCardView, "PostCard");
+const HorizontalPostCard = () => (
+  <div className="flex flex-col gap-4 rounded-lg border bg-card p-3 sm:flex-row">
+    <PostCardImage className="aspect-video shrink-0 rounded-md sm:aspect-square sm:size-24" />
+    <div className="flex flex-1 flex-col justify-between">
+      <PostCardText />
+      <div className="mt-2 flex items-center justify-between">
+        <PostCardAuthor />
+        <PostCardAction />
+      </div>
+    </div>
+  </div>
+);
+
+const CompactPostCard = () => (
+  <div className="rounded-lg border bg-card p-3">
+    <PostCardText />
+    <div className="mt-3 flex items-center justify-between">
+      <PostCardAuthor />
+      <PostCardAction />
+    </div>
+  </div>
+);
+
+const DefaultPostCard = () => (
+  <div className="overflow-hidden rounded-lg border bg-card">
+    <PostCardImage className="aspect-video w-full" />
+    <div className="p-4">
+      <PostCardText />
+      <div className="mt-4 flex items-center justify-between">
+        <PostCardAuthor />
+        <PostCardAction />
+      </div>
+    </div>
+  </div>
+);
+
+export const PostCardContent = () => {
+  const { variant } = usePostCard();
+  if (variant === "covered") {
+    return <CoveredPostCard />;
+  }
+  if (variant === "horizontal") {
+    return <HorizontalPostCard />;
+  }
+  if (variant === "compact") {
+    return <CompactPostCard />;
+  }
+  return <DefaultPostCard />;
+};
+
+const PostCardRoot = ({
+  actions,
+  appearance,
+  children,
+  className,
+  data,
+  ...props
+}: PostCardProps) => {
+  const context: PostCardContextValue = {
+    onReadMore: actions?.onReadMore,
+    post: data?.post ?? DEFAULT_POST,
+    showAuthor: appearance?.showAuthor ?? true,
+    showCategory: appearance?.showCategory ?? true,
+    showImage: appearance?.showImage ?? true,
+    variant: appearance?.variant ?? "default",
+  };
+  return (
+    <PostCardContext.Provider value={context}>
+      <article className={className} {...props}>
+        {children ?? <PostCardContent />}
+      </article>
+    </PostCardContext.Provider>
+  );
+};
+
+export const PostCard = PostCardRoot;

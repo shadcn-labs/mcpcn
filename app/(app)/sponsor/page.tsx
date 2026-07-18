@@ -13,7 +13,7 @@ import { createPageMetadata } from "@/seo/metadata";
 
 export const metadata: Metadata = createPageMetadata({
   description:
-    "Support mcpcn — an open composition-first component registry for MCP Apps.",
+    "Support mcpcn — beautiful MCP App UI components for React. Sponsor tiers, stargazers, and how to contribute.",
   path: ROUTES.SPONSOR,
   title: "Sponsor",
 });
@@ -29,8 +29,9 @@ const SponsorPage = async () => {
             Support the project
           </h1>
           <p className="text-base text-muted-foreground text-balance">
-            mcpcn is an open compound component registry for MCP Apps. Every
-            component is free and that&apos;s not changing.
+            mcpcn is a collection of beautifully designed, accessible, and
+            customizable MCP App UI components for React. Every component is
+            free and that&apos;s not changing.
           </p>
           <p className="text-sm text-muted-foreground text-balance">
             I&apos;m not going to paywall features or gate components behind a

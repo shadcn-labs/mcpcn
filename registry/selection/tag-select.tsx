@@ -1,174 +1,230 @@
 "use client";
 
 import { Check, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import type { ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
-import { createCompoundComponent } from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
-import { demoTags } from "./demo/selection";
-
-/**
- * Represents an individual tag option.
- * @interface Tag
- * @property {string} id - Unique identifier for the tag
- * @property {string} label - Display text for the tag
- * @property {"default" | "blue" | "green" | "red" | "yellow" | "purple"} [color] - Optional color theme
- */
 export interface Tag {
+  color?: "default" | "blue" | "green" | "red" | "yellow" | "purple";
   id?: string;
   label?: string;
-  color?: "default" | "blue" | "green" | "red" | "yellow" | "purple";
 }
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * TagSelectProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the TagSelect component, which provides tag-based filtering with
- * single or multiple selection modes and validation support.
- */
-export interface TagSelectProps {
-  data?: {
-    /** Array of tags to display for selection. */
-    tags?: Tag[];
-  };
+interface TagSelectContextValue {
+  clear: () => void;
+  isSelected: (tagId: string) => boolean;
+  onValidate?: (tagIds: string[]) => void;
+  selected: string[];
+  showClear: boolean;
+  showValidate: boolean;
+  tags: Tag[];
+  toggle: (tagId: string) => void;
+  validateLabel: string;
+}
+
+const TagSelectContext = createContext<TagSelectContextValue | null>(null);
+
+export const useTagSelect = () => {
+  const context = useContext(TagSelectContext);
+
+  if (!context) {
+    throw new Error("TagSelect components must be used within TagSelect");
+  }
+
+  return context;
+};
+
+const DEFAULT_TAGS: Tag[] = [
+  { color: "red", id: "1", label: "Important" },
+  { color: "yellow", id: "2", label: "In Progress" },
+  { color: "green", id: "3", label: "Done" },
+];
+
+export interface TagSelectProps extends ComponentProps<"div"> {
   actions?: {
-    /** Called when the user clicks the validate button with the selected tag IDs. */
     onValidate?: (tagIds: string[]) => void;
   };
   appearance?: {
-    /**
-     * Selection mode: single allows one tag, multiple allows many.
-     * @default "multiple"
-     */
     mode?: "single" | "multiple";
-    /**
-     * Whether to show the clear selection button.
-     * @default true
-     */
     showClear?: boolean;
-    /**
-     * Whether to show the validate button.
-     * @default true
-     */
     showValidate?: boolean;
-    /**
-     * Custom label for the validate button.
-     * @default "Validate selection"
-     */
     validateLabel?: string;
   };
   control?: {
-    /** Array of pre-selected tag IDs for controlled mode. */
     selectedTagIds?: string[];
+  };
+  data?: {
+    tags?: Tag[];
   };
 }
 
-// ChatGPT-compliant: all tags use neutral system colors
-const tagClasses = {
-  selected: "bg-foreground text-background border-foreground",
-  unselected: "bg-background text-foreground border-border hover:bg-muted",
-};
+interface TagSelectItemProps extends Omit<ComponentProps<"button">, "onClick"> {
+  tag: Tag;
+  tagId: string;
+}
 
-const TagSelectView = ({
-  data,
-  actions,
-  appearance,
-  control,
-}: TagSelectProps) => {
-  const resolved: NonNullable<TagSelectProps["data"]> = data ?? {
-    tags: demoTags,
-  };
-  const tags = resolved.tags ?? [];
-  const onValidate = actions?.onValidate;
-  const mode = appearance?.mode ?? "multiple";
-  const showClear = appearance?.showClear ?? true;
-  const showValidate = appearance?.showValidate ?? true;
-  const validateLabel = appearance?.validateLabel ?? "Validate selection";
-  const selectedTagIds = control?.selectedTagIds;
-  const [selected, setSelected] = useState<string[]>(selectedTagIds ?? []);
-
-  // Sync internal state when controlled prop changes
-  useEffect(() => {
-    setSelected(selectedTagIds ?? []);
-  }, [selectedTagIds]);
-
-  const handleToggle = (tagId: string) => {
-    let newSelected: string[];
-
-    if (mode === "single") {
-      newSelected = selected.includes(tagId) ? [] : [tagId];
-    } else {
-      newSelected = selected.includes(tagId)
-        ? selected.filter((id) => id !== tagId)
-        : [...selected, tagId];
-    }
-
-    setSelected(newSelected);
-  };
-
-  const handleClear = () => {
-    setSelected([]);
-  };
-
-  const handleValidate = () => {
-    onValidate?.(selected);
-  };
-
-  const isSelected = (tagId: string) => selected.includes(tagId);
+export const TagSelectItem = ({
+  children,
+  className,
+  tag,
+  tagId,
+  ...props
+}: TagSelectItemProps) => {
+  const { isSelected, toggle } = useTagSelect();
+  const selected = isSelected(tagId);
 
   return (
-    <div className="w-full space-y-2 bg-card rounded-lg p-4">
-      <div className="flex flex-wrap gap-2">
-        {tags.map((tag, index) => {
+    <button
+      className={cn(
+        "inline-flex cursor-pointer items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs transition-colors sm:gap-1.5 sm:px-3 sm:py-1 sm:text-sm",
+        selected
+          ? "border-foreground bg-foreground text-background"
+          : "border-border bg-background text-foreground hover:bg-muted",
+        className
+      )}
+      onClick={() => toggle(tagId)}
+      type="button"
+      {...props}
+    >
+      {children ?? (
+        <>
+          {selected && <Check className="size-3 sm:size-3.5" />}
+          {tag.label && <span>{tag.label}</span>}
+        </>
+      )}
+    </button>
+  );
+};
+
+export const TagSelectTags = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { tags } = useTagSelect();
+
+  return (
+    <div className={cn("flex flex-wrap gap-2", className)} {...props}>
+      {children ??
+        tags.map((tag, index) => {
           const tagId = tag.id ?? `tag-${index}`;
-          return (
-            <button
-              key={tagId}
-              onClick={() => handleToggle(tagId)}
-              className={cn(
-                "inline-flex items-center gap-1 sm:gap-1.5 rounded-full border px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm transition-colors cursor-pointer",
-                isSelected(tagId) ? tagClasses.selected : tagClasses.unselected
-              )}
-            >
-              {isSelected(tagId) && (
-                <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-              )}
-              {tag.label && <span>{tag.label}</span>}
-            </button>
-          );
+          return <TagSelectItem key={tagId} tag={tag} tagId={tagId} />;
         })}
-      </div>
-
-      <div className="flex items-center justify-between">
-        {showClear && selected.length > 0 ? (
-          <button
-            onClick={handleClear}
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-          >
-            <X className="h-3 w-3" />
-            Clear selection ({selected.length})
-          </button>
-        ) : (
-          <div />
-        )}
-
-        {showValidate && (
-          <Button
-            onClick={handleValidate}
-            disabled={selected.length === 0}
-            size="sm"
-          >
-            {validateLabel}
-            {selected.length > 0 && ` (${selected.length})`}
-          </Button>
-        )}
-      </div>
     </div>
   );
 };
 
-export const TagSelect = createCompoundComponent(TagSelectView, "TagSelect");
+export const TagSelectActions = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const {
+    clear,
+    onValidate,
+    selected,
+    showClear,
+    showValidate,
+    validateLabel,
+  } = useTagSelect();
+
+  return (
+    <div
+      className={cn("flex items-center justify-between", className)}
+      {...props}
+    >
+      {children ?? (
+        <>
+          {showClear && selected.length > 0 ? (
+            <button
+              className="inline-flex cursor-pointer items-center gap-1 text-muted-foreground text-xs transition-colors hover:text-foreground"
+              onClick={clear}
+              type="button"
+            >
+              <X className="size-3" />
+              Clear selection ({selected.length})
+            </button>
+          ) : (
+            <div />
+          )}
+          {showValidate && (
+            <Button
+              disabled={selected.length === 0}
+              onClick={() => onValidate?.(selected)}
+              size="sm"
+            >
+              {validateLabel}
+              {selected.length > 0 && ` (${selected.length})`}
+            </Button>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+export const TagSelectContent = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => (
+  <div className={cn("space-y-2", className)} {...props}>
+    {children ?? (
+      <>
+        <TagSelectTags />
+        <TagSelectActions />
+      </>
+    )}
+  </div>
+);
+
+const TagSelectRoot = ({
+  actions,
+  appearance,
+  children,
+  className,
+  control,
+  data,
+  ...props
+}: TagSelectProps) => {
+  const mode = appearance?.mode ?? "multiple";
+  const [selected, setSelected] = useState(control?.selectedTagIds ?? []);
+
+  useEffect(() => {
+    setSelected(control?.selectedTagIds ?? []);
+  }, [control?.selectedTagIds]);
+
+  const context: TagSelectContextValue = {
+    clear: () => setSelected([]),
+    isSelected: (tagId) => selected.includes(tagId),
+    onValidate: actions?.onValidate,
+    selected,
+    showClear: appearance?.showClear ?? true,
+    showValidate: appearance?.showValidate ?? true,
+    tags: data?.tags ?? DEFAULT_TAGS,
+    toggle: (tagId) =>
+      setSelected((current) => {
+        if (current.includes(tagId)) {
+          return current.filter((id) => id !== tagId);
+        }
+        return mode === "single" ? [tagId] : [...current, tagId];
+      }),
+    validateLabel: appearance?.validateLabel ?? "Validate selection",
+  };
+
+  return (
+    <TagSelectContext.Provider value={context}>
+      <div
+        className={cn("w-full rounded-lg bg-card p-4", className)}
+        {...props}
+      >
+        {children ?? <TagSelectContent />}
+      </div>
+    </TagSelectContext.Provider>
+  );
+};
+
+export const TagSelect = TagSelectRoot;

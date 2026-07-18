@@ -31,12 +31,15 @@ npx shadcn@latest add https://mcpcn.dev/r/contact-form.json
 <Step>Install the component dependencies:</Step>
 
 ```bash
-npm install lucide-react
+npm install @base-ui/react lucide-react
 ```
 
-<Step>Copy and paste the component into your project.</Step>
+<Step>Copy and paste the block into your project.</Step>
 
-<ComponentSource name="contact-form" title="components/ui/contact-form.tsx" />
+<ComponentSource
+  src="registry/form/contact-form.tsx"
+  title="components/ui/contact-form.tsx"
+/>
 
 <Step>Update the import paths to match your project setup.</Step>
 
@@ -62,21 +65,14 @@ Use the following composition to build an `ContactForm`:
 
 ```text
 ContactForm
-└── ContactForm.Content
+├── ContactFormActions
+├── ContactFormContactFields
+├── ContactFormContent
+├── ContactFormCountrySelect
+├── ContactFormHeader
+├── ContactFormMessageField
+└── ContactFormNameFields
 ```
-
-## Examples
-
-### With a custom heading
-
-This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original component view needs no repeated props.
-
-<ComponentPreview
-  name="contact-form"
-  src="examples/contact-form-demo.tsx"
-  variant="composed"
-  showCode
-/>
 
 ## Integrate with OpenUI
 

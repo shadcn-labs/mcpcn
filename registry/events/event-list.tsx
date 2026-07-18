@@ -7,26 +7,29 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
-import { Suspense, useCallback, useRef, useState } from "react";
+import {
+  createContext,
+  createElement,
+  Suspense,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+} from "react";
+import type { ImgHTMLAttributes, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  createCompoundComponent,
-  RegistryImage,
-} from "@/components/ui/compound";
 import { cn } from "@/lib/utils";
 
-import { demoEvents } from "./demo/events";
 import { EventCard } from "./event-card";
 import { LazyLeafletMap, MapPlaceholder } from "./shared";
 import type { Event } from "./types";
 
-// SVG pin marker - teardrop shape like Google Maps
+const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
+  createElement("img", props);
 const createPinSvg = (isSelected: boolean) => {
-  // slate-700
   const color = "#374151";
-  // gray-400 ring when selected
   const ringColor = isSelected ? "#9ca3af" : "transparent";
   return `
     <svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -36,8 +39,6 @@ const createPinSvg = (isSelected: boolean) => {
     </svg>
   `;
 };
-
-// Filter options
 const categoryOptions = [
   "Music",
   "Comedy",
@@ -135,7 +136,7 @@ const FilterSection = ({
         <span>{title}</span>
         <ChevronDown
           className={cn(
-            "h-4 w-4 text-muted-foreground transition-transform duration-200",
+            "size-4 text-muted-foreground transition-transform duration-200",
             expanded && "rotate-180"
           )}
         />
@@ -156,7 +157,7 @@ const FilterSection = ({
                 <Checkbox
                   checked={selected.includes(option)}
                   onCheckedChange={() => toggleOption(option)}
-                  className="h-4 w-4"
+                  className="size-4"
                 />
                 <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                   {option}
@@ -179,8 +180,6 @@ const FilterSection = ({
     </div>
   );
 };
-
-// Filter panel that slides over the event list
 const FilterPanel = ({
   isOpen,
   onClose,
@@ -235,11 +234,11 @@ const FilterPanel = ({
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={onClose}
             aria-label="Close filters"
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </Button>
         </div>
 
@@ -302,15 +301,8 @@ const FilterPanel = ({
   );
 };
 
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * EventListProps
- * ═══════════════════════════════════════════════════════════════════════════
- *
- * Props for the EventList component. Supports list, grid, carousel, and
- * fullwidth (split-screen with map) layout variants with filtering capabilities.
- */
 export interface EventListProps {
+  children?: ReactNode;
   data?: {
     /** Array of events to display. */
     events?: Event[];
@@ -332,9 +324,68 @@ export interface EventListProps {
   };
 }
 
+const DEFAULT_EVENTS: Event[] = [
+  {
+    category: "Music",
+    city: "Los Angeles",
+    coordinates: { lat: 34.0781, lng: -118.2606 },
+    dateTime: "Tonight 9:00 PM - 3:00 AM",
+    eventSignal: "going-fast",
+    image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800",
+    neighborhood: "Echo Park",
+    priceRange: "$45 - $150",
+    title: "NEON Vol. 9",
+    venue: "Echoplex",
+  },
+  {
+    category: "Comedy",
+    city: "Los Angeles",
+    coordinates: { lat: 34.0195, lng: -118.4912 },
+    dateTime: "Tonight 10:00 PM - 12:00 AM",
+    eventSignal: "popular",
+    image: "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?w=800",
+    neighborhood: "Santa Monica",
+    priceRange: "$15 - $35",
+    title: "The Midnight Show",
+    venue: "The Comedy Underground",
+  },
+  {
+    category: "Classes",
+    city: "Los Angeles",
+    coordinates: { lat: 34.0731, lng: -118.2608 },
+    dateTime: "Tomorrow 6:00 PM",
+    image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800",
+    neighborhood: "Silver Lake",
+    priceRange: "$25",
+    title: "Creative Workshop",
+    venue: "Makers Studio",
+  },
+  {
+    category: "Food & Drink",
+    city: "Los Angeles",
+    coordinates: { lat: 34.0407, lng: -118.2468 },
+    dateTime: "This weekend",
+    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800",
+    neighborhood: "Arts District",
+    priceRange: "$40 - $80",
+    title: "Night Market",
+    venue: "The Row",
+  },
+];
+
+const EventListContext = createContext<EventListProps | null>(null);
+
+export const useEventList = () => {
+  const context = useContext(EventListContext);
+  if (!context) {
+    throw new Error("EventList components must be used within EventList");
+  }
+  return context;
+};
+
 const EventListView = ({ data, actions, appearance }: EventListProps) => {
   const resolved: NonNullable<EventListProps["data"]> = data ?? {
-    events: demoEvents,
+    events: DEFAULT_EVENTS,
   };
   const events = resolved.events ?? [];
   const { title } = resolved;
@@ -344,18 +395,12 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
   const [selectedEventIndex, setSelectedEventIndex] = useState<number | null>(
     null
   );
-
-  // Filter state for fullwidth variant
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [appliedFilters, setAppliedFilters] =
     useState<FilterState>(defaultFilters);
-
-  // Refs for fullwidth variant scroll functionality
   const listContainerRef = useRef<HTMLDivElement>(null);
   const eventItemRefs = useRef<Map<number, HTMLElement>>(new Map());
-
-  // Scroll to event in list when selected from map
   const scrollToEvent = useCallback((eventIndex: number) => {
     const eventElement = eventItemRefs.current.get(eventIndex);
     if (eventElement && listContainerRef.current) {
@@ -371,12 +416,9 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
       });
     }
   }, []);
-
-  // Filter events based on applied filters
   const filterEvents = useCallback(
     (eventsToFilter: Event[], filtersToApply: FilterState): Event[] =>
       eventsToFilter.filter((event) => {
-        // Category filter
         if (
           filtersToApply.categories.length > 0 &&
           (!event.category ||
@@ -384,8 +426,6 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
         ) {
           return false;
         }
-
-        // Date filter - parse dateTime string for keywords
         if (filtersToApply.dates.length > 0) {
           const dateTimeLower = event.dateTime.toLowerCase();
           const dateMatch = filtersToApply.dates.some((dateOption) => {
@@ -405,7 +445,6 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
               );
             }
             if (dateOption === "This week") {
-              // Match any day name or "In X days" where X <= 7
               const dayNames = [
                 "monday",
                 "tuesday",
@@ -440,18 +479,14 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
               return false;
             }
             if (dateOption === "This month") {
-              // Accept all events for "this month" as a broad filter
               return true;
             }
-            // Custom range - accept all for now
             return true;
           });
           if (!dateMatch) {
             return false;
           }
         }
-
-        // Neighborhood filter
         if (filtersToApply.neighborhoods.length > 0) {
           const eventNeighborhood = event.neighborhood || "";
           if (
@@ -462,15 +497,12 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
             return false;
           }
         }
-
-        // Price filter
         if (filtersToApply.prices.length > 0) {
           const priceMatch = filtersToApply.prices.some((priceRange) => {
             const eventPriceRange = event.priceRange ?? "";
             if (priceRange === "Free") {
               return eventPriceRange.toLowerCase().includes("free");
             }
-            // Extract numeric price from event
             const priceNum =
               Number.parseInt(eventPriceRange.replaceAll(/[^0-9]/g, ""), 10) ||
               0;
@@ -492,21 +524,15 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
             return false;
           }
         }
-
-        // Format filter - check if event is in-person, online, or hybrid
         if (filtersToApply.formats.length > 0) {
           const formatMatch = filtersToApply.formats.some((format) => {
-            // All demo events have venues, so they're all in-person
-            // In a real app, you'd check for onlineUrl or locationType
             if (format === "In-person") {
               return event.venue && event.city;
             }
             if (format === "Online") {
-              // Would check for onlineUrl field
               return false;
             }
             if (format === "Hybrid") {
-              // Would check for both venue and onlineUrl
               return false;
             }
             return true;
@@ -520,8 +546,6 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
       }),
     []
   );
-
-  // List variant
   if (variant === "list") {
     return (
       <div className="space-y-3">
@@ -541,8 +565,6 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
       </div>
     );
   }
-
-  // Grid variant (inline mode - show 3 events with images)
   if (variant === "grid") {
     return (
       <div className="space-y-4">
@@ -564,8 +586,6 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
       </div>
     );
   }
-
-  // Fullwidth variant with split-screen layout (list on left, map on right)
   if (variant === "fullwidth") {
     const handleEventHover = (eventIndex: number | null) => {
       setSelectedEventIndex(eventIndex);
@@ -596,12 +616,8 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
       setFilters(defaultFilters);
       setAppliedFilters(defaultFilters);
     };
-
-    // Get filtered events
     const filteredEvents = filterEvents(events, appliedFilters);
-    // Get preview count for filter panel (shows what would be selected)
     const previewFilteredCount = filterEvents(events, filters).length;
-    // Count of active filters
     const activeFiltersCount = Object.values(appliedFilters).flat().length;
 
     return (
@@ -622,7 +638,7 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
               className="gap-2 flex-shrink-0"
               onClick={handleFilterButtonClick}
             >
-              <SlidersHorizontal className="h-4 w-4" />
+              <SlidersHorizontal className="size-4" />
               <span className="hidden sm:inline">Filters</span>
               {activeFiltersCount > 0 && (
                 <span className="bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded-full">
@@ -673,11 +689,11 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
                   <div className="flex gap-3 p-3">
                     {/* Thumbnail */}
                     {event.image && (
-                      <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-muted">
-                        <RegistryImage
+                      <div className="size-20 flex-shrink-0 overflow-hidden rounded-md bg-muted">
+                        <BlockImage
                           src={event.image}
                           alt={event.title || "Event image"}
-                          className="h-full w-full object-cover"
+                          className="size-full object-cover"
                         />
                       </div>
                     )}
@@ -776,8 +792,6 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
       </div>
     );
   }
-
-  // Carousel variant
   const maxIndexMobile = events.length - 1;
   const maxIndexTablet = Math.max(0, events.length - 2);
   const maxIndexDesktop = Math.max(0, events.length - 3);
@@ -872,22 +886,22 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={prev}
             disabled={isAtStart}
             aria-label="Previous event"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="size-4" />
           </Button>
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={next}
             disabled={isAtEndMobile}
             aria-label="Next event"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="size-4" />
           </Button>
         </div>
         {/* Tablet navigation */}
@@ -895,22 +909,22 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={prev}
             disabled={isAtStart}
             aria-label="Previous event"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="size-4" />
           </Button>
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={next}
             disabled={isAtEndTablet}
             aria-label="Next event"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="size-4" />
           </Button>
         </div>
         {/* Desktop navigation */}
@@ -918,22 +932,22 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={prev}
             disabled={isAtStart}
             aria-label="Previous event"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="size-4" />
           </Button>
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={next}
             disabled={isAtEndDesktop}
             aria-label="Next event"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="size-4" />
           </Button>
         </div>
       </div>
@@ -941,4 +955,15 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
   );
 };
 
-export const EventList = createCompoundComponent(EventListView, "EventList");
+export const EventListContent = (props: EventListProps) => {
+  const context = useEventList();
+  return <EventListView {...context} {...props} />;
+};
+
+const EventListRoot = ({ children, ...props }: EventListProps) => (
+  <EventListContext.Provider value={props}>
+    {children ?? <EventListContent />}
+  </EventListContext.Provider>
+);
+
+export const EventList = EventListRoot;

@@ -68,21 +68,12 @@ Use the following composition to build an `PaymentConfirmed`:
 
 ```text
 PaymentConfirmed
-└── PaymentConfirmed.Content
+├── PaymentConfirmedAction
+├── PaymentConfirmedContent
+├── PaymentConfirmedHeader
+├── PaymentConfirmedImage
+└── PaymentConfirmedSummary
 ```
-
-## Examples
-
-### With a custom heading
-
-This example adds a custom heading before the component's `Content`. `Content` reads the root props from compound context, so the original component view needs no repeated props.
-
-<ComponentPreview
-  name="payment-confirmed"
-  src="examples/payment-confirmed-demo.tsx"
-  variant="composed"
-  showCode
-/>
 
 ## Integrate with OpenUI
 
