@@ -220,20 +220,22 @@ export const ContactFormCountrySelect = ({
 
   return (
     <Popover onOpenChange={setCountryDropdownOpen} open={countryDropdownOpen}>
-      <PopoverTrigger asChild>
-        <button
-          className={cn(
-            "flex h-9 items-center gap-1.5 rounded-lg border border-input bg-transparent px-3 text-sm transition-colors",
-            "hover:bg-muted focus-visible:border-foreground focus-visible:outline-none",
-            className
-          )}
-          type="button"
-          {...props}
-        >
-          <span>{selectedCountry.flag}</span>
-          <span>{selectedCountry.code}</span>
-          <ChevronDown className="size-3.5 text-muted-foreground" />
-        </button>
+      <PopoverTrigger
+        render={
+          <button
+            className={cn(
+              "flex h-9 items-center gap-1.5 rounded-lg border border-input bg-transparent px-3 text-sm transition-colors",
+              "hover:bg-muted focus-visible:border-foreground focus-visible:outline-none",
+              className
+            )}
+            type="button"
+            {...props}
+          />
+        }
+      >
+        <span>{selectedCountry.flag}</span>
+        <span>{selectedCountry.code}</span>
+        <ChevronDown className="size-3.5 text-muted-foreground" />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-[280px] p-0">
         <div className="border-border border-b p-2">

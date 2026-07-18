@@ -243,8 +243,12 @@ const IssueReportFormView = ({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleCategoryChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, category: value, subcategory: "" }));
+  const handleCategoryChange = (value: string | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      category: value ?? "",
+      subcategory: "",
+    }));
   };
 
   const toggleAttemptedAction = (action: string) => {
@@ -325,7 +329,7 @@ const IssueReportFormView = ({
             </Label>
             <Select
               value={formData.team}
-              onValueChange={(v) => updateField("team", v)}
+              onValueChange={(v) => updateField("team", v ?? "")}
             >
               <SelectTrigger className="h-9 text-sm w-full">
                 <SelectValue placeholder="Select" />
@@ -345,7 +349,7 @@ const IssueReportFormView = ({
             </Label>
             <Select
               value={formData.location}
-              onValueChange={(v) => updateField("location", v)}
+              onValueChange={(v) => updateField("location", v ?? "")}
             >
               <SelectTrigger className="h-9 text-sm w-full">
                 <SelectValue placeholder="Select" />
@@ -385,7 +389,7 @@ const IssueReportFormView = ({
             </Label>
             <Select
               value={formData.subcategory}
-              onValueChange={(v) => updateField("subcategory", v)}
+              onValueChange={(v) => updateField("subcategory", v ?? "")}
               disabled={!formData.category}
             >
               <SelectTrigger className="h-9 text-sm w-full">
@@ -452,7 +456,7 @@ const IssueReportFormView = ({
                 </Label>
                 <Select
                   value={formData.impact}
-                  onValueChange={(v) => updateField("impact", v)}
+                  onValueChange={(v) => updateField("impact", v ?? "")}
                 >
                   <SelectTrigger className="h-9 text-sm w-full">
                     <SelectValue placeholder="Impact" />
@@ -472,7 +476,7 @@ const IssueReportFormView = ({
                 </Label>
                 <Select
                   value={formData.urgency}
-                  onValueChange={(v) => updateField("urgency", v)}
+                  onValueChange={(v) => updateField("urgency", v ?? "")}
                 >
                   <SelectTrigger className="h-9 text-sm w-full">
                     <SelectValue placeholder="Urgency" />
@@ -492,7 +496,7 @@ const IssueReportFormView = ({
                 </Label>
                 <Select
                   value={formData.frequency}
-                  onValueChange={(v) => updateField("frequency", v)}
+                  onValueChange={(v) => updateField("frequency", v ?? "")}
                 >
                   <SelectTrigger className="h-9 text-sm w-full">
                     <SelectValue placeholder="Frequency" />

@@ -24,16 +24,20 @@ const GetStartedButton = () => {
 
   return (
     <Button
-      asChild
       sound="click"
+      nativeButton={false}
       className="px-4"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      render={
+        <Link
+          href={ROUTES.DOCS_INSTALLATION}
+          transitionTypes={["nav-forward"]}
+        />
+      }
     >
-      <Link href={ROUTES.DOCS_INSTALLATION} transitionTypes={["nav-forward"]}>
-        Get Started
-        <ArrowRightIcon className="hidden sm:inline" ref={arrowRightRef} />
-      </Link>
+      Get Started
+      <ArrowRightIcon className="hidden sm:inline" ref={arrowRightRef} />
     </Button>
   );
 };
@@ -51,21 +55,22 @@ const BrowseBlocksButton = () => {
 
   return (
     <Button
-      asChild
       variant="outline"
       sound="click"
+      nativeButton={false}
       className="px-4"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      render={
+        <Link href={ROUTES.DOCS_BLOCKS} transitionTypes={["nav-forward"]} />
+      }
     >
-      <Link href={ROUTES.DOCS_BLOCKS} transitionTypes={["nav-forward"]}>
-        <ComponentIcon
-          className="hidden sm:inline"
-          ref={componentIconRef}
-          size={22}
-        />
-        Browse Blocks
-      </Link>
+      <ComponentIcon
+        className="hidden sm:inline"
+        ref={componentIconRef}
+        size={22}
+      />
+      Browse Blocks
     </Button>
   );
 };

@@ -424,13 +424,15 @@ export const MessageWithReactions = ({
             </>
           )}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                aria-label="Add reaction"
-                className="inline-flex items-center justify-center size-6 bg-card border rounded-full hover:bg-muted transition-colors cursor-pointer"
-              >
-                <Smile className="size-3.5 text-muted-foreground" />
-              </button>
+            <DropdownMenuTrigger
+              render={
+                <button
+                  aria-label="Add reaction"
+                  className="inline-flex items-center justify-center size-6 bg-card border rounded-full hover:bg-muted transition-colors cursor-pointer"
+                />
+              }
+            >
+              <Smile className="size-3.5 text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="p-2">
               <div className="grid grid-cols-5 gap-1">

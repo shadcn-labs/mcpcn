@@ -33,16 +33,15 @@ export const SiteHeader = () => (
         />
         <BrandContextMenu>
           <Button
-            asChild
             variant="ghost"
             size="icon"
             className="hidden size-8 lg:flex"
             sound="click"
+            nativeButton={false}
+            render={<Link href={ROUTES.HOME} transitionTypes={["nav-back"]} />}
           >
-            <Link href={ROUTES.HOME} transitionTypes={["nav-back"]}>
-              <LogoMark className="size-5" />
-              <span className="sr-only">{SITE.NAME}</span>
-            </Link>
+            <LogoMark className="size-5" />
+            <span className="sr-only">{SITE.NAME}</span>
           </Button>
         </BrandContextMenu>
         <MainNav items={navItems} className="hidden lg:flex" />

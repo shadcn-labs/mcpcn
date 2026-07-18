@@ -1,14 +1,26 @@
 "use client";
 
 import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
 const toggleVariants = cva(
   "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-pressed:bg-accent data-pressed:text-accent-foreground dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
+    defaultVariants: {
+      size: "default",
+      variant: "default",
+    },
     variants: {
+      size: {
+        default: "h-9 min-w-9 px-2",
+        icon: "size-9",
+        "icon-sm": "size-8",
+        lg: "h-10 min-w-10 px-2.5",
+        sm: "h-8 min-w-8 px-1.5",
+      },
       variant: {
         default: "bg-transparent",
         ghost:
@@ -18,34 +30,21 @@ const toggleVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 data-pressed:bg-secondary/60",
       },
-      size: {
-        default: "h-9 min-w-9 px-2",
-        sm: "h-8 min-w-8 px-1.5",
-        lg: "h-10 min-w-10 px-2.5",
-        icon: "size-9",
-        "icon-sm": "size-8",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
     },
   }
 );
 
-function Toggle({
+const Toggle = ({
   className,
   variant = "default",
   size = "default",
   ...props
-}: TogglePrimitive.Props & VariantProps<typeof toggleVariants>) {
-  return (
-    <TogglePrimitive
-      data-slot="toggle"
-      className={cn(toggleVariants({ variant, size, className }))}
-      {...props}
-    />
-  );
-}
+}: TogglePrimitive.Props & VariantProps<typeof toggleVariants>) => (
+  <TogglePrimitive
+    data-slot="toggle"
+    className={cn(toggleVariants({ className, size, variant }))}
+    {...props}
+  />
+);
 
 export { Toggle, toggleVariants };

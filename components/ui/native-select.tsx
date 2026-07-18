@@ -1,24 +1,22 @@
 "use client";
 
 import { ChevronDownIcon } from "lucide-react";
+import * as React from "react";
 
 import { useFeedback } from "@/hooks/use-feedback";
 import { cn } from "@/lib/utils";
 
+type NativeSelectProps = Omit<React.ComponentProps<"select">, "size"> & {
+  size?: "sm" | "default";
+};
+
 const NativeSelect = ({
   className,
-  size = "default",
   onChange,
+  size = "default",
   ...props
-}: Omit<React.ComponentProps<"select">, "size"> & {
-  size?: "sm" | "default";
-}) => {
+}: NativeSelectProps) => {
   const playSelect = useFeedback({ sound: "select" });
-
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    playSelect();
-    onChange?.(e);
-  };
 
   return (
     <div
@@ -36,7 +34,10 @@ const NativeSelect = ({
           "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
           className
         )}
-        onChange={handleChange}
+        onChange={(event) => {
+          playSelect();
+          onChange?.(event);
+        }}
         {...props}
       />
       <ChevronDownIcon

@@ -15,17 +15,19 @@ export const ModeSwitcher = () => {
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="group/toggle extend-touch-target size-8"
-          onClick={toggleTheme}
-          title="Toggle theme"
-        >
-          <ThemeIcon className="size-4.5" strokeWidth="2" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
+      <TooltipTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="group/toggle extend-touch-target size-8"
+            onClick={toggleTheme}
+            title="Toggle theme"
+          />
+        }
+      >
+        <ThemeIcon className="size-4.5" strokeWidth="2" />
+        <span className="sr-only">Toggle theme</span>
       </TooltipTrigger>
       <TooltipContent className="pr-2 pl-3">
         <div className="flex items-center gap-3">

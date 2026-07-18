@@ -70,13 +70,15 @@ export const CommandBox = ({ className }: { className?: string }) => {
             className="text-left block font-mono text-sm text-muted-foreground max-sm:leading-6"
           >
             {Object.entries(pmCommands).map(([key, command]) => (
-              <TabsContent key={key} value={key} asChild>
-                <span className="block sm:inline-block">
-                  <span className="select-none">$ </span>
-                  {command} shadcn add{" "}
-                  <span className="select-none sm:hidden" aria-hidden="true">
-                    \
-                  </span>
+              <TabsContent
+                key={key}
+                value={key}
+                render={<span className="block sm:inline-block" />}
+              >
+                <span className="select-none">$ </span>
+                {command} shadcn add{" "}
+                <span className="select-none sm:hidden" aria-hidden="true">
+                  \
                 </span>
               </TabsContent>
             ))}

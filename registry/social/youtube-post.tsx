@@ -126,13 +126,15 @@ export const YouTubePostPlayer = ({
 
 const YouTubePostMenu = () => (
   <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <button
-        className="shrink-0 cursor-pointer text-muted-foreground transition-colors hover:text-foreground"
-        type="button"
-      >
-        <MoreHorizontal className="size-5" />
-      </button>
+    <DropdownMenuTrigger
+      render={
+        <button
+          className="shrink-0 cursor-pointer text-muted-foreground transition-colors hover:text-foreground"
+          type="button"
+        />
+      }
+    >
+      <MoreHorizontal className="size-5" />
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuItem>

@@ -449,23 +449,25 @@ const DateTimePickerView = (props: DateTimePickerProps) => {
                 open={timezoneDropdownOpen}
                 onOpenChange={setTimezoneDropdownOpen}
               >
-                <PopoverTrigger asChild>
-                  <button
-                    aria-label="Select timezone"
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <Globe className="size-4" />
-                    <span>
-                      {selectedTimezone.name} (
-                      {getTimeForTimezone(selectedTimezone.iana)})
-                    </span>
-                    <ChevronRight
-                      className={cn(
-                        "size-3 transition-transform",
-                        timezoneDropdownOpen ? "rotate-90" : "rotate-0"
-                      )}
+                <PopoverTrigger
+                  render={
+                    <button
+                      aria-label="Select timezone"
+                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                     />
-                  </button>
+                  }
+                >
+                  <Globe className="size-4" />
+                  <span>
+                    {selectedTimezone.name} (
+                    {getTimeForTimezone(selectedTimezone.iana)})
+                  </span>
+                  <ChevronRight
+                    className={cn(
+                      "size-3 transition-transform",
+                      timezoneDropdownOpen ? "rotate-90" : "rotate-0"
+                    )}
+                  />
                 </PopoverTrigger>
                 <PopoverContent className="w-[320px] p-0" align="start">
                   <div className="p-2 border-b">

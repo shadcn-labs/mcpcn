@@ -126,7 +126,7 @@ export const SiteSettings = () => {
     <>
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={setIsOpen} sounds>
-          <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+          <DrawerTrigger render={trigger} />
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle>Settings</DrawerTitle>
@@ -134,15 +134,13 @@ export const SiteSettings = () => {
             </DrawerHeader>
             <div className="px-4">{content}</div>
             <DrawerFooter>
-              <DrawerClose asChild>
-                <Button size="sm">Done</Button>
-              </DrawerClose>
+              <DrawerClose render={<Button size="sm" />}>Done</DrawerClose>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
       ) : (
         <Popover open={isOpen} onOpenChange={setIsOpen} sounds>
-          <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+          <PopoverTrigger render={trigger} />
           <PopoverContent className="p-1 w-fit">{content}</PopoverContent>
         </Popover>
       )}

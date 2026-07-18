@@ -64,13 +64,15 @@ export interface InstagramPostProps extends ComponentProps<"article"> {
 
 const InstagramPostMenu = () => (
   <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <button
-        className="cursor-pointer text-foreground transition-colors hover:text-muted-foreground"
-        type="button"
-      >
-        <MoreHorizontal className="size-5" />
-      </button>
+    <DropdownMenuTrigger
+      render={
+        <button
+          className="cursor-pointer text-foreground transition-colors hover:text-muted-foreground"
+          type="button"
+        />
+      }
+    >
+      <MoreHorizontal className="size-5" />
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuItem>

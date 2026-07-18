@@ -17,7 +17,7 @@ import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 export const BrandContextMenu = ({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactElement;
 }) => {
   const { resolvedTheme } = useTheme();
   const { copyToClipboard } = useCopyToClipboard();
@@ -46,7 +46,7 @@ export const BrandContextMenu = ({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
+      <ContextMenuTrigger render={children} />
 
       <ContextMenuContent>
         <ContextMenuItem onClick={handleCopy}>

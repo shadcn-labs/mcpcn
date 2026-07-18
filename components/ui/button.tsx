@@ -3,7 +3,6 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva } from "class-variance-authority";
 import type { VariantProps } from "class-variance-authority";
-import type { ReactElement } from "react";
 
 import type { FeedbackType } from "@/hooks/use-feedback";
 import { useFeedback } from "@/hooks/use-feedback";
@@ -22,8 +21,11 @@ const buttonVariants = cva(
         icon: "size-9",
         "icon-lg": "size-10",
         "icon-sm": "size-8",
+        "icon-xs":
+          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
         sm: "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
+        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
       },
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
@@ -42,42 +44,32 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends
-    Omit<ButtonPrimitive.Props, "render">,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
+  extends ButtonPrimitive.Props, VariantProps<typeof buttonVariants> {
   haptic?: boolean;
   sound?: FeedbackType;
 }
 
 const Button = ({
-  asChild = false,
-  children,
   className,
   haptic,
   onClick,
-  size,
+  size = "default",
   sound,
-  variant,
+  variant = "default",
   ...props
 }: ButtonProps) => {
   const play = useFeedback({ haptic, sound });
+
   return (
     <ButtonPrimitive
       data-slot="button"
-      data-size={size}
-      data-variant={variant}
-      nativeButton={!asChild}
       className={cn(buttonVariants({ className, size, variant }))}
-      render={asChild ? (children as ReactElement) : undefined}
       onClick={(event) => {
         play();
         onClick?.(event);
       }}
       {...props}
-    >
-      {asChild ? undefined : children}
-    </ButtonPrimitive>
+    />
   );
 };
 

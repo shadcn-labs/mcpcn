@@ -14,6 +14,5 @@ export default defineConfig({
     ".claude/**",
     ".web-kits/**",
     "audio/**",
-    "components/ui/**",
   ],
 });

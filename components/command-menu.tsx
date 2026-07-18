@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/dialog";
 import { Kbd } from "@/components/ui/kbd";
 import { Separator } from "@/components/ui/separator";
-import { ROUTES } from "@/constants/routes";
 import { SITE } from "@/constants/site";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { useFeedback } from "@/hooks/use-feedback";
@@ -38,7 +37,8 @@ import { useMutationObserver } from "@/hooks/use-mutation-observer";
 import { usePackageManager } from "@/hooks/use-package-manager";
 import { EXCLUDED_SECTIONS, isBlocksFolder } from "@/lib/docs";
 import { trackEvent } from "@/lib/events";
-import { getAllPagesFromFolder, getPagesFromFolder } from "@/lib/page-tree";
+import type { PageTreeFolder } from "@/lib/page-tree";
+import { getPagesFromFolder } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";
 
 type DocUrlKind =
@@ -147,7 +147,7 @@ export const CommandMenu = ({
   navItems,
   tree,
   ...props
-}: React.ComponentProps<typeof Dialog> & {
+}: React.ComponentProps<typeof Button> & {
   blocks?: { name: string; description: string; categories: string[] }[];
   navItems: { href: string; label: string }[];
   tree: PageTreeRoot;
@@ -182,13 +182,31 @@ export const CommandMenu = ({
         continue;
       }
 
-      const pages = (
-        isBlocksFolder(item)
-          ? getAllPagesFromFolder(item).filter(
-              (page) => page.url !== ROUTES.DOCS_BLOCKS
-            )
-          : getPagesFromFolder(item)
-      ).map((p) => ({
+      if (isBlocksFolder(item)) {
+        const categories = item.children.filter(
+          (child): child is PageTreeFolder => child.type === "folder"
+        );
+        for (const category of categories) {
+          const pages = getPagesFromFolder(category)
+            .filter((page) => String(page.name) !== String(category.name))
+            .map((p) => ({
+              name: typeof p.name === "string" ? p.name : String(p.name),
+              url: p.url,
+            }));
+          if (pages.length > 0) {
+            groups.push({
+              label:
+                typeof category.name === "string"
+                  ? category.name
+                  : String(category.name),
+              pages,
+            });
+          }
+        }
+        continue;
+      }
+
+      const pages = getPagesFromFolder(item).map((p) => ({
         name: typeof p.name === "string" ? p.name : String(p.name),
         url: p.url,
       }));
@@ -315,22 +333,24 @@ export const CommandMenu = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen} sounds>
-      <DialogTrigger asChild>
-        <Button
-          variant="secondary"
-          className={cn(
-            "bg-surface text-surface-foreground/60 dark:bg-card relative h-8 w-full justify-start pl-2.5 font-normal shadow-none sm:pr-12 md:w-40 lg:w-56 xl:w-64"
-          )}
-          onClick={handleOpenClick}
-          {...props}
-        >
-          <span className="hidden lg:inline-flex">Search documentation...</span>
-          <span className="inline-flex lg:hidden">Search...</span>
-          <div className="absolute top-1.5 right-1.5 hidden gap-1 sm:flex">
-            <Kbd>{isMac ? "⌘" : "Ctrl"}</Kbd>
-            <Kbd className="aspect-square">K</Kbd>
-          </div>
-        </Button>
+      <DialogTrigger
+        render={
+          <Button
+            variant="secondary"
+            className={cn(
+              "bg-surface text-surface-foreground/60 dark:bg-card relative h-8 w-full justify-start pl-2.5 font-normal shadow-none sm:pr-12 md:w-40 lg:w-56 xl:w-64"
+            )}
+            onClick={handleOpenClick}
+            {...props}
+          />
+        }
+      >
+        <span className="hidden lg:inline-flex">Search documentation...</span>
+        <span className="inline-flex lg:hidden">Search...</span>
+        <div className="absolute top-1.5 right-1.5 hidden gap-1 sm:flex">
+          <Kbd>{isMac ? "⌘" : "Ctrl"}</Kbd>
+          <Kbd className="aspect-square">K</Kbd>
+        </div>
       </DialogTrigger>
       <DialogContent
         showCloseButton={false}

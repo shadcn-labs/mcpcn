@@ -1,5 +1,6 @@
 import { cva } from "class-variance-authority";
 import type { VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -57,4 +58,12 @@ const AlertDescription = ({
   />
 );
 
-export { Alert, AlertDescription, AlertTitle };
+const AlertAction = ({ className, ...props }: React.ComponentProps<"div">) => (
+  <div
+    data-slot="alert-action"
+    className={cn("absolute top-2 right-2", className)}
+    {...props}
+  />
+);
+
+export { Alert, AlertTitle, AlertDescription, AlertAction };

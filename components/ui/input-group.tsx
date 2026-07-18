@@ -62,7 +62,6 @@ const InputGroupAddon = ({
   ...props
 }: React.ComponentProps<"div"> &
   VariantProps<typeof inputGroupAddonVariants>) => (
-  // oxlint-disable-next-line jsx_a11y/click-events-have-key-events
   <div
     role="group"
     data-slot="input-group-addon"
@@ -73,6 +72,11 @@ const InputGroupAddon = ({
         return;
       }
       e.currentTarget.parentElement?.querySelector("input")?.focus();
+    }}
+    onKeyDown={(event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.currentTarget.parentElement?.querySelector("input")?.focus();
+      }
     }}
     {...props}
   />
@@ -102,8 +106,10 @@ const InputGroupButton = ({
   variant = "ghost",
   size = "xs",
   ...props
-}: Omit<React.ComponentProps<typeof Button>, "size"> &
-  VariantProps<typeof inputGroupButtonVariants>) => (
+}: Omit<React.ComponentProps<typeof Button>, "size" | "type"> &
+  VariantProps<typeof inputGroupButtonVariants> & {
+    type?: "button" | "submit" | "reset";
+  }) => (
   <Button
     type={type}
     data-size={size}
