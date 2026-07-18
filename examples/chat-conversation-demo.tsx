@@ -1,7 +1,14 @@
 "use client";
 
-import { ChatConversation } from "@/registry/messaging/chat-conversation";
+import {
+  ChatConversation,
+  ChatConversationMessages,
+} from "@/registry/messaging/chat-conversation";
 
 export default function ChatConversationDemo() {
-  return <ChatConversation />;
+  return (
+    <ChatConversation>
+      <ChatConversationMessages />
+    </ChatConversation>
+  );
 }

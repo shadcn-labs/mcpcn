@@ -170,14 +170,9 @@ export const TagSelectContent = ({
   children,
   className,
   ...props
-}: ComponentProps<"div">) => (
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
   <div className={cn("space-y-2", className)} {...props}>
-    {children ?? (
-      <>
-        <TagSelectTags />
-        <TagSelectActions />
-      </>
-    )}
+    {children}
   </div>
 );
 
@@ -189,7 +184,7 @@ const TagSelectRoot = ({
   control,
   data,
   ...props
-}: TagSelectProps) => {
+}: TagSelectProps & { children: React.ReactNode }) => {
   const mode = appearance?.mode ?? "multiple";
   const [selected, setSelected] = useState(control?.selectedTagIds ?? []);
 
@@ -221,7 +216,7 @@ const TagSelectRoot = ({
         className={cn("w-full rounded-lg bg-card p-4", className)}
         {...props}
       >
-        {children ?? <TagSelectContent />}
+        {children}
       </div>
     </TagSelectContext.Provider>
   );

@@ -1,7 +1,14 @@
 "use client";
 
-import { MessageBubble } from "@/registry/messaging/message-bubble";
+import {
+  MessageBubble,
+  MessageBubbleContent,
+} from "@/registry/messaging/message-bubble";
 
 export default function MessageBubbleDemo() {
-  return <MessageBubble />;
+  return (
+    <MessageBubble>
+      <MessageBubbleContent />
+    </MessageBubble>
+  );
 }

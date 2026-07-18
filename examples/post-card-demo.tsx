@@ -1,7 +1,11 @@
 "use client";
 
-import { PostCard } from "@/registry/blogging/post-card";
+import { PostCard, PostCardContent } from "@/registry/blogging/post-card";
 
 export default function PostCardDemo() {
-  return <PostCard />;
+  return (
+    <PostCard>
+      <PostCardContent />
+    </PostCard>
+  );
 }

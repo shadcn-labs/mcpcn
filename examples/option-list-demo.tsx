@@ -1,7 +1,19 @@
 "use client";
 
-import { OptionList } from "@/registry/selection/option-list";
+import {
+  OptionList,
+  OptionListActions,
+  OptionListContent,
+  OptionListOptions,
+} from "@/registry/selection/option-list";
 
 export default function OptionListDemo() {
-  return <OptionList />;
+  return (
+    <OptionList>
+      <OptionListContent>
+        <OptionListOptions />
+        <OptionListActions />
+      </OptionListContent>
+    </OptionList>
+  );
 }

@@ -192,7 +192,7 @@ export const DocsCopyPage = ({
           <DropdownMenuTrigger className="hidden sm:flex" render={trigger} />
           <DropdownMenuContent
             align="end"
-            className="animate-none! rounded-lg shadow-none"
+            className="animate-none! rounded-lg shadow-none w-fit"
           >
             {MENU_ITEMS.map(([key, render]) => (
               <DropdownMenuItem key={key} sound="click" render={render(url)} />

@@ -55,11 +55,16 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { DateTimePicker } from "@/components/ui/date-time-picker";
+import {
+  DateTimePicker,
+  DateTimePickerContent,
+} from "@/components/ui/date-time-picker";
 ```
 
 ```tsx
-<DateTimePicker />
+<DateTimePicker>
+  <DateTimePickerContent />
+</DateTimePicker>
 ```
 
 ## Composition
@@ -76,17 +81,21 @@ DateTimePicker
 Register `DateTimePicker` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { DateTimePicker } from "@/components/ui/date-time-picker";
+import {
+  DateTimePicker,
+  DateTimePickerContent,
+} from "@/components/ui/date-time-picker";
 
 const OpenUIDateTimePicker = defineComponent({
   name: "DateTimePicker",
   description:
     "A Calendly-style date and time picker with calendar, available time slots, and timezone display.",
   props: z.object({}),
-  component: () => <DateTimePicker />,
+  component: () => (
+    <DateTimePicker>
+      <DateTimePickerContent />
+    </DateTimePicker>
+  ),
 });
 
 export const date_time_pickerLibrary = createLibrary({

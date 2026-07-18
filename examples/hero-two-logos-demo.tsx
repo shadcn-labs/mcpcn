@@ -1,6 +1,13 @@
 "use client";
 
-import { Hero } from "@/registry/miscellaneous/hero";
+import {
+  Hero,
+  HeroActions,
+  HeroContent,
+  HeroDescription,
+  HeroLogos,
+  HeroTitle,
+} from "@/registry/miscellaneous/hero";
 
 export default function HeroTwoLogosDemo() {
   return (
@@ -15,6 +22,13 @@ export default function HeroTwoLogosDemo() {
           "Combining the best of both worlds to deliver exceptional user experiences.",
         title: "Acme × mcpcn",
       }}
-    />
+    >
+      <HeroContent>
+        <HeroLogos />
+        <HeroTitle />
+        <HeroDescription />
+        <HeroActions />
+      </HeroContent>
+    </Hero>
   );
 }

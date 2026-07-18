@@ -1,7 +1,11 @@
 "use client";
 
-import { MapCarousel } from "@/registry/map/map-carousel";
+import { MapCarousel, MapCarouselContent } from "@/registry/map/map-carousel";
 
 export default function MapCarouselDemo() {
-  return <MapCarousel />;
+  return (
+    <MapCarousel>
+      <MapCarouselContent />
+    </MapCarousel>
+  );
 }

@@ -1,7 +1,16 @@
 "use client";
 
-import { StatusBadge } from "@/registry/status/status-badge";
+import {
+  StatusBadge,
+  StatusBadgeIcon,
+  StatusBadgeLabel,
+} from "@/registry/status/status-badge";
 
 export default function StatusBadgeDemo() {
-  return <StatusBadge />;
+  return (
+    <StatusBadge>
+      <StatusBadgeIcon />
+      <StatusBadgeLabel />
+    </StatusBadge>
+  );
 }

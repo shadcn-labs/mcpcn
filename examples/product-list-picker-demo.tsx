@@ -1,7 +1,11 @@
 "use client";
 
-import { ProductList } from "@/registry/list/product-list";
+import { ProductList, ProductListContent } from "@/registry/list/product-list";
 
 export default function ProductListPickerDemo() {
-  return <ProductList appearance={{ variant: "picker" }} />;
+  return (
+    <ProductList appearance={{ variant: "picker" }}>
+      <ProductListContent />
+    </ProductList>
+  );
 }

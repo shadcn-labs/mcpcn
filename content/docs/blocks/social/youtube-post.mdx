@@ -49,11 +49,27 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { YouTubePost } from "@/components/ui/youtube-post";
+import {
+  YouTubePost,
+  YouTubePostAvatar,
+  YouTubePostDetails,
+  YouTubePostInfo,
+  YouTubePostMenu,
+  YouTubePostPlayer,
+} from "@/components/ui/youtube-post";
 ```
 
 ```tsx
-<YouTubePost />
+<YouTubePost>
+  <YouTubePostPlayer />
+  <YouTubePostInfo>
+    <div className="flex gap-3">
+      <YouTubePostAvatar />
+      <YouTubePostDetails />
+      <YouTubePostMenu />
+    </div>
+  </YouTubePostInfo>
+</YouTubePost>
 ```
 
 ## Composition
@@ -62,8 +78,11 @@ Use the following composition to build an `YouTubePost`:
 
 ```text
 YouTubePost
-├── YouTubePostInfo
-└── YouTubePostPlayer
+├── YouTubePostPlayer
+└── YouTubePostInfo
+    ├── YouTubePostAvatar
+    ├── YouTubePostDetails
+    └── YouTubePostMenu
 ```
 
 ## OpenUI Integration
@@ -71,16 +90,31 @@ YouTubePost
 Register `YouTubePost` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { YouTubePost } from "@/components/ui/youtube-post";
+import {
+  YouTubePost,
+  YouTubePostAvatar,
+  YouTubePostDetails,
+  YouTubePostInfo,
+  YouTubePostMenu,
+  YouTubePostPlayer,
+} from "@/components/ui/youtube-post";
 
 const OpenUIYouTubePost = defineComponent({
   name: "YouTubePost",
   description: "YouTube video card with playable embed.",
   props: z.object({}),
-  component: () => <YouTubePost />,
+  component: () => (
+    <YouTubePost>
+      <YouTubePostPlayer />
+      <YouTubePostInfo>
+        <div className="flex gap-3">
+          <YouTubePostAvatar />
+          <YouTubePostDetails />
+          <YouTubePostMenu />
+        </div>
+      </YouTubePostInfo>
+    </YouTubePost>
+  ),
 });
 
 export const youtube_postLibrary = createLibrary({

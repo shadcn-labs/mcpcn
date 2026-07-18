@@ -578,9 +578,12 @@ export const DateTimePickerContent = (props: DateTimePickerProps) => {
   return <DateTimePickerView {...context} {...props} />;
 };
 
-const DateTimePickerRoot = ({ children, ...props }: DateTimePickerProps) => (
+const DateTimePickerRoot = ({
+  children,
+  ...props
+}: DateTimePickerProps & { children: React.ReactNode }) => (
   <DateTimePickerContext.Provider value={props}>
-    {children ?? <DateTimePickerContent />}
+    {children}
   </DateTimePickerContext.Provider>
 );
 

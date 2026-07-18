@@ -49,11 +49,13 @@ npm install lucide-react leaflet
 ## Usage
 
 ```tsx
-import { MapCarousel } from "@/components/ui/map-carousel";
+import { MapCarousel, MapCarouselContent } from "@/components/ui/map-carousel";
 ```
 
 ```tsx
-<MapCarousel />
+<MapCarousel>
+  <MapCarouselContent />
+</MapCarousel>
 ```
 
 ## Composition
@@ -70,17 +72,18 @@ MapCarousel
 Register `MapCarousel` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { MapCarousel } from "@/components/ui/map-carousel";
+import { MapCarousel, MapCarouselContent } from "@/components/ui/map-carousel";
 
 const OpenUIMapCarousel = defineComponent({
   name: "MapCarousel",
   description:
     "Interactive map with location markers and a draggable carousel of cards.",
   props: z.object({}),
-  component: () => <MapCarousel />,
+  component: () => (
+    <MapCarousel>
+      <MapCarouselContent />
+    </MapCarousel>
+  ),
 });
 
 export const map_carouselLibrary = createLibrary({

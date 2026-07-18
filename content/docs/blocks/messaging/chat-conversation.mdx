@@ -55,11 +55,16 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { ChatConversation } from "@/components/ui/chat-conversation";
+import {
+  ChatConversation,
+  ChatConversationMessages,
+} from "@/components/ui/chat-conversation";
 ```
 
 ```tsx
-<ChatConversation />
+<ChatConversation>
+  <ChatConversationMessages />
+</ChatConversation>
 ```
 
 ## Composition
@@ -77,16 +82,20 @@ ChatConversation
 Register `ChatConversation` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { ChatConversation } from "@/components/ui/chat-conversation";
+import {
+  ChatConversation,
+  ChatConversationMessages,
+} from "@/components/ui/chat-conversation";
 
 const OpenUIChatConversation = defineComponent({
   name: "ChatConversation",
   description: "Full chat conversation component with multiple message types.",
   props: z.object({}),
-  component: () => <ChatConversation />,
+  component: () => (
+    <ChatConversation>
+      <ChatConversationMessages />
+    </ChatConversation>
+  ),
 });
 
 export const chat_conversationLibrary = createLibrary({

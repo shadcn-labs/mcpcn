@@ -55,11 +55,29 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { TicketTierSelect } from "@/components/ui/ticket-tier-select";
+import {
+  TicketOrderSummary,
+  TicketTierCheckout,
+  TicketTierContent,
+  TicketTierHeader,
+  TicketTierOptions,
+  TicketTierSelect,
+} from "@/components/ui/ticket-tier-select";
 ```
 
 ```tsx
-<TicketTierSelect />
+<TicketTierSelect>
+  <TicketTierContent>
+    <div className="flex-1">
+      <TicketTierHeader />
+      <TicketTierOptions />
+      <div className="mt-6">
+        <TicketTierCheckout />
+      </div>
+    </div>
+    <TicketOrderSummary />
+  </TicketTierContent>
+</TicketTierSelect>
 ```
 
 ## Composition
@@ -68,10 +86,12 @@ Use the following composition to build an `TicketTierSelect`:
 
 ```text
 TicketTierSelect
-├── TicketTierContent
-├── TicketTierItem
-├── TicketTierOptions
-└── TicketOrderSummary
+└── TicketTierContent
+    ├── TicketTierHeader
+    ├── TicketTierOptions
+    │   └── TicketTierItem
+    ├── TicketTierCheckout
+    └── TicketOrderSummary
 ```
 
 ## OpenUI Integration
@@ -79,17 +99,34 @@ TicketTierSelect
 Register `TicketTierSelect` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { TicketTierSelect } from "@/components/ui/ticket-tier-select";
+import {
+  TicketOrderSummary,
+  TicketTierCheckout,
+  TicketTierContent,
+  TicketTierHeader,
+  TicketTierOptions,
+  TicketTierSelect,
+} from "@/components/ui/ticket-tier-select";
 
 const OpenUITicketTierSelect = defineComponent({
   name: "TicketTierSelect",
   description:
     "Ticket tier selection with quantity controls and order summary. Shows price breakdown with fees.",
   props: z.object({}),
-  component: () => <TicketTierSelect />,
+  component: () => (
+    <TicketTierSelect>
+      <TicketTierContent>
+        <div className="flex-1">
+          <TicketTierHeader />
+          <TicketTierOptions />
+          <div className="mt-6">
+            <TicketTierCheckout />
+          </div>
+        </div>
+        <TicketOrderSummary />
+      </TicketTierContent>
+    </TicketTierSelect>
+  ),
 });
 
 export const ticket_tier_selectLibrary = createLibrary({

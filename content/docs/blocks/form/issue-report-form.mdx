@@ -55,11 +55,16 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { IssueReportForm } from "@/components/ui/issue-report-form";
+import {
+  IssueReportForm,
+  IssueReportFormContent,
+} from "@/components/ui/issue-report-form";
 ```
 
 ```tsx
-<IssueReportForm />
+<IssueReportForm>
+  <IssueReportFormContent />
+</IssueReportForm>
 ```
 
 ## Composition
@@ -76,17 +81,21 @@ IssueReportForm
 Register `IssueReportForm` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { IssueReportForm } from "@/components/ui/issue-report-form";
+import {
+  IssueReportForm,
+  IssueReportFormContent,
+} from "@/components/ui/issue-report-form";
 
 const OpenUIIssueReportForm = defineComponent({
   name: "IssueReportForm",
   description:
     "A compact issue reporting form for team members with categories, impact/urgency levels, and file attachments.",
   props: z.object({}),
-  component: () => <IssueReportForm />,
+  component: () => (
+    <IssueReportForm>
+      <IssueReportFormContent />
+    </IssueReportForm>
+  ),
 });
 
 export const issue_report_formLibrary = createLibrary({

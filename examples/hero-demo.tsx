@@ -1,7 +1,25 @@
 "use client";
 
-import { Hero } from "@/registry/miscellaneous/hero";
+import {
+  Hero,
+  HeroActions,
+  HeroContent,
+  HeroDescription,
+  HeroLogos,
+  HeroTechLogos,
+  HeroTitle,
+} from "@/registry/miscellaneous/hero";
 
 export default function HeroDemo() {
-  return <Hero />;
+  return (
+    <Hero>
+      <HeroContent>
+        <HeroLogos />
+        <HeroTitle />
+        <HeroDescription />
+        <HeroActions />
+        <HeroTechLogos />
+      </HeroContent>
+    </Hero>
+  );
 }

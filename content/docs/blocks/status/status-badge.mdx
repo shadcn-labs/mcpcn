@@ -49,11 +49,18 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { StatusBadge } from "@/components/ui/status-badge";
+import {
+  StatusBadge,
+  StatusBadgeIcon,
+  StatusBadgeLabel,
+} from "@/components/ui/status-badge";
 ```
 
 ```tsx
-<StatusBadge />
+<StatusBadge>
+  <StatusBadgeIcon />
+  <StatusBadgeLabel />
+</StatusBadge>
 ```
 
 ## Composition
@@ -72,17 +79,23 @@ StatusBadge
 Register `StatusBadge` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { StatusBadge } from "@/components/ui/status-badge";
+import {
+  StatusBadge,
+  StatusBadgeIcon,
+  StatusBadgeLabel,
+} from "@/components/ui/status-badge";
 
 const OpenUIStatusBadge = defineComponent({
   name: "StatusBadge",
   description:
     "Status badge with multiple states (success, pending, processing, error, shipped, delivered).",
   props: z.object({}),
-  component: () => <StatusBadge />,
+  component: () => (
+    <StatusBadge>
+      <StatusBadgeIcon />
+      <StatusBadgeLabel />
+    </StatusBadge>
+  ),
 });
 
 export const status_badgeLibrary = createLibrary({

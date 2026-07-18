@@ -301,7 +301,7 @@ const PostCardRoot = ({
   className,
   data,
   ...props
-}: PostCardProps) => {
+}: PostCardProps & { children: React.ReactNode }) => {
   const context: PostCardContextValue = {
     onReadMore: actions?.onReadMore,
     post: data?.post ?? DEFAULT_POST,
@@ -313,7 +313,7 @@ const PostCardRoot = ({
   return (
     <PostCardContext.Provider value={context}>
       <article className={className} {...props}>
-        {children ?? <PostCardContent />}
+        {children}
       </article>
     </PostCardContext.Provider>
   );

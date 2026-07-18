@@ -49,11 +49,23 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { Table } from "@/components/ui/table";
+import {
+  Table,
+  TableContent,
+  TableFooter,
+  TableGrid,
+  TableHeader,
+} from "@/components/ui/table";
 ```
 
 ```tsx
-<Table />
+<Table>
+  <TableContent>
+    <TableHeader />
+    <TableGrid />
+    <TableFooter />
+  </TableContent>
+</Table>
 ```
 
 ## Composition
@@ -92,17 +104,28 @@ Table
 Register `Table` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { Table } from "@/components/ui/table";
+import {
+  Table,
+  TableContent,
+  TableFooter,
+  TableGrid,
+  TableHeader,
+} from "@/components/ui/table";
 
 const OpenUITable = defineComponent({
   name: "Table",
   description:
     "Data table with optional single or multi-select modes for chat interfaces.",
   props: z.object({}),
-  component: () => <Table />,
+  component: () => (
+    <Table>
+      <TableContent>
+        <TableHeader />
+        <TableGrid />
+        <TableFooter />
+      </TableContent>
+    </Table>
+  ),
 });
 
 export const tableLibrary = createLibrary({

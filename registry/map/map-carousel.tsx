@@ -1060,9 +1060,12 @@ export const MapCarouselContent = (props: MapCarouselProps) => {
   return <MapCarouselView {...context} {...props} />;
 };
 
-const MapCarouselRoot = ({ children, ...props }: MapCarouselProps) => (
+const MapCarouselRoot = ({
+  children,
+  ...props
+}: MapCarouselProps & { children: React.ReactNode }) => (
   <MapCarouselContext.Provider value={props}>
-    {children ?? <MapCarouselContent />}
+    {children}
   </MapCarouselContext.Provider>
 );
 

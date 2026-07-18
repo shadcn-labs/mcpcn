@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { PostCard } from "./post-card";
+import { PostCard, PostCardContent } from "./post-card";
 import type { Post } from "./types";
 
 export interface PostListProps {
@@ -145,7 +145,9 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
             data={{ post }}
             appearance={{ showAuthor, showCategory, variant: "horizontal" }}
             actions={{ onReadMore }}
-          />
+          >
+            <PostCardContent />
+          </PostCard>
         ))}
       </div>
     );
@@ -169,7 +171,9 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
               variant: "compact",
             }}
             actions={{ onReadMore }}
-          />
+          >
+            <PostCardContent />
+          </PostCard>
         ))}
       </div>
     );
@@ -201,7 +205,9 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
               data={{ post }}
               appearance={{ showAuthor, showCategory, variant: "default" }}
               actions={{ onReadMore }}
-            />
+            >
+              <PostCardContent />
+            </PostCard>
           ))}
         </div>
       </div>
@@ -241,7 +247,9 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
                 data={{ post }}
                 appearance={{ showAuthor, showCategory, variant: "compact" }}
                 actions={{ onReadMore }}
-              />
+              >
+                <PostCardContent />
+              </PostCard>
             </div>
           ))}
         </div>
@@ -257,7 +265,9 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
                 data={{ post }}
                 appearance={{ showAuthor, showCategory, variant: "compact" }}
                 actions={{ onReadMore }}
-              />
+              >
+                <PostCardContent />
+              </PostCard>
             </div>
           ))}
         </div>
@@ -273,7 +283,9 @@ const PostListView = ({ data, actions, appearance }: PostListProps) => {
                 data={{ post }}
                 appearance={{ showAuthor, showCategory, variant: "compact" }}
                 actions={{ onReadMore }}
-              />
+              >
+                <PostCardContent />
+              </PostCard>
             </div>
           ))}
         </div>
@@ -373,10 +385,11 @@ export const PostListContent = (props: PostListProps) => {
   return <PostListView {...context} {...props} />;
 };
 
-const PostListRoot = ({ children, ...props }: PostListProps) => (
-  <PostListContext.Provider value={props}>
-    {children ?? <PostListContent />}
-  </PostListContext.Provider>
+const PostListRoot = ({
+  children,
+  ...props
+}: PostListProps & { children: React.ReactNode }) => (
+  <PostListContext.Provider value={props}>{children}</PostListContext.Provider>
 );
 
 export const PostList = PostListRoot;

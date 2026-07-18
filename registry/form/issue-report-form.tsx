@@ -655,9 +655,12 @@ export const IssueReportFormContent = (props: IssueReportFormProps) => {
   return <IssueReportFormView {...context} {...props} />;
 };
 
-const IssueReportFormRoot = ({ children, ...props }: IssueReportFormProps) => (
+const IssueReportFormRoot = ({
+  children,
+  ...props
+}: IssueReportFormProps & { children: React.ReactNode }) => (
   <IssueReportFormContext.Provider value={props}>
-    {children ?? <IssueReportFormContent />}
+    {children}
   </IssueReportFormContext.Provider>
 );
 

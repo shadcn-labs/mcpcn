@@ -171,14 +171,9 @@ export const OptionListContent = ({
   children,
   className,
   ...props
-}: ComponentProps<"div">) => (
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
   <div className={cn("space-y-3", className)} {...props}>
-    {children ?? (
-      <>
-        <OptionListOptions />
-        <OptionListActions />
-      </>
-    )}
+    {children}
   </div>
 );
 
@@ -190,7 +185,7 @@ const OptionListRoot = ({
   control,
   data,
   ...props
-}: OptionListProps) => {
+}: OptionListProps & { children: React.ReactNode }) => {
   const multiple = appearance?.multiple ?? false;
   const options = data?.options ?? DEFAULT_OPTIONS;
   const selectedOptionIndex = control?.selectedOptionIndex;
@@ -244,7 +239,7 @@ const OptionListRoot = ({
         className={cn("w-full rounded-lg bg-card p-4", className)}
         {...props}
       >
-        {children ?? <OptionListContent />}
+        {children}
       </div>
     </OptionListContext.Provider>
   );

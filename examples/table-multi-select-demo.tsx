@@ -1,7 +1,21 @@
 "use client";
 
-import { Table } from "@/registry/list/table";
+import {
+  Table,
+  TableContent,
+  TableFooter,
+  TableGrid,
+  TableHeader,
+} from "@/registry/list/table";
 
 export default function TableMultiSelectDemo() {
-  return <Table appearance={{ selectable: "multi" }} />;
+  return (
+    <Table appearance={{ selectable: "multi" }}>
+      <TableContent>
+        <TableHeader />
+        <TableGrid />
+        <TableFooter />
+      </TableContent>
+    </Table>
+  );
 }

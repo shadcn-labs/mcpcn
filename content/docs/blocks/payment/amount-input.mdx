@@ -49,11 +49,23 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { AmountInput } from "@/components/ui/amount-input";
+import {
+  AmountInput,
+  AmountInputActions,
+  AmountInputControls,
+  AmountInputDisplay,
+  AmountInputPresets,
+} from "@/components/ui/amount-input";
 ```
 
 ```tsx
-<AmountInput />
+<AmountInput>
+  <AmountInputDisplay />
+  <AmountInputControls>
+    <AmountInputPresets />
+    <AmountInputActions />
+  </AmountInputControls>
+</AmountInput>
 ```
 
 ## Composition
@@ -73,17 +85,28 @@ AmountInput
 Register `AmountInput` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { AmountInput } from "@/components/ui/amount-input";
+import {
+  AmountInput,
+  AmountInputActions,
+  AmountInputControls,
+  AmountInputDisplay,
+  AmountInputPresets,
+} from "@/components/ui/amount-input";
 
 const OpenUIAmountInput = defineComponent({
   name: "AmountInput",
   description:
     "Amount input with increment/decrement buttons and preset values.",
   props: z.object({}),
-  component: () => <AmountInput />,
+  component: () => (
+    <AmountInput>
+      <AmountInputDisplay />
+      <AmountInputControls>
+        <AmountInputPresets />
+        <AmountInputActions />
+      </AmountInputControls>
+    </AmountInput>
+  ),
 });
 
 export const amount_inputLibrary = createLibrary({

@@ -55,11 +55,16 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { ProgressSteps } from "@/components/ui/progress-steps";
+import {
+  ProgressSteps,
+  ProgressStepsList,
+} from "@/components/ui/progress-steps";
 ```
 
 ```tsx
-<ProgressSteps />
+<ProgressSteps>
+  <ProgressStepsList />
+</ProgressSteps>
 ```
 
 ## Composition
@@ -77,17 +82,21 @@ ProgressSteps
 Register `ProgressSteps` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { ProgressSteps } from "@/components/ui/progress-steps";
+import {
+  ProgressSteps,
+  ProgressStepsList,
+} from "@/components/ui/progress-steps";
 
 const OpenUIProgressSteps = defineComponent({
   name: "ProgressSteps",
   description:
     "Progress indicator with horizontal or vertical layout and step statuses.",
   props: z.object({}),
-  component: () => <ProgressSteps />,
+  component: () => (
+    <ProgressSteps>
+      <ProgressStepsList />
+    </ProgressSteps>
+  ),
 });
 
 export const progress_stepsLibrary = createLibrary({

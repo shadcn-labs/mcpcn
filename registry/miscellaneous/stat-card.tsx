@@ -152,7 +152,7 @@ const StatCardRoot = ({
   className,
   data,
   ...props
-}: StatCardProps) => {
+}: StatCardProps & { children: React.ReactNode }) => {
   const context: StatCardContextValue = {
     stats: data?.stats ?? DEFAULT_STATS,
   };
@@ -160,7 +160,7 @@ const StatCardRoot = ({
   return (
     <StatCardContext.Provider value={context}>
       <div className={cn("w-full", className)} {...props}>
-        {children ?? <StatCardList />}
+        {children}
       </div>
     </StatCardContext.Provider>
   );

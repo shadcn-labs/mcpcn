@@ -1,7 +1,14 @@
 "use client";
 
-import { EventConfirmation } from "@/registry/events/event-confirmation";
+import {
+  EventConfirmation,
+  EventConfirmationContent,
+} from "@/registry/events/event-confirmation";
 
 export default function EventConfirmationDemo() {
-  return <EventConfirmation />;
+  return (
+    <EventConfirmation>
+      <EventConfirmationContent />
+    </EventConfirmation>
+  );
 }

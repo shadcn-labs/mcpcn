@@ -1,7 +1,11 @@
 "use client";
 
-import { ProductList } from "@/registry/list/product-list";
+import { ProductList, ProductListContent } from "@/registry/list/product-list";
 
 export default function ProductListGridDemo() {
-  return <ProductList appearance={{ variant: "grid" }} />;
+  return (
+    <ProductList appearance={{ variant: "grid" }}>
+      <ProductListContent />
+    </ProductList>
+  );
 }

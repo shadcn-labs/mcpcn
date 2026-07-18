@@ -166,9 +166,12 @@ export const MessageBubbleContent = (props: MessageBubbleProps) => {
   return <MessageBubbleView {...context} {...props} />;
 };
 
-const MessageBubbleRoot = ({ children, ...props }: MessageBubbleProps) => (
+const MessageBubbleRoot = ({
+  children,
+  ...props
+}: MessageBubbleProps & { children: React.ReactNode }) => (
   <MessageBubbleContext.Provider value={props}>
-    {children ?? <MessageBubbleContent />}
+    {children}
   </MessageBubbleContext.Provider>
 );
 

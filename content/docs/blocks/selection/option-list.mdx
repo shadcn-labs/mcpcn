@@ -49,11 +49,21 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { OptionList } from "@/components/ui/option-list";
+import {
+  OptionList,
+  OptionListActions,
+  OptionListContent,
+  OptionListOptions,
+} from "@/components/ui/option-list";
 ```
 
 ```tsx
-<OptionList />
+<OptionList>
+  <OptionListContent>
+    <OptionListOptions />
+    <OptionListActions />
+  </OptionListContent>
+</OptionList>
 ```
 
 ## Composition
@@ -73,17 +83,26 @@ OptionList
 Register `OptionList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { OptionList } from "@/components/ui/option-list";
+import {
+  OptionList,
+  OptionListActions,
+  OptionListContent,
+  OptionListOptions,
+} from "@/components/ui/option-list";
 
 const OpenUIOptionList = defineComponent({
   name: "OptionList",
   description:
     "Tag-style option selector with single or multiple selection modes.",
   props: z.object({}),
-  component: () => <OptionList />,
+  component: () => (
+    <OptionList>
+      <OptionListContent>
+        <OptionListOptions />
+        <OptionListActions />
+      </OptionListContent>
+    </OptionList>
+  ),
 });
 
 export const option_listLibrary = createLibrary({

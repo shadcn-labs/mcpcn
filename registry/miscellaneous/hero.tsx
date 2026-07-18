@@ -307,7 +307,7 @@ export const HeroContent = ({
   children,
   className,
   ...props
-}: ComponentProps<"div">) => (
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
   <div
     className={cn(
       "flex flex-col items-center justify-center px-6 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24",
@@ -315,15 +315,7 @@ export const HeroContent = ({
     )}
     {...props}
   >
-    {children ?? (
-      <>
-        <HeroLogos />
-        <HeroTitle />
-        <HeroDescription />
-        <HeroActions />
-        <HeroTechLogos />
-      </>
-    )}
+    {children}
   </div>
 );
 
@@ -333,7 +325,7 @@ const HeroRoot = ({
   className,
   data,
   ...props
-}: HeroProps) => {
+}: HeroProps & { children: React.ReactNode }) => {
   const context: HeroContextValue = {
     data: data ?? DEFAULT_HERO,
     onPrimaryClick: actions?.onPrimaryClick,
@@ -346,7 +338,7 @@ const HeroRoot = ({
         className={cn("w-full rounded-xl border bg-card shadow-sm", className)}
         {...props}
       >
-        {children ?? <HeroContent />}
+        {children}
       </section>
     </HeroContext.Provider>
   );

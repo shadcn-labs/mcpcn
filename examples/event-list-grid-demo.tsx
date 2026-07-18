@@ -1,7 +1,11 @@
 "use client";
 
-import { EventList } from "@/registry/events/event-list";
+import { EventList, EventListContent } from "@/registry/events/event-list";
 
 export default function EventListGridDemo() {
-  return <EventList appearance={{ variant: "grid" }} />;
+  return (
+    <EventList appearance={{ variant: "grid" }}>
+      <EventListContent />
+    </EventList>
+  );
 }

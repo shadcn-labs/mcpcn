@@ -1,7 +1,21 @@
 "use client";
 
-import { AmountInput } from "@/registry/payment/amount-input";
+import {
+  AmountInput,
+  AmountInputActions,
+  AmountInputControls,
+  AmountInputDisplay,
+  AmountInputPresets,
+} from "@/registry/payment/amount-input";
 
 export default function AmountInputDemo() {
-  return <AmountInput />;
+  return (
+    <AmountInput>
+      <AmountInputDisplay />
+      <AmountInputControls>
+        <AmountInputPresets />
+        <AmountInputActions />
+      </AmountInputControls>
+    </AmountInput>
+  );
 }

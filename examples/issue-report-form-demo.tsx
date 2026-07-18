@@ -1,7 +1,14 @@
 "use client";
 
-import { IssueReportForm } from "@/registry/form/issue-report-form";
+import {
+  IssueReportForm,
+  IssueReportFormContent,
+} from "@/registry/form/issue-report-form";
 
 export default function IssueReportFormDemo() {
-  return <IssueReportForm />;
+  return (
+    <IssueReportForm>
+      <IssueReportFormContent />
+    </IssueReportForm>
+  );
 }

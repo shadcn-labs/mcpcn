@@ -49,11 +49,13 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { StatCard } from "@/components/ui/stat-card";
+import { StatCard, StatCardList } from "@/components/ui/stat-card";
 ```
 
 ```tsx
-<StatCard />
+<StatCard>
+  <StatCardList />
+</StatCard>
 ```
 
 ## Composition
@@ -71,17 +73,18 @@ StatCard
 Register `StatCard` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { StatCard } from "@/components/ui/stat-card";
+import { StatCard, StatCardList } from "@/components/ui/stat-card";
 
 const OpenUIStatCard = defineComponent({
   name: "StatCard",
   description:
     "Scrollable stat cards with values, trends, and change indicators.",
   props: z.object({}),
-  component: () => <StatCard />,
+  component: () => (
+    <StatCard>
+      <StatCardList />
+    </StatCard>
+  ),
 });
 
 export const stat_cardLibrary = createLibrary({

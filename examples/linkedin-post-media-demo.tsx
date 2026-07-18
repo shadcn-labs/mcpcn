@@ -1,6 +1,15 @@
 "use client";
 
-import { LinkedInPost } from "@/registry/social/linkedin-post";
+import {
+  LinkedInPost,
+  LinkedInPostBody,
+  LinkedInPostContent,
+  LinkedInPostEngagement,
+  LinkedInPostFooter,
+  LinkedInPostHeader,
+  LinkedInPostMain,
+  LinkedInPostMedia,
+} from "@/registry/social/linkedin-post";
 
 export default function LinkedInPostMediaDemo() {
   return (
@@ -18,6 +27,16 @@ export default function LinkedInPostMediaDemo() {
         time: "2h",
         topReactions: ["like", "celebrate", "insightful"],
       }}
-    />
+    >
+      <LinkedInPostContent>
+        <LinkedInPostMain>
+          <LinkedInPostHeader />
+          <LinkedInPostBody />
+        </LinkedInPostMain>
+        <LinkedInPostMedia />
+        <LinkedInPostEngagement />
+        <LinkedInPostFooter />
+      </LinkedInPostContent>
+    </LinkedInPost>
   );
 }

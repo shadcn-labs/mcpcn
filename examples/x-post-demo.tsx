@@ -1,7 +1,25 @@
 "use client";
 
-import { XPost } from "@/registry/social/x-post";
+import {
+  XPost,
+  XPostActions,
+  XPostAvatar,
+  XPostContent,
+  XPostHeader,
+  XPostText,
+} from "@/registry/social/x-post";
 
 export default function XPostDemo() {
-  return <XPost />;
+  return (
+    <XPost>
+      <div className="flex gap-3">
+        <XPostAvatar />
+        <XPostContent>
+          <XPostHeader />
+          <XPostText />
+          <XPostActions />
+        </XPostContent>
+      </div>
+    </XPost>
+  );
 }

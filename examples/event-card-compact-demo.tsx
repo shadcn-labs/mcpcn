@@ -1,7 +1,11 @@
 "use client";
 
-import { EventCard } from "@/registry/events/event-card";
+import { EventCard, EventCardContent } from "@/registry/events/event-card";
 
 export default function EventCardCompactDemo() {
-  return <EventCard appearance={{ variant: "compact" }} />;
+  return (
+    <EventCard appearance={{ variant: "compact" }}>
+      <EventCardContent />
+    </EventCard>
+  );
 }

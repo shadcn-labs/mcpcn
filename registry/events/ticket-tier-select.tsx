@@ -293,44 +293,45 @@ export const TicketTierContent = ({
   children,
   className,
   ...props
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
+  <div className={cn("flex flex-col gap-6 lg:flex-row", className)} {...props}>
+    {children}
+  </div>
+);
+
+export const TicketTierHeader = ({
+  children,
+  className,
+  ...props
 }: ComponentProps<"div">) => {
-  const { checkout, event, selectionsList } = useTicketTierSelect();
+  const { event } = useTicketTierSelect();
   return (
-    <div
-      className={cn("flex flex-col gap-6 lg:flex-row", className)}
-      {...props}
-    >
+    <div className={cn("mb-6 text-center", className)} {...props}>
       {children ?? (
         <>
-          <div className="flex-1">
-            {(event?.title || event?.date) && (
-              <div className="mb-6 text-center">
-                {event.title && (
-                  <h2 className="font-semibold text-xl">{event.title}</h2>
-                )}
-                {event.date && (
-                  <p className="mt-1 text-muted-foreground text-sm">
-                    {event.date}
-                  </p>
-                )}
-              </div>
-            )}
-            <TicketTierOptions />
-            <div className="mt-6">
-              <Button
-                className="w-full"
-                disabled={selectionsList.length === 0}
-                onClick={checkout}
-                size="lg"
-              >
-                Check out
-              </Button>
-            </div>
-          </div>
-          <TicketOrderSummary />
+          <h2 className="font-semibold text-xl">{event?.title}</h2>
+          <p className="mt-1 text-muted-foreground text-sm">{event?.date}</p>
         </>
       )}
     </div>
+  );
+};
+
+export const TicketTierCheckout = ({
+  children,
+  ...props
+}: ComponentProps<typeof Button>) => {
+  const { checkout, selectionsList } = useTicketTierSelect();
+  return (
+    <Button
+      className="w-full"
+      disabled={selectionsList.length === 0}
+      onClick={checkout}
+      size="lg"
+      {...props}
+    >
+      {children ?? "Check out"}
+    </Button>
   );
 };
 
@@ -342,7 +343,7 @@ const TicketTierSelectRoot = ({
   control,
   data,
   ...props
-}: TicketTierSelectProps) => {
+}: TicketTierSelectProps & { children: React.ReactNode }) => {
   const tiers = data?.tiers ?? DEFAULT_TIERS;
   const [selections, setSelections] = useState(control?.selections ?? {});
   const selectionsList = Object.entries(selections).flatMap(
@@ -401,7 +402,7 @@ const TicketTierSelectRoot = ({
         className={cn("rounded-xl border bg-card p-6", className)}
         {...props}
       >
-        {children ?? <TicketTierContent />}
+        {children}
       </div>
     </TicketTierSelectContext.Provider>
   );

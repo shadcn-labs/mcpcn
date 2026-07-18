@@ -49,11 +49,22 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { OrderConfirm } from "@/components/ui/order-confirm";
+import {
+  OrderConfirm,
+  OrderConfirmContent,
+  OrderConfirmFooter,
+  OrderConfirmProduct,
+} from "@/components/ui/order-confirm";
 ```
 
 ```tsx
-<OrderConfirm />
+<OrderConfirm>
+  <OrderConfirmContent>
+    <OrderConfirmProduct />
+    <div className="border-t" />
+    <OrderConfirmFooter />
+  </OrderConfirmContent>
+</OrderConfirm>
 ```
 
 ## Composition
@@ -74,17 +85,27 @@ OrderConfirm
 Register `OrderConfirm` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { OrderConfirm } from "@/components/ui/order-confirm";
+import {
+  OrderConfirm,
+  OrderConfirmContent,
+  OrderConfirmFooter,
+  OrderConfirmProduct,
+} from "@/components/ui/order-confirm";
 
 const OpenUIOrderConfirm = defineComponent({
   name: "OrderConfirm",
   description:
     "Order confirmation with product image, delivery info, and confirm action.",
   props: z.object({}),
-  component: () => <OrderConfirm />,
+  component: () => (
+    <OrderConfirm>
+      <OrderConfirmContent>
+        <OrderConfirmProduct />
+        <div className="border-t" />
+        <OrderConfirmFooter />
+      </OrderConfirmContent>
+    </OrderConfirm>
+  ),
 });
 
 export const order_confirmLibrary = createLibrary({

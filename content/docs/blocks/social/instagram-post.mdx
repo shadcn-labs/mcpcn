@@ -55,11 +55,29 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { InstagramPost } from "@/components/ui/instagram-post";
+import {
+  InstagramPost,
+  InstagramPostActions,
+  InstagramPostCaption,
+  InstagramPostContent,
+  InstagramPostFooter,
+  InstagramPostHeader,
+  InstagramPostLikes,
+  InstagramPostMedia,
+} from "@/components/ui/instagram-post";
 ```
 
 ```tsx
-<InstagramPost />
+<InstagramPost>
+  <InstagramPostHeader />
+  <InstagramPostMedia />
+  <InstagramPostContent>
+    <InstagramPostActions />
+    <InstagramPostLikes />
+    <InstagramPostCaption />
+    <InstagramPostFooter />
+  </InstagramPostContent>
+</InstagramPost>
 ```
 
 ## Composition
@@ -68,10 +86,13 @@ Use the following composition to build an `InstagramPost`:
 
 ```text
 InstagramPost
-├── InstagramPostActions
-├── InstagramPostContent
 ├── InstagramPostHeader
-└── InstagramPostMedia
+├── InstagramPostMedia
+└── InstagramPostContent
+    ├── InstagramPostActions
+    ├── InstagramPostLikes
+    ├── InstagramPostCaption
+    └── InstagramPostFooter
 ```
 
 ## OpenUI Integration
@@ -79,16 +100,33 @@ InstagramPost
 Register `InstagramPost` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { InstagramPost } from "@/components/ui/instagram-post";
+import {
+  InstagramPost,
+  InstagramPostActions,
+  InstagramPostCaption,
+  InstagramPostContent,
+  InstagramPostFooter,
+  InstagramPostHeader,
+  InstagramPostLikes,
+  InstagramPostMedia,
+} from "@/components/ui/instagram-post";
 
 const OpenUIInstagramPost = defineComponent({
   name: "InstagramPost",
   description: "Instagram post card with image and engagement.",
   props: z.object({}),
-  component: () => <InstagramPost />,
+  component: () => (
+    <InstagramPost>
+      <InstagramPostHeader />
+      <InstagramPostMedia />
+      <InstagramPostContent>
+        <InstagramPostActions />
+        <InstagramPostLikes />
+        <InstagramPostCaption />
+        <InstagramPostFooter />
+      </InstagramPostContent>
+    </InstagramPost>
+  ),
 });
 
 export const instagram_postLibrary = createLibrary({

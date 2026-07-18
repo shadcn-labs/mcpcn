@@ -49,11 +49,27 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { XPost } from "@/components/ui/x-post";
+import {
+  XPost,
+  XPostActions,
+  XPostAvatar,
+  XPostContent,
+  XPostHeader,
+  XPostText,
+} from "@/components/ui/x-post";
 ```
 
 ```tsx
-<XPost />
+<XPost>
+  <div className="flex gap-3">
+    <XPostAvatar />
+    <XPostContent>
+      <XPostHeader />
+      <XPostText />
+      <XPostActions />
+    </XPostContent>
+  </div>
+</XPost>
 ```
 
 ## Composition
@@ -62,9 +78,11 @@ Use the following composition to build an `XPost`:
 
 ```text
 XPost
-├── XPostActions
-├── XPostContent
-└── XPostHeader
+├── XPostAvatar
+└── XPostContent
+    ├── XPostHeader
+    ├── XPostText
+    └── XPostActions
 ```
 
 ## OpenUI Integration
@@ -72,16 +90,31 @@ XPost
 Register `XPost` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { XPost } from "@/components/ui/x-post";
+import {
+  XPost,
+  XPostActions,
+  XPostAvatar,
+  XPostContent,
+  XPostHeader,
+  XPostText,
+} from "@/components/ui/x-post";
 
 const OpenUIXPost = defineComponent({
   name: "XPost",
   description: "X (Twitter) post card with engagement metrics.",
   props: z.object({}),
-  component: () => <XPost />,
+  component: () => (
+    <XPost>
+      <div className="flex gap-3">
+        <XPostAvatar />
+        <XPostContent>
+          <XPostHeader />
+          <XPostText />
+          <XPostActions />
+        </XPostContent>
+      </div>
+    </XPost>
+  ),
 });
 
 export const x_postLibrary = createLibrary({

@@ -1,6 +1,14 @@
 "use client";
 
-import { Hero } from "@/registry/miscellaneous/hero";
+import {
+  Hero,
+  HeroActions,
+  HeroContent,
+  HeroDescription,
+  HeroLogos,
+  HeroTechLogos,
+  HeroTitle,
+} from "@/registry/miscellaneous/hero";
 
 export default function HeroTechLogosDemo() {
   return (
@@ -36,6 +44,14 @@ export default function HeroTechLogosDemo() {
         techLogosLabel: "Built with open-source technologies",
         title: "Build your next project with Acme",
       }}
-    />
+    >
+      <HeroContent>
+        <HeroLogos />
+        <HeroTitle />
+        <HeroDescription />
+        <HeroActions />
+        <HeroTechLogos />
+      </HeroContent>
+    </Hero>
   );
 }

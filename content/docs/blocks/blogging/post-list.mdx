@@ -49,11 +49,13 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { PostList } from "@/components/ui/post-list";
+import { PostList, PostListContent } from "@/components/ui/post-list";
 ```
 
 ```tsx
-<PostList />
+<PostList>
+  <PostListContent />
+</PostList>
 ```
 
 ## Composition
@@ -88,17 +90,18 @@ PostList
 Register `PostList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { PostList } from "@/components/ui/post-list";
+import { PostList, PostListContent } from "@/components/ui/post-list";
 
 const OpenUIPostList = defineComponent({
   name: "PostList",
   description:
     "Post list with list, grid, carousel, and fullwidth variants. Fullwidth mode shows paginated posts.",
   props: z.object({}),
-  component: () => <PostList />,
+  component: () => (
+    <PostList>
+      <PostListContent />
+    </PostList>
+  ),
 });
 
 export const post_listLibrary = createLibrary({

@@ -55,11 +55,16 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { MessageBubble } from "@/components/ui/message-bubble";
+import {
+  MessageBubble,
+  MessageBubbleContent,
+} from "@/components/ui/message-bubble";
 ```
 
 ```tsx
-<MessageBubble />
+<MessageBubble>
+  <MessageBubbleContent />
+</MessageBubble>
 ```
 
 ## Composition
@@ -102,17 +107,21 @@ MessageBubble
 Register `MessageBubble` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { MessageBubble } from "@/components/ui/message-bubble";
+import {
+  MessageBubble,
+  MessageBubbleContent,
+} from "@/components/ui/message-bubble";
 
 const OpenUIMessageBubble = defineComponent({
   name: "MessageBubble",
   description:
     "Chat message bubbles with text, image, voice, and reaction variants.",
   props: z.object({}),
-  component: () => <MessageBubble />,
+  component: () => (
+    <MessageBubble>
+      <MessageBubbleContent />
+    </MessageBubble>
+  ),
 });
 
 export const message_bubbleLibrary = createLibrary({

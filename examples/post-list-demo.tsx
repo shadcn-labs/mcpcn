@@ -1,7 +1,11 @@
 "use client";
 
-import { PostList } from "@/registry/blogging/post-list";
+import { PostList, PostListContent } from "@/registry/blogging/post-list";
 
 export default function PostListDemo() {
-  return <PostList />;
+  return (
+    <PostList>
+      <PostListContent />
+    </PostList>
+  );
 }

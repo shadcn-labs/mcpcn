@@ -1,7 +1,19 @@
 "use client";
 
-import { TagSelect } from "@/registry/selection/tag-select";
+import {
+  TagSelect,
+  TagSelectActions,
+  TagSelectContent,
+  TagSelectTags,
+} from "@/registry/selection/tag-select";
 
 export default function TagSelectDemo() {
-  return <TagSelect />;
+  return (
+    <TagSelect>
+      <TagSelectContent>
+        <TagSelectTags />
+        <TagSelectActions />
+      </TagSelectContent>
+    </TagSelect>
+  );
 }

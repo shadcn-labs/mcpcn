@@ -353,7 +353,7 @@ const EventCardRoot = ({
   className,
   data,
   ...props
-}: EventCardProps) => {
+}: EventCardProps & { children: React.ReactNode }) => {
   const event = data?.event ?? DEFAULT_EVENT;
   const context: EventCardContextValue = {
     event,
@@ -371,7 +371,7 @@ const EventCardRoot = ({
         type="button"
         {...props}
       >
-        {children ?? <EventCardContent />}
+        {children}
       </button>
     </EventCardContext.Provider>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { Repeat2 } from "lucide-react";
-import type { ImgHTMLAttributes, JSX, ReactNode } from "react";
+import type { ComponentProps, ImgHTMLAttributes, JSX, ReactNode } from "react";
 import React, {
   createContext,
   createElement,
@@ -10,6 +10,8 @@ import React, {
   useRef,
   useState,
 } from "react";
+
+import { cn } from "@/lib/utils";
 
 const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
   createElement("img", props);
@@ -23,34 +25,36 @@ type ReactionType =
   | "insightful"
   | "funny";
 
+export interface LinkedInPostData {
+  /** Author's display name. */
+  author?: string;
+  /** Author's professional headline or title. */
+  headline?: string;
+  /** Avatar letter fallback or image URL for the profile picture. */
+  avatar?: string;
+  /** Post text content (supports line breaks and hashtags). */
+  content?: string;
+  /** Time since posted (e.g., "2h"). */
+  time?: string;
+  /** Optional image URL for the post. */
+  image?: string;
+  /** Number of reactions (e.g., "1,234" or "1.2K"). */
+  reactions?: string;
+  /** Top reaction types to display (max 3 icons shown). */
+  topReactions?: ReactionType[];
+  /** Number of comments (e.g., "56"). */
+  comments?: string;
+  /** Number of reposts (e.g., "12"). */
+  reposts?: string;
+  /** URL to the original LinkedIn post. If provided, shows the LinkedIn icon. */
+  postUrl?: string;
+  /** URL for the repost action. If provided, shows the repost button in footer. */
+  repostUrl?: string;
+}
+
 export interface LinkedInPostProps {
-  children?: ReactNode;
-  data?: {
-    /** Author's display name. */
-    author?: string;
-    /** Author's professional headline or title. */
-    headline?: string;
-    /** Avatar letter fallback or image URL for the profile picture. */
-    avatar?: string;
-    /** Post text content (supports line breaks and hashtags). */
-    content?: string;
-    /** Time since posted (e.g., "2h"). */
-    time?: string;
-    /** Optional image URL for the post. */
-    image?: string;
-    /** Number of reactions (e.g., "1,234" or "1.2K"). */
-    reactions?: string;
-    /** Top reaction types to display (max 3 icons shown). */
-    topReactions?: ReactionType[];
-    /** Number of comments (e.g., "56"). */
-    comments?: string;
-    /** Number of reposts (e.g., "12"). */
-    reposts?: string;
-    /** URL to the original LinkedIn post. If provided, shows the LinkedIn icon. */
-    postUrl?: string;
-    /** URL for the repost action. If provided, shows the repost button in footer. */
-    repostUrl?: string;
-  };
+  children: ReactNode;
+  data?: LinkedInPostData;
   appearance?: {
     /** Maximum number of lines to show before truncating. @default 3 */
     maxLines?: number;
@@ -72,7 +76,14 @@ const DEFAULT_POST = {
   topReactions: ["like", "celebrate", "love"],
 } satisfies NonNullable<LinkedInPostProps["data"]>;
 
-const LinkedInPostContext = createContext<LinkedInPostProps | null>(null);
+interface LinkedInPostContextValue {
+  appearance?: LinkedInPostProps["appearance"];
+  data: LinkedInPostData;
+}
+
+const LinkedInPostContext = createContext<LinkedInPostContextValue | null>(
+  null
+);
 
 export const useLinkedInPost = () => {
   const context = useContext(LinkedInPostContext);
@@ -335,27 +346,76 @@ const reactionIcons: Record<ReactionType, JSX.Element> = {
   ),
 };
 
-const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
-  const resolved: NonNullable<LinkedInPostProps["data"]> = data ?? DEFAULT_POST;
-  const {
-    author,
-    headline,
-    avatar,
-    content,
-    time,
-    image,
-    reactions,
-    topReactions,
-    comments,
-    reposts,
-    postUrl,
-    repostUrl,
-  } = resolved;
+export const LinkedInPostContent = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div"> & { children: ReactNode }) => (
+  <div className={cn("rounded-xl border bg-card", className)} {...props}>
+    {children}
+  </div>
+);
+
+export const LinkedInPostMain = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div"> & { children: ReactNode }) => (
+  <div className={cn("p-4", className)} {...props}>
+    {children}
+  </div>
+);
+
+export const LinkedInPostHeader = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data } = useLinkedInPost();
+  const { author, headline, avatar, time, postUrl } = data;
+
+  return (
+    <div className={cn("flex gap-3", className)} {...props}>
+      {children ?? (
+        <>
+          <div className="size-12 rounded-full bg-[#0A66C2] text-white flex items-center justify-center font-semibold shrink-0">
+            {avatar}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="font-semibold text-sm">{author}</p>
+                <p className="text-xs text-muted-foreground line-clamp-1">
+                  {headline}
+                </p>
+                <p className="text-xs text-muted-foreground">{time}</p>
+              </div>
+              <a
+                href={postUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#0A66C2] hover:text-[#004182] transition-colors"
+                aria-label="View on LinkedIn"
+              >
+                <LinkedInIcon className="size-5" />
+              </a>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export const LinkedInPostBody = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { appearance, data } = useLinkedInPost();
+  const { content } = data;
 
   const { maxLines = 3 } = appearance ?? {};
-
-  const hasEngagement = reactions || comments || reposts;
-
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTruncated, setIsTruncated] = useState(false);
   const contentRef = useRef<HTMLParagraphElement>(null);
@@ -367,43 +427,10 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
     }
   }, [content, maxLines]);
 
-  const handleExpand = () => {
-    setIsExpanded(true);
-  };
-
   return (
-    <div className="rounded-xl border bg-card">
-      <div className="p-4">
-        <div className="flex gap-3">
-          {avatar && (
-            <div className="size-12 rounded-full bg-[#0A66C2] text-white flex items-center justify-center font-semibold shrink-0">
-              {avatar}
-            </div>
-          )}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="font-semibold text-sm">{author}</p>
-                <p className="text-xs text-muted-foreground line-clamp-1">
-                  {headline}
-                </p>
-                <p className="text-xs text-muted-foreground">{time}</p>
-              </div>
-              {postUrl && (
-                <a
-                  href={postUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#0A66C2] hover:text-[#004182] transition-colors"
-                  aria-label="View on LinkedIn"
-                >
-                  <LinkedInIcon className="size-5" />
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="mt-3">
+    <div className={cn("mt-3", className)} {...props}>
+      {children ?? (
+        <>
           <p
             ref={contentRef}
             className="text-sm whitespace-pre-wrap"
@@ -422,29 +449,55 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
           </p>
           {isTruncated && !isExpanded && (
             <button
-              onClick={handleExpand}
+              onClick={() => setIsExpanded(true)}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              type="button"
             >
               ...more
             </button>
           )}
-        </div>
-      </div>
-
-      {/* Image section */}
-      {image && (
-        <div className="w-full">
-          <BlockImage
-            src={image}
-            alt="Post image"
-            className="w-full object-cover max-h-[400px]"
-          />
-        </div>
+        </>
       )}
+    </div>
+  );
+};
 
-      {/* Engagement stats - reactions, comments, reposts */}
-      {hasEngagement && (
-        <div className="px-4 py-2 flex items-center justify-between text-xs text-muted-foreground">
+export const LinkedInPostMedia = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data } = useLinkedInPost();
+  return (
+    <div className={cn("w-full", className)} {...props}>
+      {children ?? (
+        <BlockImage
+          src={data.image}
+          alt="Post image"
+          className="w-full object-cover max-h-[400px]"
+        />
+      )}
+    </div>
+  );
+};
+
+export const LinkedInPostEngagement = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data } = useLinkedInPost();
+  const { comments, reactions, reposts, topReactions } = data;
+  return (
+    <div
+      className={cn(
+        "px-4 py-2 flex items-center justify-between text-xs text-muted-foreground",
+        className
+      )}
+      {...props}
+    >
+      {children ?? (
+        <>
           <div className="flex items-center gap-1">
             {topReactions && topReactions.length > 0 && (
               <div className="flex -space-x-1">
@@ -465,35 +518,47 @@ const LinkedInPostView = ({ data, appearance }: LinkedInPostProps) => {
             {comments && <span>{comments} comments</span>}
             {reposts && <span>{reposts} reposts</span>}
           </div>
-        </div>
-      )}
-
-      {/* Footer with repost button - only shows if repostUrl is provided */}
-      {repostUrl && (
-        <div className="px-4 py-2 border-t flex justify-end">
-          <a
-            href={repostUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 hover:bg-muted rounded-md transition-colors text-sm text-muted-foreground"
-          >
-            <Repeat2 className="size-5" />
-            <span>Repost</span>
-          </a>
-        </div>
+        </>
       )}
     </div>
   );
 };
 
-export const LinkedInPostContent = (props: LinkedInPostProps) => {
-  const context = useLinkedInPost();
-  return <LinkedInPostView {...context} {...props} />;
+export const LinkedInPostFooter = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data } = useLinkedInPost();
+  return (
+    <div
+      className={cn("px-4 py-2 border-t flex justify-end", className)}
+      {...props}
+    >
+      {children ?? (
+        <a
+          href={data.repostUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-2 hover:bg-muted rounded-md transition-colors text-sm text-muted-foreground"
+        >
+          <Repeat2 className="size-5" />
+          <span>Repost</span>
+        </a>
+      )}
+    </div>
+  );
 };
 
-const LinkedInPostRoot = ({ children, ...props }: LinkedInPostProps) => (
-  <LinkedInPostContext.Provider value={props}>
-    {children ?? <LinkedInPostContent />}
+const LinkedInPostRoot = ({
+  children,
+  appearance,
+  data,
+}: LinkedInPostProps) => (
+  <LinkedInPostContext.Provider
+    value={{ appearance, data: { ...DEFAULT_POST, ...data } }}
+  >
+    {children}
   </LinkedInPostContext.Provider>
 );
 

@@ -209,15 +209,9 @@ export const OrderConfirmContent = ({
   children,
   className,
   ...props
-}: ComponentProps<"div">) => (
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
   <div className={className} {...props}>
-    {children ?? (
-      <>
-        <OrderConfirmProduct />
-        <div className="border-t" />
-        <OrderConfirmFooter />
-      </>
-    )}
+    {children}
   </div>
 );
 
@@ -229,7 +223,7 @@ const OrderConfirmRoot = ({
   control,
   data,
   ...props
-}: OrderConfirmProps) => {
+}: OrderConfirmProps & { children: React.ReactNode }) => {
   const currency = appearance?.currency ?? "USD";
   const context: OrderConfirmContextValue = {
     data: data ?? DEFAULT_ORDER,
@@ -247,7 +241,7 @@ const OrderConfirmRoot = ({
         className={cn("w-full rounded-md bg-card sm:rounded-lg", className)}
         {...props}
       >
-        {children ?? <OrderConfirmContent />}
+        {children}
       </div>
     </OrderConfirmContext.Provider>
   );

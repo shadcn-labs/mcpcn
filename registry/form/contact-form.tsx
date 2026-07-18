@@ -448,20 +448,12 @@ export const ContactFormContent = ({
   children,
   className,
   ...props
-}: ComponentProps<"div">) => {
+}: ComponentProps<"div"> & { children: React.ReactNode }) => {
   useContactForm();
 
   return (
     <div className={cn("space-y-4", className)} {...props}>
-      {children ?? (
-        <>
-          <ContactFormHeader className="mb-6" />
-          <ContactFormNameFields />
-          <ContactFormContactFields />
-          <ContactFormMessageField />
-          <ContactFormActions />
-        </>
-      )}
+      {children}
     </div>
   );
 };
@@ -474,7 +466,7 @@ const ContactFormRoot = ({
   onSubmit,
   submitLabel = "Send Message",
   ...props
-}: ContactFormProps) => {
+}: ContactFormProps & { children: React.ReactNode }) => {
   const id = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -567,7 +559,7 @@ const ContactFormRoot = ({
         onSubmit={handleSubmit}
         {...props}
       >
-        {children ?? <ContactFormContent />}
+        {children}
       </form>
     </ContactFormContext.Provider>
   );

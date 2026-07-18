@@ -55,11 +55,16 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { PaymentConfirmed } from "@/components/ui/payment-confirmed";
+import {
+  PaymentConfirmed,
+  PaymentConfirmedContent,
+} from "@/components/ui/payment-confirmed";
 ```
 
 ```tsx
-<PaymentConfirmed />
+<PaymentConfirmed>
+  <PaymentConfirmedContent />
+</PaymentConfirmed>
 ```
 
 ## Composition
@@ -90,17 +95,21 @@ PaymentConfirmed
 Register `PaymentConfirmed` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { PaymentConfirmed } from "@/components/ui/payment-confirmed";
+import {
+  PaymentConfirmed,
+  PaymentConfirmedContent,
+} from "@/components/ui/payment-confirmed";
 
 const OpenUIPaymentConfirmed = defineComponent({
   name: "PaymentConfirmed",
   description:
     "Payment confirmation card with product image, price, delivery info, and tracking button. Supports default and compressed variants.",
   props: z.object({}),
-  component: () => <PaymentConfirmed />,
+  component: () => (
+    <PaymentConfirmed>
+      <PaymentConfirmedContent />
+    </PaymentConfirmed>
+  ),
 });
 
 export const payment_confirmedLibrary = createLibrary({

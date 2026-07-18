@@ -160,7 +160,7 @@ const StatusBadgeRoot = ({
   className,
   data,
   ...props
-}: StatusBadgeProps) => {
+}: StatusBadgeProps & { children: React.ReactNode }) => {
   const status = data?.status ?? "processing";
   const config = STATUS_CONFIG[status];
   const size = appearance?.size ?? "md";
@@ -183,7 +183,7 @@ const StatusBadgeRoot = ({
         )}
         {...props}
       >
-        {children ?? <StatusBadgeContent />}
+        {children}
       </span>
     </StatusBadgeContext.Provider>
   );

@@ -327,7 +327,7 @@ const PostDetailRoot = ({
   className,
   data,
   ...props
-}: PostDetailProps) => {
+}: PostDetailProps & { children: React.ReactNode }) => {
   const context: PostDetailContextValue = {
     content: data?.content ?? DEFAULT_CONTENT,
     displayMode: appearance?.displayMode ?? "inline",
@@ -342,7 +342,7 @@ const PostDetailRoot = ({
   return (
     <PostDetailContext.Provider value={context}>
       <article className={className} {...props}>
-        {children ?? <PostDetailContent />}
+        {children}
       </article>
     </PostDetailContext.Provider>
   );

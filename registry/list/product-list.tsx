@@ -905,9 +905,12 @@ export const ProductListContent = (props: ProductListProps) => {
   return <ProductListView {...context} {...props} />;
 };
 
-const ProductListRoot = ({ children, ...props }: ProductListProps) => (
+const ProductListRoot = ({
+  children,
+  ...props
+}: ProductListProps & { children: React.ReactNode }) => (
   <ProductListContext.Provider value={props}>
-    {children ?? <ProductListContent />}
+    {children}
   </ProductListContext.Provider>
 );
 

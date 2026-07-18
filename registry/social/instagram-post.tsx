@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 const BlockImage = (props: ImgHTMLAttributes<HTMLImageElement>) =>
   createElement("img", props);
 
-interface InstagramPostData {
+export interface InstagramPostData {
   author?: string;
   avatar?: string;
   caption?: string;
@@ -58,7 +58,11 @@ export const useInstagramPost = () => {
   return context;
 };
 
-export interface InstagramPostProps extends ComponentProps<"article"> {
+export interface InstagramPostProps extends Omit<
+  ComponentProps<"article">,
+  "children"
+> {
+  children: React.ReactNode;
   data?: InstagramPostData;
 }
 
@@ -136,22 +140,22 @@ export const InstagramPostHeader = ({
 };
 
 export const InstagramPostMedia = ({
+  children,
   className,
   ...props
 }: ComponentProps<"div">) => {
   const data = useInstagramPost();
-  if (!data.image) {
-    return null;
-  }
   return (
     <div className={cn("aspect-square bg-muted", className)} {...props}>
-      <BlockImage
-        alt={
-          data.author ? `Instagram post by ${data.author}` : "Instagram post"
-        }
-        className="size-full object-cover"
-        src={data.image}
-      />
+      {children ?? (
+        <BlockImage
+          alt={
+            data.author ? `Instagram post by ${data.author}` : "Instagram post"
+          }
+          className="size-full object-cover"
+          src={data.image}
+        />
+      )}
     </div>
   );
 };
@@ -206,31 +210,52 @@ export const InstagramPostContent = ({
   children,
   className,
   ...props
-}: ComponentProps<"div">) => {
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
+  <div className={cn("space-y-2 p-3", className)} {...props}>
+    {children}
+  </div>
+);
+
+export const InstagramPostLikes = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"p">) => {
   const data = useInstagramPost();
   return (
-    <div className={cn("space-y-2 p-3", className)} {...props}>
+    <p className={cn("font-semibold text-sm", className)} {...props}>
+      {children ?? `${data.likes} likes`}
+    </p>
+  );
+};
+
+export const InstagramPostCaption = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"p">) => {
+  const data = useInstagramPost();
+  return (
+    <p className={cn("text-sm", className)} {...props}>
       {children ?? (
         <>
-          <InstagramPostActions />
-          {data.likes && (
-            <p className="font-semibold text-sm">{data.likes} likes</p>
-          )}
-          {(data.author || data.caption) && (
-            <p className="text-sm">
-              {data.author && (
-                <span className="font-semibold">{data.author}</span>
-              )}
-              {data.author && data.caption && " "}
-              {data.caption}
-            </p>
-          )}
-          {data.time && (
-            <p className="text-muted-foreground text-xs">{data.time}</p>
-          )}
+          <span className="font-semibold">{data.author}</span> {data.caption}
         </>
       )}
-    </div>
+    </p>
+  );
+};
+
+export const InstagramPostFooter = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"p">) => {
+  const data = useInstagramPost();
+  return (
+    <p className={cn("text-muted-foreground text-xs", className)} {...props}>
+      {children ?? data.time}
+    </p>
   );
 };
 
@@ -239,21 +264,15 @@ const InstagramPostRoot = ({
   className,
   data,
   ...props
-}: InstagramPostProps) => {
-  const value = data ?? DEFAULT_POST;
+}: InstagramPostProps & { children: React.ReactNode }) => {
+  const value = { ...DEFAULT_POST, ...data };
   return (
     <InstagramPostContext.Provider value={value}>
       <article
         className={cn("overflow-hidden rounded-xl border bg-card", className)}
         {...props}
       >
-        {children ?? (
-          <>
-            <InstagramPostHeader />
-            <InstagramPostMedia />
-            <InstagramPostContent />
-          </>
-        )}
+        {children}
       </article>
     </InstagramPostContext.Provider>
   );

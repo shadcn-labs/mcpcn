@@ -49,11 +49,13 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { PostCard } from "@/components/ui/post-card";
+import { PostCard, PostCardContent } from "@/components/ui/post-card";
 ```
 
 ```tsx
-<PostCard />
+<PostCard>
+  <PostCardContent />
+</PostCard>
 ```
 
 ## Composition
@@ -110,17 +112,18 @@ PostCard
 Register `PostCard` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { PostCard } from "@/components/ui/post-card";
+import { PostCard, PostCardContent } from "@/components/ui/post-card";
 
 const OpenUIPostCard = defineComponent({
   name: "PostCard",
   description:
     "Post card with image, title, excerpt, author info and read more button. Supports default, compact, horizontal, and covered variants. Includes post-detail for fullscreen view.",
   props: z.object({}),
-  component: () => <PostCard />,
+  component: () => (
+    <PostCard>
+      <PostCardContent />
+    </PostCard>
+  ),
 });
 
 export const post_cardLibrary = createLibrary({

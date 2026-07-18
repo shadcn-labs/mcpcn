@@ -55,11 +55,16 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { EventConfirmation } from "@/components/ui/event-confirmation";
+import {
+  EventConfirmation,
+  EventConfirmationContent,
+} from "@/components/ui/event-confirmation";
 ```
 
 ```tsx
-<EventConfirmation />
+<EventConfirmation>
+  <EventConfirmationContent />
+</EventConfirmation>
 ```
 
 ## Composition
@@ -76,17 +81,21 @@ EventConfirmation
 Register `EventConfirmation` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { EventConfirmation } from "@/components/ui/event-confirmation";
+import {
+  EventConfirmation,
+  EventConfirmationContent,
+} from "@/components/ui/event-confirmation";
 
 const OpenUIEventConfirmation = defineComponent({
   name: "EventConfirmation",
   description:
     "Order confirmation with event details, ticket delivery info, organizer follow, and social sharing.",
   props: z.object({}),
-  component: () => <EventConfirmation />,
+  component: () => (
+    <EventConfirmation>
+      <EventConfirmationContent />
+    </EventConfirmation>
+  ),
 });
 
 export const event_confirmationLibrary = createLibrary({

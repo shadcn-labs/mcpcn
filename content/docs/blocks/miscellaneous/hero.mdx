@@ -49,11 +49,27 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { Hero } from "@/components/ui/hero";
+import {
+  Hero,
+  HeroActions,
+  HeroContent,
+  HeroDescription,
+  HeroLogos,
+  HeroTechLogos,
+  HeroTitle,
+} from "@/components/ui/hero";
 ```
 
 ```tsx
-<Hero />
+<Hero>
+  <HeroContent>
+    <HeroLogos />
+    <HeroTitle />
+    <HeroDescription />
+    <HeroActions />
+    <HeroTechLogos />
+  </HeroContent>
+</Hero>
 ```
 
 ## Composition
@@ -101,17 +117,32 @@ Hero
 Register `Hero` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { Hero } from "@/components/ui/hero";
+import {
+  Hero,
+  HeroActions,
+  HeroContent,
+  HeroDescription,
+  HeroLogos,
+  HeroTechLogos,
+  HeroTitle,
+} from "@/components/ui/hero";
 
 const OpenUIHero = defineComponent({
   name: "Hero",
   description:
     "Landing hero section with optional logos, title, subtitle, CTA buttons, and tech logos footer. Supports image or text logos with separator.",
   props: z.object({}),
-  component: () => <Hero />,
+  component: () => (
+    <Hero>
+      <HeroContent>
+        <HeroLogos />
+        <HeroTitle />
+        <HeroDescription />
+        <HeroActions />
+        <HeroTechLogos />
+      </HeroContent>
+    </Hero>
+  ),
 });
 
 export const heroLibrary = createLibrary({

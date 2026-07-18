@@ -124,7 +124,7 @@ export const YouTubePostPlayer = ({
   );
 };
 
-const YouTubePostMenu = () => (
+export const YouTubePostMenu = () => (
   <DropdownMenu>
     <DropdownMenuTrigger
       render={
@@ -162,39 +162,54 @@ export const YouTubePostInfo = ({
   children,
   className,
   ...props
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
+  <div className={cn("p-3", className)} {...props}>
+    {children}
+  </div>
+);
+
+export const YouTubePostAvatar = ({
+  children,
+  className,
+  ...props
 }: ComponentProps<"div">) => {
   const { data } = useYouTubePost();
   return (
-    <div className={cn("p-3", className)} {...props}>
+    <div
+      className={cn(
+        "flex size-9 shrink-0 items-center justify-center rounded-full bg-red-600 font-semibold text-sm text-white",
+        className
+      )}
+      {...props}
+    >
+      {children ?? data.avatar}
+    </div>
+  );
+};
+
+export const YouTubePostDetails = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const { data } = useYouTubePost();
+  return (
+    <div className={cn("min-w-0 flex-1", className)} {...props}>
       {children ?? (
-        <div className="flex gap-3">
-          {data.avatar && (
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-red-600 font-semibold text-sm text-white">
-              {data.avatar}
-            </div>
-          )}
-          <div className="min-w-0 flex-1">
-            {data.title && (
-              <h3 className="line-clamp-2 font-semibold text-sm leading-tight">
-                {data.title}
-              </h3>
-            )}
-            {data.channel && (
-              <div className="mt-1.5 flex items-center gap-1 text-muted-foreground text-xs">
-                <span>{data.channel}</span>
-                {data.verified && <span>✓</span>}
-              </div>
-            )}
-            {(data.views || data.time) && (
-              <p className="text-muted-foreground text-xs">
-                {data.views}
-                {data.views && data.time && " • "}
-                {data.time}
-              </p>
-            )}
+        <>
+          <h3 className="line-clamp-2 font-semibold text-sm leading-tight">
+            {data.title}
+          </h3>
+          <div className="mt-1.5 flex items-center gap-1 text-muted-foreground text-xs">
+            <span>{data.channel}</span>
+            {data.verified && <span>✓</span>}
           </div>
-          <YouTubePostMenu />
-        </div>
+          <p className="text-muted-foreground text-xs">
+            {data.views}
+            {data.views && data.time && " • "}
+            {data.time}
+          </p>
+        </>
       )}
     </div>
   );
@@ -205,10 +220,10 @@ const YouTubePostRoot = ({
   className,
   data,
   ...props
-}: YouTubePostProps) => {
+}: YouTubePostProps & { children: React.ReactNode }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const context: YouTubePostContextValue = {
-    data: data ?? DEFAULT_POST,
+    data: { ...DEFAULT_POST, ...data },
     isPlaying,
     play: () => setIsPlaying(true),
   };
@@ -218,12 +233,7 @@ const YouTubePostRoot = ({
         className={cn("overflow-hidden rounded-xl border bg-card", className)}
         {...props}
       >
-        {children ?? (
-          <>
-            <YouTubePostPlayer />
-            <YouTubePostInfo />
-          </>
-        )}
+        {children}
       </article>
     </YouTubePostContext.Provider>
   );

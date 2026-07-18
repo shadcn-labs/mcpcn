@@ -1,7 +1,11 @@
 "use client";
 
-import { ProductList } from "@/registry/list/product-list";
+import { ProductList, ProductListContent } from "@/registry/list/product-list";
 
 export default function ProductListDemo() {
-  return <ProductList />;
+  return (
+    <ProductList>
+      <ProductListContent />
+    </ProductList>
+  );
 }

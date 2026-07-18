@@ -49,11 +49,13 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { PostDetail } from "@/components/ui/post-detail";
+import { PostDetail, PostDetailContent } from "@/components/ui/post-detail";
 ```
 
 ```tsx
-<PostDetail />
+<PostDetail>
+  <PostDetailContent />
+</PostDetail>
 ```
 
 ## Composition
@@ -75,17 +77,18 @@ PostDetail
 Register `PostDetail` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { PostDetail } from "@/components/ui/post-detail";
+import { PostDetail, PostDetailContent } from "@/components/ui/post-detail";
 
 const OpenUIPostDetail = defineComponent({
   name: "PostDetail",
   description:
     "Full post view with cover image, author info, content, tags and related posts section.",
   props: z.object({}),
-  component: () => <PostDetail />,
+  component: () => (
+    <PostDetail>
+      <PostDetailContent />
+    </PostDetail>
+  ),
 });
 
 export const post_detailLibrary = createLibrary({

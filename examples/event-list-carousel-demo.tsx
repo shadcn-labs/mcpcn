@@ -1,7 +1,11 @@
 "use client";
 
-import { EventList } from "@/registry/events/event-list";
+import { EventList, EventListContent } from "@/registry/events/event-list";
 
 export default function EventListCarouselDemo() {
-  return <EventList appearance={{ variant: "carousel" }} />;
+  return (
+    <EventList appearance={{ variant: "carousel" }}>
+      <EventListContent />
+    </EventList>
+  );
 }

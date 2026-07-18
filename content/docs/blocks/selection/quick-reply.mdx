@@ -47,11 +47,13 @@ No additional npm dependencies are required.
 ## Usage
 
 ```tsx
-import { QuickReply } from "@/components/ui/quick-reply";
+import { QuickReply, QuickReplyList } from "@/components/ui/quick-reply";
 ```
 
 ```tsx
-<QuickReply />
+<QuickReply>
+  <QuickReplyList />
+</QuickReply>
 ```
 
 ## Composition
@@ -69,16 +71,17 @@ QuickReply
 Register `QuickReply` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { QuickReply } from "@/components/ui/quick-reply";
+import { QuickReply, QuickReplyList } from "@/components/ui/quick-reply";
 
 const OpenUIQuickReply = defineComponent({
   name: "QuickReply",
   description: "Quick reply buttons for common chat responses.",
   props: z.object({}),
-  component: () => <QuickReply />,
+  component: () => (
+    <QuickReply>
+      <QuickReplyList />
+    </QuickReply>
+  ),
 });
 
 export const quick_replyLibrary = createLibrary({

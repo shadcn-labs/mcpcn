@@ -47,6 +47,25 @@ export interface XPostProps extends ComponentProps<"article"> {
   data?: XPostData;
 }
 
+export const XPostAvatar = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
+  const data = useXPost();
+  return (
+    <div
+      className={cn(
+        "flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground font-semibold text-background text-sm",
+        className
+      )}
+      {...props}
+    >
+      {children ?? data.avatar}
+    </div>
+  );
+};
+
 const VerifiedBadge = () => (
   <svg className="size-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
     <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334-4.334 6.5a.75.75 0 0 1-1.156.134l-2.415-2.415a.75.75 0 1 1 1.06-1.06l1.77 1.767 3.825-5.74a.75.75 0 0 1 1.25.833z" />
@@ -168,41 +187,39 @@ export const XPostContent = ({
   children,
   className,
   ...props
-}: ComponentProps<"div">) => {
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
+  <div className={cn("min-w-0 flex-1", className)} {...props}>
+    {children}
+  </div>
+);
+
+export const XPostText = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"p">) => {
   const data = useXPost();
   return (
-    <div className={cn("min-w-0 flex-1", className)} {...props}>
-      {children ?? (
-        <>
-          <XPostHeader />
-          {data.content && (
-            <p className="mt-1 whitespace-pre-wrap text-sm">{data.content}</p>
-          )}
-          <XPostActions />
-        </>
-      )}
-    </div>
+    <p className={cn("mt-1 whitespace-pre-wrap text-sm", className)} {...props}>
+      {children ?? data.content}
+    </p>
   );
 };
 
-const XPostRoot = ({ children, className, data, ...props }: XPostProps) => {
-  const value = data ?? DEFAULT_POST;
+const XPostRoot = ({
+  children,
+  className,
+  data,
+  ...props
+}: XPostProps & { children: React.ReactNode }) => {
+  const value = { ...DEFAULT_POST, ...data };
   return (
     <XPostContext.Provider value={value}>
       <article
         className={cn("rounded-xl border bg-card p-4", className)}
         {...props}
       >
-        {children ?? (
-          <div className="flex gap-3">
-            {value.avatar && (
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground font-semibold text-background text-sm">
-                {value.avatar}
-              </div>
-            )}
-            <XPostContent />
-          </div>
-        )}
+        {children}
       </article>
     </XPostContext.Provider>
   );

@@ -499,21 +499,9 @@ export const EventDetailContent = ({
   children,
   className,
   ...props
-}: ComponentProps<"div">) => (
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
   <div className={cn("space-y-6 p-4 sm:p-6", className)} {...props}>
-    {children ?? (
-      <>
-        <EventDetailHeader />
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-          <div className="space-y-6">
-            <EventDetailDescription />
-            <EventDetailOrganizer />
-            <EventDetailMap />
-          </div>
-          <EventDetailTickets className="h-fit" />
-        </div>
-      </>
-    )}
+    {children}
   </div>
 );
 
@@ -524,7 +512,7 @@ const EventDetailRoot = ({
   className,
   data,
   ...props
-}: EventDetailProps) => {
+}: EventDetailProps & { children: React.ReactNode }) => {
   const event = data?.event ?? DEFAULT_EVENT;
   const images = getEventImages(event);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -559,12 +547,7 @@ const EventDetailRoot = ({
         className={cn("overflow-hidden rounded-xl border bg-card", className)}
         {...props}
       >
-        {children ?? (
-          <>
-            <EventDetailGallery />
-            <EventDetailContent />
-          </>
-        )}
+        {children}
       </article>
     </EventDetailContext.Provider>
   );

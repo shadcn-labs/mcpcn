@@ -103,7 +103,7 @@ const QuickReplyRoot = ({
   className,
   data,
   ...props
-}: QuickReplyProps) => {
+}: QuickReplyProps & { children: React.ReactNode }) => {
   const context: QuickReplyContextValue = {
     onSelectReply: actions?.onSelectReply,
     replies: data?.replies ?? DEFAULT_REPLIES,
@@ -115,7 +115,7 @@ const QuickReplyRoot = ({
         className={cn("w-full rounded-lg bg-card p-4", className)}
         {...props}
       >
-        {children ?? <QuickReplyList />}
+        {children}
       </div>
     </QuickReplyContext.Provider>
   );

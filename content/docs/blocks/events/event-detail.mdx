@@ -49,11 +49,31 @@ npm install lucide-react react-leaflet leaflet
 ## Usage
 
 ```tsx
-import { EventDetail } from "@/components/ui/event-detail";
+import {
+  EventDetail,
+  EventDetailContent,
+  EventDetailDescription,
+  EventDetailHeader,
+  EventDetailMap,
+  EventDetailOrganizer,
+  EventDetailTickets,
+} from "@/components/ui/event-detail";
 ```
 
 ```tsx
-<EventDetail />
+<EventDetail>
+  <EventDetailContent>
+    <EventDetailHeader />
+    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+      <div className="space-y-6">
+        <EventDetailDescription />
+        <EventDetailOrganizer />
+        <EventDetailMap />
+      </div>
+      <EventDetailTickets className="h-fit" />
+    </div>
+  </EventDetailContent>
+</EventDetail>
 ```
 
 ## Composition
@@ -77,17 +97,36 @@ EventDetail
 Register `EventDetail` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { EventDetail } from "@/components/ui/event-detail";
+import {
+  EventDetail,
+  EventDetailContent,
+  EventDetailDescription,
+  EventDetailHeader,
+  EventDetailMap,
+  EventDetailOrganizer,
+  EventDetailTickets,
+} from "@/components/ui/event-detail";
 
 const OpenUIEventDetail = defineComponent({
   name: "EventDetail",
   description:
     "Full event detail view with organizer info, interactive map, policies, and ticket purchase. Fullwidth mode only.",
   props: z.object({}),
-  component: () => <EventDetail />,
+  component: () => (
+    <EventDetail>
+      <EventDetailContent>
+        <EventDetailHeader />
+        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+          <div className="space-y-6">
+            <EventDetailDescription />
+            <EventDetailOrganizer />
+            <EventDetailMap />
+          </div>
+          <EventDetailTickets className="h-fit" />
+        </div>
+      </EventDetailContent>
+    </EventDetail>
+  ),
 });
 
 export const event_detailLibrary = createLibrary({

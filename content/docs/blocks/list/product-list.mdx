@@ -49,11 +49,13 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { ProductList } from "@/components/ui/product-list";
+import { ProductList, ProductListContent } from "@/components/ui/product-list";
 ```
 
 ```tsx
-<ProductList />
+<ProductList>
+  <ProductListContent />
+</ProductList>
 ```
 
 ## Composition
@@ -96,16 +98,17 @@ ProductList
 Register `ProductList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { ProductList } from "@/components/ui/product-list";
+import { ProductList, ProductListContent } from "@/components/ui/product-list";
 
 const OpenUIProductList = defineComponent({
   name: "ProductList",
   description: "Product list with list, grid, carousel, and picker variants.",
   props: z.object({}),
-  component: () => <ProductList />,
+  component: () => (
+    <ProductList>
+      <ProductListContent />
+    </ProductList>
+  ),
 });
 
 export const product_listLibrary = createLibrary({

@@ -49,11 +49,28 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { LinkedInPost } from "@/components/ui/linkedin-post";
+import {
+  LinkedInPost,
+  LinkedInPostBody,
+  LinkedInPostContent,
+  LinkedInPostEngagement,
+  LinkedInPostFooter,
+  LinkedInPostHeader,
+  LinkedInPostMain,
+} from "@/components/ui/linkedin-post";
 ```
 
 ```tsx
-<LinkedInPost />
+<LinkedInPost>
+  <LinkedInPostContent>
+    <LinkedInPostMain>
+      <LinkedInPostHeader />
+      <LinkedInPostBody />
+    </LinkedInPostMain>
+    <LinkedInPostEngagement />
+    <LinkedInPostFooter />
+  </LinkedInPostContent>
+</LinkedInPost>
 ```
 
 ## Composition
@@ -63,6 +80,12 @@ Use the following composition to build an `LinkedInPost`:
 ```text
 LinkedInPost
 └── LinkedInPostContent
+    ├── LinkedInPostMain
+    │   ├── LinkedInPostHeader
+    │   └── LinkedInPostBody
+    ├── LinkedInPostMedia
+    ├── LinkedInPostEngagement
+    └── LinkedInPostFooter
 ```
 
 ## Examples
@@ -88,16 +111,32 @@ LinkedInPost
 Register `LinkedInPost` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { LinkedInPost } from "@/components/ui/linkedin-post";
+import {
+  LinkedInPost,
+  LinkedInPostBody,
+  LinkedInPostContent,
+  LinkedInPostEngagement,
+  LinkedInPostFooter,
+  LinkedInPostHeader,
+  LinkedInPostMain,
+} from "@/components/ui/linkedin-post";
 
 const OpenUILinkedInPost = defineComponent({
   name: "LinkedInPost",
   description: "LinkedIn post card with professional styling.",
   props: z.object({}),
-  component: () => <LinkedInPost />,
+  component: () => (
+    <LinkedInPost>
+      <LinkedInPostContent>
+        <LinkedInPostMain>
+          <LinkedInPostHeader />
+          <LinkedInPostBody />
+        </LinkedInPostMain>
+        <LinkedInPostEngagement />
+        <LinkedInPostFooter />
+      </LinkedInPostContent>
+    </LinkedInPost>
+  ),
 });
 
 export const linkedin_postLibrary = createLibrary({

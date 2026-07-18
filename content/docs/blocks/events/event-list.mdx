@@ -49,11 +49,13 @@ npm install lucide-react react-leaflet leaflet
 ## Usage
 
 ```tsx
-import { EventList } from "@/components/ui/event-list";
+import { EventList, EventListContent } from "@/components/ui/event-list";
 ```
 
 ```tsx
-<EventList />
+<EventList>
+  <EventListContent />
+</EventList>
 ```
 
 ## Composition
@@ -88,17 +90,18 @@ EventList
 Register `EventList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { EventList } from "@/components/ui/event-list";
+import { EventList, EventListContent } from "@/components/ui/event-list";
 
 const OpenUIEventList = defineComponent({
   name: "EventList",
   description:
     "Display events in grid, list, or carousel layouts. Fullscreen mode shows interactive split-screen map with Leaflet and animated filter panel.",
   props: z.object({}),
-  component: () => <EventList />,
+  component: () => (
+    <EventList>
+      <EventListContent />
+    </EventList>
+  ),
 });
 
 export const event_listLibrary = createLibrary({

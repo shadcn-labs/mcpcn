@@ -49,11 +49,21 @@ npm install lucide-react
 ## Usage
 
 ```tsx
-import { TagSelect } from "@/components/ui/tag-select";
+import {
+  TagSelect,
+  TagSelectActions,
+  TagSelectContent,
+  TagSelectTags,
+} from "@/components/ui/tag-select";
 ```
 
 ```tsx
-<TagSelect />
+<TagSelect>
+  <TagSelectContent>
+    <TagSelectTags />
+    <TagSelectActions />
+  </TagSelectContent>
+</TagSelect>
 ```
 
 ## Composition
@@ -73,17 +83,26 @@ TagSelect
 Register `TagSelect` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { TagSelect } from "@/components/ui/tag-select";
+import {
+  TagSelect,
+  TagSelectActions,
+  TagSelectContent,
+  TagSelectTags,
+} from "@/components/ui/tag-select";
 
 const OpenUITagSelect = defineComponent({
   name: "TagSelect",
   description:
     "Colored tag selector with single or multiple selection and color variants.",
   props: z.object({}),
-  component: () => <TagSelect />,
+  component: () => (
+    <TagSelect>
+      <TagSelectContent>
+        <TagSelectTags />
+        <TagSelectActions />
+      </TagSelectContent>
+    </TagSelect>
+  ),
 });
 
 export const tag_selectLibrary = createLibrary({

@@ -52,11 +52,27 @@ npm install @base-ui/react lucide-react
 ## Usage
 
 ```tsx
-import { ContactForm } from "@/components/ui/contact-form";
+import {
+  ContactForm,
+  ContactFormActions,
+  ContactFormContactFields,
+  ContactFormContent,
+  ContactFormHeader,
+  ContactFormMessageField,
+  ContactFormNameFields,
+} from "@/components/ui/contact-form";
 ```
 
 ```tsx
-<ContactForm />
+<ContactForm>
+  <ContactFormContent>
+    <ContactFormHeader className="mb-6" />
+    <ContactFormNameFields />
+    <ContactFormContactFields />
+    <ContactFormMessageField />
+    <ContactFormActions />
+  </ContactFormContent>
+</ContactForm>
 ```
 
 ## Composition
@@ -79,17 +95,32 @@ ContactForm
 Register `ContactForm` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
 
 ```tsx showLineNumbers
-import { createLibrary, defineComponent } from "@openuidev/react-lang";
-import { z } from "zod/v4";
-
-import { ContactForm } from "@/components/ui/contact-form";
+import {
+  ContactForm,
+  ContactFormActions,
+  ContactFormContactFields,
+  ContactFormContent,
+  ContactFormHeader,
+  ContactFormMessageField,
+  ContactFormNameFields,
+} from "@/components/ui/contact-form";
 
 const OpenUIContactForm = defineComponent({
   name: "ContactForm",
   description:
     "A complete contact form with name fields, phone with country selector, email, message textarea, and file attachment.",
   props: z.object({}),
-  component: () => <ContactForm />,
+  component: () => (
+    <ContactForm>
+      <ContactFormContent>
+        <ContactFormHeader className="mb-6" />
+        <ContactFormNameFields />
+        <ContactFormContactFields />
+        <ContactFormMessageField />
+        <ContactFormActions />
+      </ContactFormContent>
+    </ContactForm>
+  ),
 });
 
 export const contact_formLibrary = createLibrary({

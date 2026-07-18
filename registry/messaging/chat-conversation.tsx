@@ -5,7 +5,11 @@ import type { ComponentProps } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { ImageMessageBubble, MessageBubble } from "./message-bubble";
+import {
+  ImageMessageBubble,
+  MessageBubble,
+  MessageBubbleContent,
+} from "./message-bubble";
 import type { ChatMessage } from "./types";
 
 export type { ChatMessage } from "./types";
@@ -106,7 +110,9 @@ export const ChatConversationMessage = ({
       appearance={{ isOwn: message.isOwn ?? false }}
       control={{ status: message.status }}
       data={data}
-    />
+    >
+      <MessageBubbleContent />
+    </MessageBubble>
   );
 };
 
@@ -135,7 +141,7 @@ const ChatConversationRoot = ({
   className,
   data,
   ...props
-}: ChatConversationProps) => {
+}: ChatConversationProps & { children: React.ReactNode }) => {
   const context: ChatConversationContextValue = {
     messages: data?.messages ?? DEFAULT_MESSAGES,
   };
@@ -143,7 +149,7 @@ const ChatConversationRoot = ({
   return (
     <ChatConversationContext.Provider value={context}>
       <div className={cn("rounded-xl bg-card p-4", className)} {...props}>
-        {children ?? <ChatConversationMessages />}
+        {children}
       </div>
     </ChatConversationContext.Provider>
   );

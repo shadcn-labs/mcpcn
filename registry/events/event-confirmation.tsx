@@ -231,9 +231,9 @@ export const EventConfirmationContent = (props: EventConfirmationProps) => {
 const EventConfirmationRoot = ({
   children,
   ...props
-}: EventConfirmationProps) => (
+}: EventConfirmationProps & { children: React.ReactNode }) => (
   <EventConfirmationContext.Provider value={props}>
-    {children ?? <EventConfirmationContent />}
+    {children}
   </EventConfirmationContext.Provider>
 );
 

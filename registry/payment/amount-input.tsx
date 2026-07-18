@@ -226,7 +226,7 @@ export const AmountInputControls = ({
   children,
   className,
   ...props
-}: ComponentProps<"div">) => (
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
   <div
     className={cn(
       "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2",
@@ -234,12 +234,7 @@ export const AmountInputControls = ({
     )}
     {...props}
   >
-    {children ?? (
-      <>
-        <AmountInputPresets />
-        <AmountInputActions />
-      </>
-    )}
+    {children}
   </div>
 );
 
@@ -251,7 +246,7 @@ const AmountInputRoot = ({
   control,
   data,
   ...props
-}: AmountInputProps) => {
+}: AmountInputProps & { children: React.ReactNode }) => {
   const currency = appearance?.currency ?? "EUR";
   const max = appearance?.max ?? 10_000;
   const min = appearance?.min ?? 0;
@@ -310,12 +305,7 @@ const AmountInputRoot = ({
         )}
         {...props}
       >
-        {children ?? (
-          <>
-            <AmountInputDisplay />
-            <AmountInputControls />
-          </>
-        )}
+        {children}
       </div>
     </AmountInputContext.Provider>
   );

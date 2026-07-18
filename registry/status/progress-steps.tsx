@@ -127,7 +127,7 @@ const ProgressStepsRoot = ({
   className,
   data,
   ...props
-}: ProgressStepsProps) => {
+}: ProgressStepsProps & { children: React.ReactNode }) => {
   const context: ProgressStepsContextValue = {
     steps: data?.steps ?? DEFAULT_STEPS,
   };
@@ -135,7 +135,7 @@ const ProgressStepsRoot = ({
   return (
     <ProgressStepsContext.Provider value={context}>
       <div className={cn("rounded-lg bg-card p-4", className)} {...props}>
-        {children ?? <ProgressStepsList />}
+        {children}
       </div>
     </ProgressStepsContext.Provider>
   );

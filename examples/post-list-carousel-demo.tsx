@@ -1,7 +1,11 @@
 "use client";
 
-import { PostList } from "@/registry/blogging/post-list";
+import { PostList, PostListContent } from "@/registry/blogging/post-list";
 
 export default function PostListCarouselDemo() {
-  return <PostList appearance={{ variant: "carousel" }} />;
+  return (
+    <PostList appearance={{ variant: "carousel" }}>
+      <PostListContent />
+    </PostList>
+  );
 }

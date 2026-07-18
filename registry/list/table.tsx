@@ -512,15 +512,9 @@ export const TableContent = ({
   children,
   className,
   ...props
-}: ComponentProps<"div">) => (
+}: ComponentProps<"div"> & { children: React.ReactNode }) => (
   <div className={className} {...props}>
-    {children ?? (
-      <>
-        <TableHeader />
-        <TableGrid />
-        <TableFooter />
-      </>
-    )}
+    {children}
   </div>
 );
 
@@ -619,7 +613,7 @@ const TableRoot = ({
   className,
   control,
   data,
-}: TableProps<TableRow>) => {
+}: TableProps<TableRow> & { children: React.ReactNode }) => {
   const {
     compact,
     displayMode,
@@ -697,7 +691,7 @@ const TableRoot = ({
       <div
         className={cn("overflow-hidden rounded-lg border bg-card", className)}
       >
-        {children ?? <TableContent />}
+        {children}
       </div>
     </TableContext.Provider>
   );

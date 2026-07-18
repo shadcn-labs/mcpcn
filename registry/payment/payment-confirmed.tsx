@@ -344,7 +344,7 @@ const PaymentConfirmedRoot = ({
   className,
   data,
   ...props
-}: PaymentConfirmedProps) => {
+}: PaymentConfirmedProps & { children: React.ReactNode }) => {
   const currency = appearance?.currency ?? "EUR";
   const context: PaymentConfirmedContextValue = {
     data: data ?? DEFAULT_PAYMENT,
@@ -365,7 +365,7 @@ const PaymentConfirmedRoot = ({
         )}
         {...props}
       >
-        {children ?? <PaymentConfirmedContent />}
+        {children}
       </div>
     </PaymentConfirmedContext.Provider>
   );

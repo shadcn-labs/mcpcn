@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 
-import { EventCard } from "./event-card";
+import { EventCard, EventCardContent } from "./event-card";
 import { LazyLeafletMap, MapPlaceholder } from "./shared";
 import type { Event } from "./types";
 
@@ -560,7 +560,9 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
             data={{ event }}
             appearance={{ variant: "horizontal" }}
             actions={{ onClick: onEventSelect }}
-          />
+          >
+            <EventCardContent />
+          </EventCard>
         ))}
       </div>
     );
@@ -580,7 +582,9 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
               data={{ event }}
               appearance={{ variant: "default" }}
               actions={{ onClick: onEventSelect }}
-            />
+            >
+              <EventCardContent />
+            </EventCard>
           ))}
         </div>
       </div>
@@ -828,7 +832,9 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
                 data={{ event }}
                 appearance={{ variant: "compact" }}
                 actions={{ onClick: onEventSelect }}
-              />
+              >
+                <EventCardContent />
+              </EventCard>
             </div>
           ))}
         </div>
@@ -844,7 +850,9 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
                 data={{ event }}
                 appearance={{ variant: "compact" }}
                 actions={{ onClick: onEventSelect }}
-              />
+              >
+                <EventCardContent />
+              </EventCard>
             </div>
           ))}
         </div>
@@ -860,7 +868,9 @@ const EventListView = ({ data, actions, appearance }: EventListProps) => {
                 data={{ event }}
                 appearance={{ variant: "compact" }}
                 actions={{ onClick: onEventSelect }}
-              />
+              >
+                <EventCardContent />
+              </EventCard>
             </div>
           ))}
         </div>
@@ -960,9 +970,12 @@ export const EventListContent = (props: EventListProps) => {
   return <EventListView {...context} {...props} />;
 };
 
-const EventListRoot = ({ children, ...props }: EventListProps) => (
+const EventListRoot = ({
+  children,
+  ...props
+}: EventListProps & { children: React.ReactNode }) => (
   <EventListContext.Provider value={props}>
-    {children ?? <EventListContent />}
+    {children}
   </EventListContext.Provider>
 );
 
