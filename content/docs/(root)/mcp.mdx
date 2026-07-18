@@ -1,0 +1,44 @@
+---
+title: "MCP"
+description: "Use the shadcn MCP server to discover and install mcpcn components."
+---
+
+[Model Context Protocol](https://modelcontextprotocol.io/) standardizes how AI assistants connect to tools and data sources. The shadcn CLI includes an MCP server that can browse, search, and install items from compatible registries such as **mcpcn**.
+
+## Configure the registry
+
+Add the mcpcn namespace to your project's `components.json` file:
+
+```json title="components.json"
+{
+  "registries": {
+    "@mcpcn": "https://mcpcn.dev/r/{name}.json"
+  }
+}
+```
+
+See the [Registry](/docs/registry) page for CLI usage and full-URL installation.
+
+## Configure MCP
+
+Run the shadcn MCP setup command from your project:
+
+```bash
+npx shadcn@latest mcp init
+```
+
+Choose your MCP client when prompted, finish its setup, and restart the client so it can load the server.
+
+## Usage
+
+With MCP enabled, your assistant can discover mcpcn blocks and install them through natural-language requests. Try prompts such as:
+
+- Show me all available components in the mcpcn registry.
+- Add `@mcpcn/message-bubble` and `@mcpcn/quick-reply` to my project.
+- Build a payment flow using the mcpcn order and payment confirmation blocks.
+- Create an event experience with an event card, event details, and ticket selection.
+- Find a compact mcpcn component for displaying status and progress.
+
+The MCP server reads registries from `components.json`, then uses the shadcn CLI to copy selected source files and their dependencies into your project.
+
+For client-specific configuration and troubleshooting, see the [shadcn MCP documentation](https://ui.shadcn.com/docs/mcp).

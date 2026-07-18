@@ -1,66 +1,77 @@
 ---
-title: Installation
-description: Install and compose mcpcn blocks in a React application.
+title: "Installation"
+description: "Install and compose mcpcn blocks in a React application."
 ---
 
 ## Prerequisites
 
-mcpcn targets React applications configured for shadcn/ui and Tailwind CSS. Initialize shadcn first if your project does not already have a `components.json` file.
+A React project with [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/) configured.
 
-## Install a block
-
-Use the block’s registry URL:
+If your project does not have a `components.json` file yet, initialize shadcn/ui first:
 
 ```bash
-npx shadcn@latest add https://mcpcn.dev/r/event-confirmation.json
+npx shadcn@latest init
 ```
 
-The installer copies the block, its category types, and the small compound-context helper into your application.
+## Installation
 
-## Use the default composition
+Run the following command to add a component:
 
-Every root renders a ready-to-use default when no children are supplied:
+```bash
+npx shadcn@latest add https://mcpcn.dev/r/quick-reply.json
+```
+
+The CLI copies the component into your project and installs its npm and shadcn/ui dependencies. To install items by namespace, configure the [`@mcpcn` registry alias](/docs/registry).
+
+```bash
+npx shadcn@latest add @mcpcn/quick-reply
+```
+
+## Usage
+
+Import and render the installed component:
 
 ```tsx
-import { EventConfirmation } from "@/components/ui/event-confirmation";
+import { QuickReply } from "@/components/ui/quick-reply";
 
-export function Confirmation() {
-  return <EventConfirmation onViewTickets={() => openTickets()} />;
+export function SuggestedReplies() {
+  return <QuickReply />;
 }
 ```
 
-## Compose the slots
+Every root component renders its default composition when `children` are omitted.
 
-Supply named children when your interface needs different content or structure:
+## Composition
+
+Import child components directly when you need to customize the structure:
 
 ```tsx
-<EventConfirmation onFollowOrganizer={() => follow()}>
-  <EventConfirmation.Header
-    heading="You’re on the list"
-    orderNumber="#EVENT-2048"
-  />
-  <EventConfirmation.Details
-    eventTitle="MCP Apps Summit"
-    ticketCount={1}
-    recipientEmail="builder@example.com"
-  />
-  <EventConfirmation.Organizer name="mcpcn community">
-    <VerifiedBadge />
-  </EventConfirmation.Organizer>
-</EventConfirmation>
+"use client";
+
+import {
+  QuickReply,
+  QuickReplyItem,
+  QuickReplyList,
+} from "@/components/ui/quick-reply";
+
+const replies = [
+  { label: "Approve" },
+  { label: "Ask a question" },
+  { label: "Cancel" },
+];
+
+export function SuggestedReplies() {
+  return (
+    <QuickReply actions={{ onSelectReply: (reply) => console.log(reply) }}>
+      <p className="mb-3 text-sm font-medium">Choose a response</p>
+      <QuickReplyList>
+        {replies.map((reply) => (
+          <QuickReplyItem key={reply.label} reply={reply} />
+        ))}
+      </QuickReplyList>
+    </QuickReply>
+  );
+}
 ```
 
-Subcomponents must remain inside their root. Rendering one outside its provider throws a clear runtime error.
-
-## Local development
-
-To work on this registry itself:
-
-```bash
-pnpm install
-pnpm typecheck
-pnpm registry:build
-pnpm dev
-```
-
-Run `pnpm build` before deployment to regenerate the registry and verify the documentation site.
+Child components that consume shared context must remain inside their root component.

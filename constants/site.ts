@@ -37,7 +37,7 @@ export const SITE = {
   ] as const,
   NAME: "mcpcn",
   OG_IMAGE: `${baseUrl}/og`,
-  REGISTRY: baseUrl,
+  REGISTRY: "@mcpcn",
   URL: baseUrl,
 };
 
@@ -54,6 +54,8 @@ export const TOP_LEVEL_SECTIONS = [
   { href: ROUTES.DOCS, name: "Introduction" },
   { href: ROUTES.DOCS_INSTALLATION, name: "Installation" },
   { href: ROUTES.DOCS_BLOCKS, name: "Blocks" },
+  { href: ROUTES.DOCS_MCP, name: "MCP" },
+  { href: ROUTES.DOCS_REGISTRY, name: "Registry" },
   { href: ROUTES.LLMS, name: "llms.txt" },
   // { href: ROUTES.DOCS_CHANGELOG, name: "Changelog" },
 ];

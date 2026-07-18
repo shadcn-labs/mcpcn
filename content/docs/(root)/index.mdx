@@ -1,49 +1,95 @@
 ---
-title: Introduction
-description: Composition-first React blocks for polished MCP Apps.
+title: "Introduction"
+description: "Copy-paste React components for MCP Apps, built with Base UI and the shadcn CLI."
 ---
 
-**mcpcn** is a shadcn-compatible registry of compound React components for [MCP Apps](https://modelcontextprotocol.io/). Its APIs favor composition over fixed `data` and `actions` objects.
+import {
+  BlocksIcon,
+  ClipboardCopyIcon,
+  Code2Icon,
+  LayoutGridIcon,
+  SunMoonIcon,
+  ZapIcon,
+} from "lucide-react";
+
+**mcpcn** provides polished, accessible, and customizable React components for [MCP Apps](https://modelcontextprotocol.io/). It is built with [Base UI](https://base-ui.com/) and works with the [shadcn CLI](https://ui.shadcn.com/docs/cli).
+
+## Philosophy
+
+mcpcn follows the shadcn model for MCP App interfaces: copy the components into your project, own the source code, and customize them without waiting for a package API to change.
+
+Model-driven interfaces often need more than a collection of isolated primitives. They need complete patterns for messages, forms, payments, events, lists, maps, and social content. mcpcn provides those patterns with useful defaults while keeping their structure open for composition.
+
+The goal is simple: make MCP Apps feel like the rest of your product—consistent, accessible, responsive, and easy to adapt.
+
+## Why mcpcn?
+
+Most MCP App interfaces are assembled from one-off markup or rigid components. mcpcn is designed for teams that want to move quickly without giving up control:
+
+- **Own your code:** Install source files into your application and change every detail.
+- **Start fast:** Render a complete default component immediately after installation.
+- **Compose freely:** Import child components directly and replace or rearrange sections with ordinary JSX.
+- **Stay compatible:** Use the same CLI, aliases, utilities, and primitives as a shadcn/ui project.
 
 ## Composition first
 
-Each block has a root provider and named subcomponents. Put factual values on the subcomponent that displays them, share callbacks and formatters through the root context, and replace interface elements with children.
+Each compound component owns shared data and behavior through context. Its child components are exported individually, so you can use the default composition or build your own without dot notation.
 
 ```tsx
-<EventConfirmation onShare={(platform) => share(platform)}>
-  <EventConfirmation.Header orderNumber="#EVENT-2048" />
-  <EventConfirmation.Details
-    eventTitle="MCP Apps Summit"
-    eventDate="July 24 · 10 AM"
-    eventLocation="Bengaluru"
+import {
+  QuickReply,
+  QuickReplyItem,
+  QuickReplyList,
+} from "@/components/ui/quick-reply";
+
+const replies = [{ label: "Show details" }, { label: "Continue" }];
+
+export function SuggestedReplies() {
+  return (
+    <QuickReply actions={{ onSelectReply: (reply) => console.log(reply) }}>
+      <QuickReplyList>
+        {replies.map((reply) => (
+          <QuickReplyItem key={reply.label} reply={reply} />
+        ))}
+      </QuickReplyList>
+    </QuickReply>
+  );
+}
+```
+
+Omit `children` when you want the ready-to-use default composition.
+
+## Features
+
+<div className="not-prose mt-4 grid gap-4 sm:grid-cols-2">
+  <FeatureCard
+    icon={ZapIcon}
+    title="Ready to use"
+    description="Every block includes a polished default composition with demo data."
   />
-  <EventConfirmation.Organizer name="mcpcn community">
-    <VerifiedBadge />
-  </EventConfirmation.Organizer>
-  <EventConfirmation.Share />
-</EventConfirmation>
-```
-
-Omit the root children when you want a polished quick-start composition.
-
-## Registry
-
-The registry includes 21 blocks across payment, events, social, forms, blogging, lists, status, and miscellaneous categories. Every block includes:
-
-- A typed compound API
-- Contextual shared behavior
-- Arbitrary child composition
-- Responsive semantic Tailwind styles
-- Quick-start and composed examples
-
-Install a block directly:
-
-```bash
-npx shadcn@latest add https://mcpcn.dev/r/event-confirmation.json
-```
-
-Browse the block categories in the documentation sidebar or open the full registry at `/r/registry.json`.
-
-## Why copy/paste?
-
-The shadcn model gives your application ownership of the component code. You can adapt layout, behavior, and product language without waiting for a package API to anticipate your use case.
+  <FeatureCard
+    icon={SunMoonIcon}
+    title="Theme aware"
+    description="Semantic color tokens adapt to your existing light and dark themes."
+  />
+  <FeatureCard
+    icon={LayoutGridIcon}
+    title="Composable"
+    description="Context-backed child components can be imported and arranged directly."
+  />
+  <FeatureCard
+    icon={Code2Icon}
+    title="TypeScript"
+    description="Typed data, appearance, and action contracts make integrations predictable."
+  />
+  <FeatureCard
+    icon={ClipboardCopyIcon}
+    title="Copy and paste"
+    description="The source code lives in your project, with no component package lock-in."
+  />
+  <FeatureCard
+    icon={BlocksIcon}
+    title="shadcn compatible"
+    description="Install blocks and their dependencies with the familiar shadcn CLI."
+  />
+</div>
