@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="public/android-chrome-512x512.png" alt="mcpcn" width="96" />
+  <img src="public/og.png" alt="mcpcn banner" />
 </p>
 
 <h1 align="center">mcpcn</h1>
 
 <p align="center">
-  Free and open-source, ready-to-use compound React components for MCP Apps.<br/>
-  Composition first. One-command installation. Built with <a href="https://base-ui.com/">Base UI</a> and compatible with <a href="https://ui.shadcn.com/">shadcn/ui</a>.
+  Free & open-source, ready-to-use, customizable React components for MCP Apps.<br/>
+  Zero config. One command setup. Built with <a href="https://base-ui.com/">Base UI</a> and works seamlessly with <a href="https://ui.shadcn.com/">shadcn/ui</a>.
 </p>
 
 <p align="center">
@@ -24,20 +24,13 @@
 
 ## Features
 
-- 🧩 **Composition first** — Extend and rearrange component content with ordinary JSX
-- 🤖 **Built for MCP Apps** — Polished interface patterns for model-driven applications
-- 📦 **shadcn/ui compatible** — Install source code with the familiar registry CLI
-- ♿ **Base UI primitives** — Accessible foundations without Radix UI
-- 🧱 **30 ready-to-use blocks** — Forms, payments, lists, messaging, social, maps, events, and more
-- 🎨 **Theme aware** — Responsive components built with semantic color tokens
-- 🔌 **OpenUI ready** — Every component page includes OpenUI integration guidance
-- 🔓 **Open code** — Components are copied into your project for complete ownership
-
-Install a component with one command:
-
-```bash
-npx shadcn@latest add https://mcpcn.dev/r/order-confirm.json
-```
+- 🎨 **Theme-aware** — Adapts to existing light and dark themes with semantic color tokens
+- 🎯 **Zero config** — Works out of the box with sensible defaults
+- 📦 **shadcn/ui compatible** — Uses the same registry format and CLI
+- ♿ **Base UI powered** — Accessible primitives without Radix UI
+- 🧩 **Composable** — Import child components directly and arrange them with ordinary JSX
+- 🤖 **Built for MCP Apps** — Forms, payments, messages, social content, maps, events, and more
+- 🔌 **OpenUI ready** — Component documentation includes OpenUI integration guidance
 
 ## Contributing
 
@@ -46,7 +39,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
 3. Install dependencies (`pnpm install`)
-4. Run the checks (`pnpm check && pnpm typecheck`)
+4. Run the checks (`pnpm fix && pnpm typecheck`)
 5. Commit your changes (`git commit -m 'Add some amazing feature'`)
 6. Push to the branch (`git push origin feature/amazing-feature`)
 7. Open a Pull Request

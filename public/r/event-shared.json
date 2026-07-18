@@ -23,13 +23,6 @@
       "target": "components/ui/shared.tsx"
     }
   ],
-  "meta": {
-    "version": "1.0.1",
-    "changelog": {
-      "1.0.0": "Extracted shared map utilities and signal badges from event-list and event-detail",
-      "1.0.1": "Replaced useReactLeaflet hook with React.lazy to fix Invalid hook call errors"
-    }
-  },
   "categories": [
     "events"
   ],

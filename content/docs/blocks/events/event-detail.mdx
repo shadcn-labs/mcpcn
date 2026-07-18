@@ -51,27 +51,41 @@ npm install lucide-react react-leaflet leaflet
 ```tsx
 import {
   EventDetail,
+  EventDetailActions,
+  EventDetailAiMatch,
   EventDetailContent,
   EventDetailDescription,
+  EventDetailFaq,
+  EventDetailGallery,
+  EventDetailGoodToKnow,
   EventDetailHeader,
+  EventDetailLineup,
   EventDetailMap,
   EventDetailOrganizer,
+  EventDetailPolicies,
+  EventDetailRelated,
+  EventDetailReport,
   EventDetailTickets,
 } from "@/components/ui/event-detail";
 ```
 
 ```tsx
 <EventDetail>
+  <EventDetailGallery />
   <EventDetailContent>
     <EventDetailHeader />
-    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-      <div className="space-y-6">
-        <EventDetailDescription />
-        <EventDetailOrganizer />
-        <EventDetailMap />
-      </div>
-      <EventDetailTickets className="h-fit" />
-    </div>
+    <EventDetailActions />
+    <EventDetailAiMatch />
+    <EventDetailDescription />
+    <EventDetailLineup />
+    <EventDetailGoodToKnow />
+    <EventDetailMap />
+    <EventDetailOrganizer />
+    <EventDetailPolicies />
+    <EventDetailFaq />
+    <EventDetailReport />
+    <EventDetailRelated />
+    <EventDetailTickets />
   </EventDetailContent>
 </EventDetail>
 ```
@@ -82,14 +96,21 @@ Use the following composition to build an `EventDetail`:
 
 ```text
 EventDetail
-├── EventDetailActions
-├── EventDetailContent
-├── EventDetailDescription
 ├── EventDetailGallery
-├── EventDetailHeader
-├── EventDetailMap
-├── EventDetailOrganizer
-└── EventDetailTickets
+└── EventDetailContent
+    ├── EventDetailHeader
+    ├── EventDetailActions
+    ├── EventDetailAiMatch
+    ├── EventDetailDescription
+    ├── EventDetailLineup
+    ├── EventDetailGoodToKnow
+    ├── EventDetailMap
+    ├── EventDetailOrganizer
+    ├── EventDetailPolicies
+    ├── EventDetailFaq
+    ├── EventDetailReport
+    ├── EventDetailRelated
+    └── EventDetailTickets
 ```
 
 ## OpenUI Integration
@@ -99,11 +120,20 @@ Register `EventDetail` with `defineComponent`, describe its model-generated prop
 ```tsx showLineNumbers
 import {
   EventDetail,
+  EventDetailActions,
+  EventDetailAiMatch,
   EventDetailContent,
   EventDetailDescription,
+  EventDetailFaq,
+  EventDetailGallery,
+  EventDetailGoodToKnow,
   EventDetailHeader,
+  EventDetailLineup,
   EventDetailMap,
   EventDetailOrganizer,
+  EventDetailPolicies,
+  EventDetailRelated,
+  EventDetailReport,
   EventDetailTickets,
 } from "@/components/ui/event-detail";
 
@@ -114,16 +144,21 @@ const OpenUIEventDetail = defineComponent({
   props: z.object({}),
   component: () => (
     <EventDetail>
+      <EventDetailGallery />
       <EventDetailContent>
         <EventDetailHeader />
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-          <div className="space-y-6">
-            <EventDetailDescription />
-            <EventDetailOrganizer />
-            <EventDetailMap />
-          </div>
-          <EventDetailTickets className="h-fit" />
-        </div>
+        <EventDetailActions />
+        <EventDetailAiMatch />
+        <EventDetailDescription />
+        <EventDetailLineup />
+        <EventDetailGoodToKnow />
+        <EventDetailMap />
+        <EventDetailOrganizer />
+        <EventDetailPolicies />
+        <EventDetailFaq />
+        <EventDetailReport />
+        <EventDetailRelated />
+        <EventDetailTickets />
       </EventDetailContent>
     </EventDetail>
   ),

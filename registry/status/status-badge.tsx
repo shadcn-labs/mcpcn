@@ -87,7 +87,6 @@ const ICON_SIZES = {
 interface StatusBadgeContextValue {
   config: StatusConfig;
   label: string;
-  showIcon: boolean;
   size: keyof typeof SIZE_CLASSES;
   status: StatusType;
 }
@@ -107,7 +106,6 @@ export const useStatusBadge = () => {
 export interface StatusBadgeProps extends ComponentProps<"span"> {
   appearance?: {
     label?: string;
-    showIcon?: boolean;
     size?: "sm" | "md" | "lg";
   };
   data?: {
@@ -143,17 +141,6 @@ export const StatusBadgeLabel = ({
   return <span {...props}>{children ?? label}</span>;
 };
 
-export const StatusBadgeContent = () => {
-  const { showIcon } = useStatusBadge();
-
-  return (
-    <>
-      {showIcon && <StatusBadgeIcon />}
-      <StatusBadgeLabel />
-    </>
-  );
-};
-
 const StatusBadgeRoot = ({
   appearance,
   children,
@@ -167,7 +154,6 @@ const StatusBadgeRoot = ({
   const context: StatusBadgeContextValue = {
     config,
     label: appearance?.label ?? config.defaultLabel,
-    showIcon: appearance?.showIcon ?? true,
     size,
     status,
   };
