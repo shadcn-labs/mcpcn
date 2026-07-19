@@ -4,15 +4,62 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { XIcon } from "lucide-react";
 import * as React from "react";
 
+import { modalClose, modalOpen } from "@/audio/core";
 import { Button } from "@/components/ui/button";
+import { useFeedback } from "@/hooks/use-feedback";
 import { cn } from "@/lib/utils";
 
 const Dialog = ({
-  sounds: _sounds,
+  onOpenChange,
+  sounds = false,
   ...props
-}: DialogPrimitive.Root.Props & { sounds?: boolean }) => (
-  <DialogPrimitive.Root data-slot="dialog" {...props} />
-);
+}: DialogPrimitive.Root.Props & { sounds?: boolean }) => {
+  const playOpen = useFeedback({ soundDef: modalOpen });
+  const playClose = useFeedback({ soundDef: modalClose });
+  const isControlled = props.open !== undefined;
+  const lastOpen = React.useRef(props.open ?? props.defaultOpen ?? false);
+
+  const playStateSound = React.useCallback(
+    (open: boolean) => {
+      if (!sounds || open === lastOpen.current) {
+        return;
+      }
+
+      if (open) {
+        playOpen();
+      } else {
+        playClose();
+      }
+
+      lastOpen.current = open;
+    },
+    [playClose, playOpen, sounds]
+  );
+
+  React.useEffect(() => {
+    if (isControlled) {
+      playStateSound(props.open ?? false);
+    }
+  }, [isControlled, playStateSound, props.open]);
+
+  const handleOpenChange = React.useCallback<
+    NonNullable<DialogPrimitive.Root.Props["onOpenChange"]>
+  >(
+    (open, eventDetails) => {
+      playStateSound(open);
+      onOpenChange?.(open, eventDetails);
+    },
+    [onOpenChange, playStateSound]
+  );
+
+  return (
+    <DialogPrimitive.Root
+      data-slot="dialog"
+      onOpenChange={sounds ? handleOpenChange : onOpenChange}
+      {...props}
+    />
+  );
+};
 
 const DialogTrigger = ({ ...props }: DialogPrimitive.Trigger.Props) => (
   <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
@@ -33,7 +80,7 @@ const DialogOverlay = ({
   <DialogPrimitive.Backdrop
     data-slot="dialog-overlay"
     className={cn(
-      "fixed inset-0 z-50 bg-black/50 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+      "fixed inset-0 isolate z-50 bg-black/50 duration-200 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
       className
     )}
     {...props}
@@ -53,7 +100,7 @@ const DialogContent = ({
     <DialogPrimitive.Popup
       data-slot="dialog-content"
       className={cn(
-        "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 sm:max-w-lg data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+        "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 shadow-lg outline-none duration-200 sm:max-w-lg data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
         className
       )}
       {...props}
@@ -62,13 +109,7 @@ const DialogContent = ({
       {showCloseButton && (
         <DialogPrimitive.Close
           data-slot="dialog-close"
-          render={
-            <Button
-              variant="ghost"
-              className="absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100"
-              size="icon-sm"
-            />
-          }
+          className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
         >
           <XIcon />
           <span className="sr-only">Close</span>

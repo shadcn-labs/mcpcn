@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@/components/analytics";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { META_THEME_COLORS } from "@/constants/site";
 import { fontVariables } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
@@ -43,9 +44,11 @@ const RootLayout = ({
     >
       <SoundProvider>
         <ThemeProvider>
-          {children}
-          <Toaster position="top-center" />
-          <Analytics />
+          <TooltipProvider>
+            {children}
+            <Toaster position="top-center" />
+            <Analytics />
+          </TooltipProvider>
         </ThemeProvider>
       </SoundProvider>
     </body>

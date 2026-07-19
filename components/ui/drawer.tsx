@@ -3,6 +3,8 @@
 import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer";
 import * as React from "react";
 
+import { drawerClose, drawerOpen } from "@/audio/core";
+import { useFeedback } from "@/hooks/use-feedback";
 import { cn } from "@/lib/utils";
 
 interface DrawerContextProps {
@@ -26,15 +28,20 @@ const useDrawer = () => {
 
 const Drawer = ({
   modal = true,
+  onOpenChange,
   showSwipeHandle = false,
   snapPoints,
-  sounds: _sounds,
+  sounds = false,
   swipeDirection = "down",
   ...props
 }: DrawerPrimitive.Root.Props & {
   showSwipeHandle?: boolean;
   sounds?: boolean;
 }) => {
+  const playOpen = useFeedback({ soundDef: drawerOpen });
+  const playClose = useFeedback({ soundDef: drawerClose });
+  const isControlled = props.open !== undefined;
+  const lastOpen = React.useRef(props.open ?? props.defaultOpen ?? false);
   const hasSnapPoints =
     snapPoints !== null && snapPoints !== undefined && snapPoints.length > 0;
   const contextValue = React.useMemo(
@@ -42,11 +49,45 @@ const Drawer = ({
     [hasSnapPoints, modal, showSwipeHandle, swipeDirection]
   );
 
+  const playStateSound = React.useCallback(
+    (open: boolean) => {
+      if (!sounds || open === lastOpen.current) {
+        return;
+      }
+
+      if (open) {
+        playOpen();
+      } else {
+        playClose();
+      }
+
+      lastOpen.current = open;
+    },
+    [playClose, playOpen, sounds]
+  );
+
+  React.useEffect(() => {
+    if (isControlled) {
+      playStateSound(props.open ?? false);
+    }
+  }, [isControlled, playStateSound, props.open]);
+
+  const handleOpenChange = React.useCallback<
+    NonNullable<DrawerPrimitive.Root.Props["onOpenChange"]>
+  >(
+    (open, eventDetails) => {
+      playStateSound(open);
+      onOpenChange?.(open, eventDetails);
+    },
+    [onOpenChange, playStateSound]
+  );
+
   return (
     <DrawerContext.Provider value={contextValue}>
       <DrawerPrimitive.Root
         data-slot="drawer"
         modal={modal}
+        onOpenChange={sounds ? handleOpenChange : onOpenChange}
         snapPoints={snapPoints}
         swipeDirection={swipeDirection}
         {...props}

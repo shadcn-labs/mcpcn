@@ -15,10 +15,7 @@ const TooltipProvider = ({
   />
 );
 
-const Tooltip = ({
-  sounds: _sounds,
-  ...props
-}: TooltipPrimitive.Root.Props & { sounds?: boolean }) => (
+const Tooltip = ({ ...props }: TooltipPrimitive.Root.Props) => (
   <TooltipPrimitive.Root data-slot="tooltip" {...props} />
 );
 

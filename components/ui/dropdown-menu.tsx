@@ -4,14 +4,62 @@ import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { ChevronRightIcon, CheckIcon } from "lucide-react";
 import * as React from "react";
 
+import { dropdownClose, dropdownOpen } from "@/audio/core";
+import type { FeedbackType } from "@/hooks/use-feedback";
+import { useFeedback } from "@/hooks/use-feedback";
 import { cn } from "@/lib/utils";
 
 const DropdownMenu = ({
-  sounds: _sounds,
+  onOpenChange,
+  sounds = false,
   ...props
-}: MenuPrimitive.Root.Props & { sounds?: boolean }) => (
-  <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />
-);
+}: MenuPrimitive.Root.Props & { sounds?: boolean }) => {
+  const playOpen = useFeedback({ soundDef: dropdownOpen });
+  const playClose = useFeedback({ soundDef: dropdownClose });
+  const isControlled = props.open !== undefined;
+  const lastOpen = React.useRef(props.open ?? props.defaultOpen ?? false);
+
+  const playStateSound = React.useCallback(
+    (open: boolean) => {
+      if (!sounds || open === lastOpen.current) {
+        return;
+      }
+
+      if (open) {
+        playOpen();
+      } else {
+        playClose();
+      }
+
+      lastOpen.current = open;
+    },
+    [playClose, playOpen, sounds]
+  );
+
+  React.useEffect(() => {
+    if (isControlled) {
+      playStateSound(props.open ?? false);
+    }
+  }, [isControlled, playStateSound, props.open]);
+
+  const handleOpenChange = React.useCallback<
+    NonNullable<MenuPrimitive.Root.Props["onOpenChange"]>
+  >(
+    (open, eventDetails) => {
+      playStateSound(open);
+      onOpenChange?.(open, eventDetails);
+    },
+    [onOpenChange, playStateSound]
+  );
+
+  return (
+    <MenuPrimitive.Root
+      data-slot="dropdown-menu"
+      onOpenChange={sounds ? handleOpenChange : onOpenChange}
+      {...props}
+    />
+  );
+};
 
 const DropdownMenuPortal = ({ ...props }: MenuPrimitive.Portal.Props) => (
   <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />
@@ -74,26 +122,43 @@ const DropdownMenuLabel = ({
 
 const DropdownMenuItem = ({
   className,
+  haptic,
   inset,
-  sound: _sound,
+  onClick,
+  sound,
   variant = "default",
   ...props
 }: MenuPrimitive.Item.Props & {
+  haptic?: boolean;
   inset?: boolean;
-  sound?: string;
+  sound?: FeedbackType;
   variant?: "default" | "destructive";
-}) => (
-  <MenuPrimitive.Item
-    data-slot="dropdown-menu-item"
-    data-inset={inset}
-    data-variant={variant}
-    className={cn(
-      "relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-inset:pl-8 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground data-[variant=destructive]:*:[svg]:text-destructive",
-      className
-    )}
-    {...props}
-  />
-);
+}) => {
+  const play = useFeedback({ haptic, sound });
+  const handleClick = React.useCallback<
+    NonNullable<MenuPrimitive.Item.Props["onClick"]>
+  >(
+    (event) => {
+      play();
+      onClick?.(event);
+    },
+    [onClick, play]
+  );
+
+  return (
+    <MenuPrimitive.Item
+      data-slot="dropdown-menu-item"
+      data-inset={inset}
+      data-variant={variant}
+      className={cn(
+        "relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-inset:pl-8 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground data-[variant=destructive]:*:[svg]:text-destructive",
+        className
+      )}
+      onClick={sound ? handleClick : onClick}
+      {...props}
+    />
+  );
+};
 
 const DropdownMenuSub = ({ ...props }: MenuPrimitive.SubmenuRoot.Props) => (
   <MenuPrimitive.SubmenuRoot data-slot="dropdown-menu-sub" {...props} />
