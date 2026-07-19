@@ -14,7 +14,8 @@
   ],
   "registryDependencies": [
     "button",
-    "checkbox"
+    "checkbox",
+    "https://mcpcn.dev/r/apps-sdk-theme.json"
   ],
   "files": [
     {

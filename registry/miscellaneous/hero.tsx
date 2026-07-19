@@ -222,6 +222,7 @@ export const HeroActions = ({
         "flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4",
         className
       )}
+      data-apps-sdk-actions=""
       {...props}
     >
       {children ?? (

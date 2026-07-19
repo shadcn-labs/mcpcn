@@ -161,6 +161,8 @@ const StatusBadgeRoot = ({
   return (
     <StatusBadgeContext.Provider value={context}>
       <span
+        data-apps-sdk-status={status}
+        data-slot="status-badge"
         className={cn(
           "inline-flex items-center rounded-full border font-medium",
           config.className,

@@ -10,7 +10,8 @@
   ],
   "registryDependencies": [
     "button",
-    "popover"
+    "popover",
+    "https://mcpcn.dev/r/apps-sdk-theme.json"
   ],
   "files": [
     {

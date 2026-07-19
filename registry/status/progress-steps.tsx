@@ -65,6 +65,8 @@ export const ProgressStep = ({
         <>
           <div className="flex items-center gap-2">
             <div
+              data-apps-sdk-status={status}
+              data-slot="progress-step-indicator"
               className={cn(
                 "flex size-5 shrink-0 items-center justify-center rounded-full text-xs",
                 status === "completed" && "bg-foreground text-background",
@@ -134,7 +136,11 @@ const ProgressStepsRoot = ({
 
   return (
     <ProgressStepsContext.Provider value={context}>
-      <div className={cn("rounded-lg bg-card p-4", className)} {...props}>
+      <div
+        data-apps-sdk-surface="card"
+        className={cn("rounded-lg bg-card p-4", className)}
+        {...props}
+      >
         {children}
       </div>
     </ProgressStepsContext.Provider>

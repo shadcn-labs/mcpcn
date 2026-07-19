@@ -28,6 +28,7 @@
 - 🎯 **Zero config** — Works out of the box with sensible defaults
 - 📦 **shadcn/ui compatible** — Uses the same registry format and CLI
 - ♿ **Base UI powered** — Accessible primitives without Radix UI
+- 💬 **Apps SDK UI aligned** — Optional scoped tokens and control geometry based on OpenAI's official UI system
 - 🧩 **Composable** — Import child components directly and arrange them with ordinary JSX
 - 🤖 **Built for MCP Apps** — Forms, payments, messages, social content, maps, events, and more
 - 🔌 **OpenUI ready** — Component documentation includes OpenUI integration guidance

@@ -1,0 +1,246 @@
+@theme inline {
+  --color-app-text: var(--apps-sdk-text);
+  --color-app-text-secondary: var(--apps-sdk-text-secondary);
+  --color-app-text-tertiary: var(--apps-sdk-text-tertiary);
+  --color-app-surface: var(--apps-sdk-surface);
+  --color-app-surface-secondary: var(--apps-sdk-surface-secondary);
+  --color-app-surface-tertiary: var(--apps-sdk-surface-tertiary);
+  --color-app-surface-elevated: var(--apps-sdk-surface-elevated);
+  --color-app-border: var(--apps-sdk-border);
+  --color-app-border-subtle: var(--apps-sdk-border-subtle);
+  --color-app-border-strong: var(--apps-sdk-border-strong);
+  --color-app-info: var(--apps-sdk-info);
+  --color-app-info-soft: var(--apps-sdk-info-soft);
+  --color-app-success: var(--apps-sdk-success);
+  --color-app-success-soft: var(--apps-sdk-success-soft);
+  --color-app-warning: var(--apps-sdk-warning);
+  --color-app-warning-soft: var(--apps-sdk-warning-soft);
+  --color-app-danger: var(--apps-sdk-danger);
+  --color-app-danger-soft: var(--apps-sdk-danger-soft);
+  --color-app-discovery: var(--apps-sdk-discovery);
+  --color-app-discovery-soft: var(--apps-sdk-discovery-soft);
+  --radius-app-card: var(--apps-sdk-card-radius);
+}
+
+[data-apps-sdk-ui] {
+  --apps-sdk-text: #0d0d0d;
+  --apps-sdk-text-secondary: #5d5d5d;
+  --apps-sdk-text-tertiary: #8f8f8f;
+  --apps-sdk-surface: #fff;
+  --apps-sdk-surface-secondary: #f9f9f9;
+  --apps-sdk-surface-tertiary: #f3f3f3;
+  --apps-sdk-surface-elevated: #fff;
+  --apps-sdk-border-subtle: rgb(13 13 13 / 5%);
+  --apps-sdk-border: rgb(13 13 13 / 10%);
+  --apps-sdk-border-strong: rgb(13 13 13 / 15%);
+  --apps-sdk-primary: #181818;
+  --apps-sdk-primary-hover: #303030;
+  --apps-sdk-primary-foreground: #fff;
+  --apps-sdk-ring: #0169cc;
+  --apps-sdk-info: #0169cc;
+  --apps-sdk-info-soft: #eaf4ff;
+  --apps-sdk-success: #00692a;
+  --apps-sdk-success-soft: #eaf9ee;
+  --apps-sdk-warning: #923b0f;
+  --apps-sdk-warning-soft: #fff3e8;
+  --apps-sdk-danger: #911e1b;
+  --apps-sdk-danger-soft: #ffeded;
+  --apps-sdk-discovery: #532d8d;
+  --apps-sdk-discovery-soft: #f4edff;
+  --apps-sdk-card-radius: 1rem;
+  --apps-sdk-control-radius: 0.5rem;
+  --apps-sdk-control-size: 2rem;
+  --background: var(--apps-sdk-surface);
+  --foreground: var(--apps-sdk-text);
+  --card: var(--apps-sdk-surface);
+  --card-foreground: var(--apps-sdk-text);
+  --popover: var(--apps-sdk-surface-elevated);
+  --popover-foreground: var(--apps-sdk-text);
+  --primary: var(--apps-sdk-primary);
+  --primary-foreground: var(--apps-sdk-primary-foreground);
+  --secondary: var(--apps-sdk-surface-secondary);
+  --secondary-foreground: var(--apps-sdk-text);
+  --muted: var(--apps-sdk-surface-secondary);
+  --muted-foreground: var(--apps-sdk-text-secondary);
+  --accent: var(--apps-sdk-surface-tertiary);
+  --accent-foreground: var(--apps-sdk-text);
+  --destructive: var(--apps-sdk-danger);
+  --border: var(--apps-sdk-border);
+  --input: var(--apps-sdk-border-strong);
+  --ring: var(--apps-sdk-ring);
+  color: var(--apps-sdk-text);
+  font-family:
+    ui-sans-serif,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  letter-spacing: 0;
+}
+
+.dark [data-apps-sdk-ui],
+[data-apps-sdk-ui].dark {
+  --apps-sdk-text: #fff;
+  --apps-sdk-text-secondary: #afafaf;
+  --apps-sdk-text-tertiary: #8f8f8f;
+  --apps-sdk-surface: #212121;
+  --apps-sdk-surface-secondary: #131313;
+  --apps-sdk-surface-tertiary: #161616;
+  --apps-sdk-surface-elevated: #303030;
+  --apps-sdk-border-subtle: rgb(255 255 255 / 6%);
+  --apps-sdk-border: rgb(255 255 255 / 12%);
+  --apps-sdk-border-strong: rgb(255 255 255 / 20%);
+  --apps-sdk-primary: #f3f3f3;
+  --apps-sdk-primary-hover: #ededed;
+  --apps-sdk-primary-foreground: #0d0d0d;
+  --apps-sdk-ring: #0285ff;
+  --apps-sdk-info: #66b5ff;
+  --apps-sdk-info-soft: rgb(2 133 255 / 14%);
+  --apps-sdk-success: #04b84c;
+  --apps-sdk-success-soft: rgb(4 184 76 / 14%);
+  --apps-sdk-warning: #e25507;
+  --apps-sdk-warning-soft: rgb(226 85 7 / 14%);
+  --apps-sdk-danger: #e02e2a;
+  --apps-sdk-danger-soft: rgb(224 46 42 / 14%);
+  --apps-sdk-discovery: #be95fa;
+  --apps-sdk-discovery-soft: rgb(146 79 247 / 14%);
+}
+
+[data-apps-sdk-ui] [data-slot="button"] {
+  border-radius: 9999px;
+}
+
+[data-apps-sdk-ui] [data-slot="button"][data-size="default"],
+[data-apps-sdk-ui] [data-slot="button"][data-size="icon"] {
+  height: var(--apps-sdk-control-size);
+}
+
+[data-apps-sdk-ui] [data-slot="button"][data-size="sm"],
+[data-apps-sdk-ui] [data-slot="button"][data-size="icon-sm"] {
+  height: 1.75rem;
+}
+
+[data-apps-sdk-ui] [data-slot="button"][data-size="lg"],
+[data-apps-sdk-ui] [data-slot="button"][data-size="icon-lg"] {
+  height: 2.25rem;
+}
+
+[data-apps-sdk-ui] [data-slot="input"],
+[data-apps-sdk-ui] [data-slot="select-trigger"] {
+  height: var(--apps-sdk-control-size);
+  border-color: var(--apps-sdk-border-strong);
+  border-radius: var(--apps-sdk-control-radius);
+  box-shadow: none;
+}
+
+[data-apps-sdk-ui] [data-slot="textarea"] {
+  border-color: var(--apps-sdk-border-strong);
+  border-radius: var(--apps-sdk-control-radius);
+  box-shadow: none;
+}
+
+[data-apps-sdk-ui] [data-slot="card"],
+[data-apps-sdk-ui] [data-apps-sdk-surface="card"] {
+  border-color: var(--apps-sdk-border);
+  border-radius: var(--apps-sdk-card-radius);
+  background: var(--apps-sdk-surface);
+}
+
+[data-apps-sdk-ui] [data-apps-sdk-status="info"] {
+  color: var(--apps-sdk-info);
+}
+
+[data-apps-sdk-ui] [data-apps-sdk-status="success"] {
+  color: var(--apps-sdk-success);
+}
+
+[data-apps-sdk-ui] [data-apps-sdk-status="warning"] {
+  color: var(--apps-sdk-warning);
+}
+
+[data-apps-sdk-ui] [data-apps-sdk-status="danger"] {
+  color: var(--apps-sdk-danger);
+}
+
+[data-apps-sdk-ui] [data-apps-sdk-status="danger"][data-apps-sdk-fill] {
+  fill: var(--apps-sdk-danger);
+}
+
+[data-apps-sdk-ui] [data-apps-sdk-status="success-soft"] {
+  color: var(--apps-sdk-success);
+  background: var(--apps-sdk-success-soft);
+}
+
+[data-apps-sdk-ui] [data-apps-sdk-status="success-solid"] {
+  color: var(--apps-sdk-primary-foreground);
+  background: var(--apps-sdk-success);
+}
+
+[data-apps-sdk-ui] [data-apps-sdk-status="success-solid"] > svg {
+  color: var(--apps-sdk-primary-foreground);
+}
+
+[data-apps-sdk-ui] [data-slot="status-badge"][data-apps-sdk-status="success"],
+[data-apps-sdk-ui]
+  [data-slot="status-badge"][data-apps-sdk-status="delivered"] {
+  color: var(--apps-sdk-success);
+  border-color: color-mix(in srgb, var(--apps-sdk-success) 30%, transparent);
+  background: var(--apps-sdk-success-soft);
+}
+
+[data-apps-sdk-ui]
+  [data-slot="status-badge"][data-apps-sdk-status="processing"],
+[data-apps-sdk-ui] [data-slot="status-badge"][data-apps-sdk-status="shipped"] {
+  color: var(--apps-sdk-info);
+  border-color: color-mix(in srgb, var(--apps-sdk-info) 30%, transparent);
+  background: var(--apps-sdk-info-soft);
+}
+
+[data-apps-sdk-ui] [data-slot="status-badge"][data-apps-sdk-status="warning"] {
+  color: var(--apps-sdk-warning);
+  border-color: color-mix(in srgb, var(--apps-sdk-warning) 30%, transparent);
+  background: var(--apps-sdk-warning-soft);
+}
+
+[data-apps-sdk-ui] [data-slot="status-badge"][data-apps-sdk-status="error"] {
+  color: var(--apps-sdk-danger);
+  border-color: color-mix(in srgb, var(--apps-sdk-danger) 30%, transparent);
+  background: var(--apps-sdk-danger-soft);
+}
+
+[data-apps-sdk-ui]
+  [data-slot="progress-step-indicator"][data-apps-sdk-status="completed"] {
+  color: var(--apps-sdk-primary-foreground);
+  background: var(--apps-sdk-success);
+}
+
+[data-apps-sdk-ui] [data-slot="alert"] {
+  border-color: var(--apps-sdk-border);
+  border-radius: 0.75rem;
+}
+
+[data-apps-sdk-ui] [data-slot="tabs-list"] {
+  border-radius: 9999px;
+  background: var(--apps-sdk-surface-secondary);
+}
+
+[data-apps-sdk-ui] [data-slot="tabs-trigger"] {
+  border-radius: 9999px;
+}
+
+[data-apps-sdk-ui] [data-apps-sdk-actions] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 575px) {
+  [data-apps-sdk-ui] [data-apps-sdk-actions] > [data-slot="button"] {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+}

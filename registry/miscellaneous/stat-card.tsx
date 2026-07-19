@@ -53,6 +53,12 @@ const TREND_CLASSES = {
   up: "text-green-600",
 };
 
+const TREND_STATUS = {
+  down: "danger",
+  neutral: undefined,
+  up: "success",
+};
+
 const TrendIcon = ({ trend = "neutral" }: Pick<StatCard, "trend">) => {
   if (trend === "up") {
     return <TrendingUp className="size-3.5" />;
@@ -102,6 +108,7 @@ export const StatCardItem = ({
               )}
               {stat.change !== undefined && (
                 <span
+                  data-apps-sdk-status={TREND_STATUS[trend]}
                   className={cn(
                     "flex shrink-0 items-center gap-0.5 font-medium text-[10px] sm:text-xs",
                     TREND_CLASSES[trend]

@@ -18,7 +18,8 @@
     "checkbox",
     "https://mcpcn.dev/r/event-card.json",
     "https://mcpcn.dev/r/shared-types.json",
-    "https://mcpcn.dev/r/event-shared.json"
+    "https://mcpcn.dev/r/event-shared.json",
+    "https://mcpcn.dev/r/apps-sdk-theme.json"
   ],
   "files": [
     {

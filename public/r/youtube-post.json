@@ -9,7 +9,8 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "dropdown-menu"
+    "dropdown-menu",
+    "https://mcpcn.dev/r/apps-sdk-theme.json"
   ],
   "files": [
     {

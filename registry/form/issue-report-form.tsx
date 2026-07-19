@@ -626,7 +626,10 @@ const IssueReportFormView = ({
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2">
+        <div
+          className="flex flex-col gap-2 pt-2 sm:flex-row sm:items-center sm:justify-between"
+          data-apps-sdk-actions=""
+        >
           <Button
             variant="outline"
             size="sm"

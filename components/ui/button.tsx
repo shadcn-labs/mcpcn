@@ -63,6 +63,8 @@ const Button = ({
   return (
     <ButtonPrimitive
       data-slot="button"
+      data-size={size}
+      data-variant={variant}
       className={cn(buttonVariants({ className, size, variant }))}
       onClick={(event) => {
         play();

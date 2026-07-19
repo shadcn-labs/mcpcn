@@ -90,12 +90,18 @@ const EventConfirmationView = ({ data, actions }: EventConfirmationProps) => {
   const { onViewTickets, onFollowOrganizer, onShare } = actions ?? {};
 
   return (
-    <div className="rounded-xl border bg-card p-6 ">
+    <div className="rounded-xl border bg-card p-6" data-apps-sdk-surface="card">
       {/* Success header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-full bg-green-100">
-            <CheckCircle className="size-6 text-green-600" />
+          <div
+            className="flex size-10 items-center justify-center rounded-full bg-green-100"
+            data-apps-sdk-status="success-soft"
+          >
+            <CheckCircle
+              className="size-6 text-green-600"
+              data-apps-sdk-status="success"
+            />
           </div>
           <div>
             <h1 className="text-xl font-semibold">Thanks for your order!</h1>

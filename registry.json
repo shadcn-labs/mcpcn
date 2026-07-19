@@ -4,6 +4,47 @@
   "homepage": "https://mcpcn.dev",
   "items": [
     {
+      "name": "apps-sdk-theme",
+      "type": "registry:style",
+      "title": "Apps SDK Theme",
+      "description": "A scoped OpenAI Apps SDK UI compatibility theme for mcpcn blocks.",
+      "author": "mcpcn",
+      "categories": ["style"],
+      "cssVars": {
+        "theme": {
+          "color-app-text": "var(--apps-sdk-text)",
+          "color-app-text-secondary": "var(--apps-sdk-text-secondary)",
+          "color-app-text-tertiary": "var(--apps-sdk-text-tertiary)",
+          "color-app-surface": "var(--apps-sdk-surface)",
+          "color-app-surface-secondary": "var(--apps-sdk-surface-secondary)",
+          "color-app-surface-tertiary": "var(--apps-sdk-surface-tertiary)",
+          "color-app-surface-elevated": "var(--apps-sdk-surface-elevated)",
+          "color-app-border": "var(--apps-sdk-border)",
+          "color-app-border-subtle": "var(--apps-sdk-border-subtle)",
+          "color-app-border-strong": "var(--apps-sdk-border-strong)",
+          "color-app-info": "var(--apps-sdk-info)",
+          "color-app-info-soft": "var(--apps-sdk-info-soft)",
+          "color-app-success": "var(--apps-sdk-success)",
+          "color-app-success-soft": "var(--apps-sdk-success-soft)",
+          "color-app-warning": "var(--apps-sdk-warning)",
+          "color-app-warning-soft": "var(--apps-sdk-warning-soft)",
+          "color-app-danger": "var(--apps-sdk-danger)",
+          "color-app-danger-soft": "var(--apps-sdk-danger-soft)",
+          "color-app-discovery": "var(--apps-sdk-discovery)",
+          "color-app-discovery-soft": "var(--apps-sdk-discovery-soft)",
+          "radius-app-card": "var(--apps-sdk-card-radius)"
+        }
+      },
+      "files": [
+        {
+          "path": "styles/apps-sdk.css",
+          "type": "registry:style",
+          "target": "styles/apps-sdk.css"
+        }
+      ],
+      "category": "style"
+    },
+    {
       "name": "contact-form",
       "type": "registry:block",
       "title": "Contact Form",
@@ -11,7 +52,13 @@
       "author": "mcpcn",
       "categories": ["form"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["button", "input", "label", "popover"],
+      "registryDependencies": [
+        "button",
+        "input",
+        "label",
+        "popover",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/form/contact-form.tsx",
@@ -29,7 +76,11 @@
       "author": "mcpcn",
       "categories": ["form"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["button", "popover"],
+      "registryDependencies": [
+        "button",
+        "popover",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/form/date-time-picker.tsx",
@@ -47,7 +98,13 @@
       "author": "mcpcn",
       "categories": ["form"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["button", "input", "label", "select"],
+      "registryDependencies": [
+        "button",
+        "input",
+        "label",
+        "select",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/form/issue-report-form.tsx",
@@ -67,6 +124,7 @@
       "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
+        "https://mcpcn.dev/r/apps-sdk-theme.json",
         "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
@@ -88,6 +146,7 @@
       "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
+        "https://mcpcn.dev/r/apps-sdk-theme.json",
         "https://mcpcn.dev/r/shared-types.json"
       ],
       "files": [
@@ -109,7 +168,8 @@
       "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
-        "https://mcpcn.dev/r/shared-types.json"
+        "https://mcpcn.dev/r/shared-types.json",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
       ],
       "files": [
         {
@@ -130,7 +190,8 @@
       "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
-        "https://mcpcn.dev/r/shared-types.json"
+        "https://mcpcn.dev/r/shared-types.json",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
       ],
       "files": [
         {
@@ -151,7 +212,8 @@
       "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "button",
-        "https://mcpcn.dev/r/shared-types.json"
+        "https://mcpcn.dev/r/shared-types.json",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
       ],
       "files": [
         {
@@ -170,7 +232,10 @@
       "author": "mcpcn",
       "categories": ["selection"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["button"],
+      "registryDependencies": [
+        "button",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/selection/tag-select.tsx",
@@ -188,7 +253,7 @@
       "author": "mcpcn",
       "categories": ["selection"],
       "dependencies": [],
-      "registryDependencies": [],
+      "registryDependencies": ["https://mcpcn.dev/r/apps-sdk-theme.json"],
       "files": [
         {
           "path": "registry/selection/quick-reply.tsx",
@@ -206,7 +271,7 @@
       "author": "mcpcn",
       "categories": ["status"],
       "dependencies": ["lucide-react"],
-      "registryDependencies": [],
+      "registryDependencies": ["https://mcpcn.dev/r/apps-sdk-theme.json"],
       "files": [
         {
           "path": "registry/status/progress-steps.tsx",
@@ -224,7 +289,7 @@
       "author": "mcpcn",
       "categories": ["status"],
       "dependencies": ["lucide-react"],
-      "registryDependencies": [],
+      "registryDependencies": ["https://mcpcn.dev/r/apps-sdk-theme.json"],
       "files": [
         {
           "path": "registry/status/status-badge.tsx",
@@ -242,7 +307,7 @@
       "author": "mcpcn",
       "categories": ["miscellaneous"],
       "dependencies": ["lucide-react"],
-      "registryDependencies": [],
+      "registryDependencies": ["https://mcpcn.dev/r/apps-sdk-theme.json"],
       "files": [
         {
           "path": "registry/miscellaneous/stat-card.tsx",
@@ -263,7 +328,8 @@
       "registryDependencies": [
         "button",
         "tooltip",
-        "https://mcpcn.dev/r/shared-types.json"
+        "https://mcpcn.dev/r/shared-types.json",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
       ],
       "files": [
         {
@@ -290,7 +356,8 @@
       "registryDependencies": [
         "button",
         "tooltip",
-        "https://mcpcn.dev/r/shared-types.json"
+        "https://mcpcn.dev/r/shared-types.json",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
       ],
       "files": [
         {
@@ -322,7 +389,8 @@
       "registryDependencies": [
         "button",
         "tooltip",
-        "https://mcpcn.dev/r/shared-types.json"
+        "https://mcpcn.dev/r/shared-types.json",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
       ],
       "files": [
         {
@@ -346,7 +414,13 @@
       "author": "mcpcn",
       "categories": ["list"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["button", "popover", "select", "input"],
+      "registryDependencies": [
+        "button",
+        "popover",
+        "select",
+        "input",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/list/table.tsx",
@@ -364,7 +438,10 @@
       "author": "mcpcn",
       "categories": ["messaging"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["dropdown-menu"],
+      "registryDependencies": [
+        "dropdown-menu",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/messaging/message-bubble.tsx",
@@ -384,7 +461,8 @@
       "dependencies": ["@base-ui/react", "lucide-react"],
       "registryDependencies": [
         "dropdown-menu",
-        "https://mcpcn.dev/r/shared-types.json"
+        "https://mcpcn.dev/r/shared-types.json",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
       ],
       "files": [
         {
@@ -408,7 +486,7 @@
       "author": "mcpcn",
       "categories": ["social"],
       "dependencies": ["lucide-react"],
-      "registryDependencies": [],
+      "registryDependencies": ["https://mcpcn.dev/r/apps-sdk-theme.json"],
       "files": [
         {
           "path": "registry/social/x-post.tsx",
@@ -426,7 +504,10 @@
       "author": "mcpcn",
       "categories": ["social"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["dropdown-menu"],
+      "registryDependencies": [
+        "dropdown-menu",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/social/instagram-post.tsx",
@@ -451,7 +532,8 @@
           "target": "components/ui/linkedin-post.tsx"
         }
       ],
-      "category": "social"
+      "category": "social",
+      "registryDependencies": ["https://mcpcn.dev/r/apps-sdk-theme.json"]
     },
     {
       "name": "youtube-post",
@@ -461,7 +543,10 @@
       "author": "mcpcn",
       "categories": ["social"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["dropdown-menu"],
+      "registryDependencies": [
+        "dropdown-menu",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/social/youtube-post.tsx",
@@ -480,7 +565,11 @@
       "categories": ["map"],
       "dependencies": ["@base-ui/react", "lucide-react", "leaflet"],
       "devDependencies": ["@types/leaflet"],
-      "registryDependencies": ["button", "checkbox"],
+      "registryDependencies": [
+        "button",
+        "checkbox",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/map/map-carousel.tsx",
@@ -498,7 +587,10 @@
       "author": "mcpcn",
       "categories": ["events"],
       "dependencies": ["lucide-react"],
-      "registryDependencies": ["https://mcpcn.dev/r/shared-types.json"],
+      "registryDependencies": [
+        "https://mcpcn.dev/r/shared-types.json",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/events/event-card.tsx",
@@ -527,7 +619,8 @@
         "checkbox",
         "https://mcpcn.dev/r/event-card.json",
         "https://mcpcn.dev/r/shared-types.json",
-        "https://mcpcn.dev/r/event-shared.json"
+        "https://mcpcn.dev/r/event-shared.json",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
       ],
       "files": [
         {
@@ -555,7 +648,8 @@
       "registryDependencies": [
         "button",
         "https://mcpcn.dev/r/shared-types.json",
-        "https://mcpcn.dev/r/event-shared.json"
+        "https://mcpcn.dev/r/event-shared.json",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
       ],
       "files": [
         {
@@ -574,7 +668,10 @@
       "author": "mcpcn",
       "categories": ["events"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["button"],
+      "registryDependencies": [
+        "button",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/events/ticket-tier-select.tsx",
@@ -592,7 +689,10 @@
       "author": "mcpcn",
       "categories": ["events"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["button"],
+      "registryDependencies": [
+        "button",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/events/event-confirmation.tsx",
@@ -610,7 +710,10 @@
       "author": "mcpcn",
       "categories": ["miscellaneous"],
       "dependencies": ["@base-ui/react", "lucide-react"],
-      "registryDependencies": ["button"],
+      "registryDependencies": [
+        "button",
+        "https://mcpcn.dev/r/apps-sdk-theme.json"
+      ],
       "files": [
         {
           "path": "registry/miscellaneous/hero.tsx",

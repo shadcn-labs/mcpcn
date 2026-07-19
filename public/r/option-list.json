@@ -10,7 +10,8 @@
   ],
   "registryDependencies": [
     "button",
-    "https://mcpcn.dev/r/shared-types.json"
+    "https://mcpcn.dev/r/shared-types.json",
+    "https://mcpcn.dev/r/apps-sdk-theme.json"
   ],
   "files": [
     {

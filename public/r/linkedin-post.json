@@ -7,6 +7,9 @@
   "dependencies": [
     "lucide-react"
   ],
+  "registryDependencies": [
+    "https://mcpcn.dev/r/apps-sdk-theme.json"
+  ],
   "files": [
     {
       "path": "registry/social/linkedin-post.tsx",

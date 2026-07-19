@@ -9,7 +9,8 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "button"
+    "button",
+    "https://mcpcn.dev/r/apps-sdk-theme.json"
   ],
   "files": [
     {

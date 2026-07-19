@@ -385,6 +385,7 @@ export const ContactFormActions = ({
         "flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between",
         className
       )}
+      data-apps-sdk-actions=""
       {...props}
     >
       {children ?? (

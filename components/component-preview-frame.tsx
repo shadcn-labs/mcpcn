@@ -54,6 +54,7 @@ export const ComponentPreviewFrame = ({
   if (showcase) {
     return (
       <div
+        data-apps-sdk-ui=""
         className={cn(
           "not-prose h-full overflow-hidden rounded-xl border bg-background",
           className
@@ -93,7 +94,10 @@ export const ComponentPreviewFrame = ({
           ))}
         </TabsList>
 
-        <div className="flex min-h-[360px] items-center justify-center overflow-hidden rounded-xl border bg-background p-4 sm:p-8">
+        <div
+          data-apps-sdk-ui=""
+          className="flex min-h-[360px] items-center justify-center overflow-hidden rounded-xl border bg-background p-4 sm:p-8"
+        >
           <TabsContent className="w-full" value="inline">
             <div className="mx-auto w-full max-w-3xl">{children}</div>
           </TabsContent>
@@ -122,6 +126,7 @@ export const ComponentPreviewFrame = ({
         ? createPortal(
             <section
               aria-label="Picture in picture preview"
+              data-apps-sdk-ui=""
               className="fixed right-4 bottom-4 z-100 w-[min(420px,calc(100vw-2rem))] overflow-hidden rounded-xl border bg-background shadow-2xl"
             >
               <header className="flex h-11 items-center justify-between border-b px-3">
@@ -148,6 +153,7 @@ export const ComponentPreviewFrame = ({
             <section
               aria-label="Full-width preview"
               aria-modal="true"
+              data-apps-sdk-ui=""
               className="fixed inset-0 z-100 flex flex-col bg-background"
               role="dialog"
             >

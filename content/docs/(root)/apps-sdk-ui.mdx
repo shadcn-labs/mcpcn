@@ -1,0 +1,84 @@
+---
+title: "Apps SDK UI"
+description: "Render mcpcn blocks with OpenAI-aligned tokens and interaction geometry."
+---
+
+mcpcn keeps its Base UI primitives and composition APIs while providing an optional compatibility theme for apps rendered inside ChatGPT. The theme follows the semantic surfaces, text hierarchy, borders, status colors, system typography, compact controls, and responsive action layout used by [Apps SDK UI](https://openai.github.io/apps-sdk-ui/).
+
+## Installation
+
+Install the scoped theme from the registry:
+
+```bash
+npx shadcn@latest add @mcpcn/apps-sdk-theme
+```
+
+Import the generated stylesheet after your existing global theme:
+
+```css title="app/globals.css"
+@import "../styles/apps-sdk.css";
+```
+
+Adjust the relative path when your global stylesheet lives elsewhere.
+
+## Usage
+
+Apply `data-apps-sdk-ui` to the widget boundary. Existing application and documentation styles outside this boundary remain unchanged.
+
+```tsx
+import {
+  OrderConfirm,
+  OrderConfirmContent,
+  OrderConfirmFooter,
+  OrderConfirmProduct,
+} from "@/components/ui/order-confirm";
+
+export function OrderWidget() {
+  return (
+    <div data-apps-sdk-ui>
+      <OrderConfirm>
+        <OrderConfirmContent>
+          <OrderConfirmProduct />
+          <div className="border-t" />
+          <OrderConfirmFooter data-apps-sdk-actions />
+        </OrderConfirmContent>
+      </OrderConfirm>
+    </div>
+  );
+}
+```
+
+The boundary maps existing shadcn/ui variables to Apps SDK surfaces and keeps the installed Base UI behavior intact. Buttons retain mcpcn sound and haptic feedback.
+
+When a widget uses Base UI portals, place the attribute on the widget document's `body` or configure the portal to render inside this boundary. This ensures popovers, dialogs, and tooltips inherit the same tokens.
+
+## Semantic tokens
+
+Inside the boundary, the theme also exposes namespaced Tailwind utilities that do not conflict with shadcn/ui token names.
+
+| Purpose  | Utilities                                                                                        |
+| -------- | ------------------------------------------------------------------------------------------------ |
+| Surfaces | `bg-app-surface`, `bg-app-surface-secondary`, `bg-app-surface-elevated`                          |
+| Text     | `text-app-text`, `text-app-text-secondary`, `text-app-text-tertiary`                             |
+| Borders  | `border-app-border`, `border-app-border-subtle`, `border-app-border-strong`                      |
+| Status   | `text-app-success`, `text-app-warning`, `text-app-danger`, `text-app-info`, `text-app-discovery` |
+| Cards    | `rounded-app-card`                                                                               |
+
+Use system tokens for structural UI. Brand colors should be limited to meaningful accents, logos, badges, or imagery.
+
+## Action layout
+
+Add `data-apps-sdk-actions` to an action container to wrap actions consistently and stack direct button children on narrow screens.
+
+```tsx
+<div data-apps-sdk-actions>
+  <Button variant="outline">Cancel</Button>
+  <Button>Confirm</Button>
+</div>
+```
+
+Inline widgets should expose no more than one primary action and one optional secondary action. Richer navigation belongs in fullscreen rather than inside an inline card.
+
+## Host behavior
+
+The theme only handles visual compatibility. Display modes, persisted widget state, tool calls, and external links must still use the Apps SDK host bridge. See the official [UI guidelines](https://developers.openai.com/apps-sdk/concepts/ui-guidelines) and [Apps SDK reference](https://developers.openai.com/apps-sdk/reference).

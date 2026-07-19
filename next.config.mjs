@@ -41,6 +41,11 @@ const nextConfig = {
   redirects() {
     return [
       {
+        destination: ROUTES.DOCS_APPS_SDK_UI,
+        permanent: true,
+        source: "/docs/apps-sdk",
+      },
+      {
         destination: `${ROUTES.DOCS}.md`,
         permanent: true,
         source: `${ROUTES.DOCS}.mdx`,

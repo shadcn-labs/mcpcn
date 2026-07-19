@@ -7,7 +7,9 @@
   "dependencies": [
     "lucide-react"
   ],
-  "registryDependencies": [],
+  "registryDependencies": [
+    "https://mcpcn.dev/r/apps-sdk-theme.json"
+  ],
   "files": [
     {
       "path": "registry/social/x-post.tsx",

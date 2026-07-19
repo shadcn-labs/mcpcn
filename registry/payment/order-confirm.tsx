@@ -103,7 +103,12 @@ export const OrderConfirmProduct = ({
                 </p>
               )}
               {freeShipping && (
-                <p className="text-green-600 text-xs">Free shipping</p>
+                <p
+                  className="text-green-600 text-xs"
+                  data-apps-sdk-status="success"
+                >
+                  Free shipping
+                </p>
               )}
             </div>
           </div>
@@ -112,7 +117,12 @@ export const OrderConfirmProduct = ({
               <p className="font-semibold">{formatCurrency(data.price)}</p>
             )}
             {freeShipping && (
-              <p className="text-green-600 text-sm">Free shipping</p>
+              <p
+                className="text-green-600 text-sm"
+                data-apps-sdk-status="success"
+              >
+                Free shipping
+              </p>
             )}
           </div>
         </>
@@ -190,6 +200,7 @@ export const OrderConfirmFooter = ({
   ...props
 }: ComponentProps<"div">) => (
   <div
+    data-apps-sdk-actions=""
     className={cn(
       "space-y-3 p-3 sm:flex sm:items-center sm:justify-between sm:space-y-0 sm:py-2 sm:pr-2 sm:pl-4",
       className
@@ -238,6 +249,7 @@ const OrderConfirmRoot = ({
   return (
     <OrderConfirmContext.Provider value={context}>
       <div
+        data-apps-sdk-surface="card"
         className={cn("w-full rounded-md bg-card sm:rounded-lg", className)}
         {...props}
       >

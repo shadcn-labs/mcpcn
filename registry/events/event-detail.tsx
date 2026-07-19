@@ -303,6 +303,8 @@ export const EventDetailGallery = ({
               type="button"
             >
               <Heart
+                data-apps-sdk-fill=""
+                data-apps-sdk-status={isSaved ? "danger" : undefined}
                 className={cn("size-5", isSaved && "fill-red-500 text-red-500")}
               />
             </button>
@@ -350,7 +352,10 @@ const EventDetailHeaderIntro = () => {
       {event.organizer && (
         <div className="flex items-center gap-2 text-sm">
           {event.organizer.verified && (
-            <BadgeCheck className="size-4 text-blue-500" />
+            <BadgeCheck
+              className="size-4 text-blue-500"
+              data-apps-sdk-status="info"
+            />
           )}
           {event.organizer.name && (
             <span className="font-medium">{event.organizer.name}</span>
@@ -360,7 +365,10 @@ const EventDetailHeaderIntro = () => {
             <>
               <span className="text-muted-foreground">·</span>
               <span className="flex items-center gap-1">
-                <Star className="size-4 fill-current text-yellow-500" />
+                <Star
+                  className="size-4 fill-current text-yellow-500"
+                  data-apps-sdk-status="warning"
+                />
                 {event.organizer.rating}
                 {event.organizer.reviewCount !== undefined &&
                   ` (${formatNumber(event.organizer.reviewCount)})`}
@@ -470,7 +478,11 @@ export const EventDetailActions = ({
 }: ComponentProps<"div">) => {
   const { event, onGetTickets } = useEventDetail();
   return (
-    <div className={cn("flex gap-3", className)} {...props}>
+    <div
+      className={cn("flex gap-3", className)}
+      data-apps-sdk-actions=""
+      {...props}
+    >
       {children ?? (
         <>
           <Button
@@ -740,12 +752,18 @@ const EventDetailOrganizerTrackRecord = ({
   return (
     <div className="mt-3 flex flex-wrap gap-2 text-xs">
       {organizer.trackRecord === "great" && (
-        <span className="flex items-center gap-1 text-green-600">
+        <span
+          className="flex items-center gap-1 text-green-600"
+          data-apps-sdk-status="success"
+        >
           <CheckCircle className="size-3" /> Great track record
         </span>
       )}
       {organizer.responseRate === "very responsive" && (
-        <span className="flex items-center gap-1 text-orange-600">
+        <span
+          className="flex items-center gap-1 text-orange-600"
+          data-apps-sdk-status="warning"
+        >
           <CheckCircle className="size-3" /> Very responsive
         </span>
       )}
@@ -778,7 +796,7 @@ export const EventDetailOrganizer = ({
                 <EventDetailOrganizerStats organizer={organizer} />
               </div>
             </div>
-            <div className="mt-3 flex gap-2">
+            <div className="mt-3 flex gap-2" data-apps-sdk-actions="">
               <Button
                 className="flex-1"
                 onClick={() => onContact?.(organizer)}
@@ -874,6 +892,7 @@ export const EventDetailReport = ({
       "flex items-center gap-2 text-blue-600 text-sm hover:underline",
       className
     )}
+    data-apps-sdk-status="info"
     type="button"
     {...props}
   >

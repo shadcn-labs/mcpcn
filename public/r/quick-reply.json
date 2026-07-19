@@ -5,7 +5,9 @@
   "author": "mcpcn",
   "description": "Quick reply buttons for common chat responses.",
   "dependencies": [],
-  "registryDependencies": [],
+  "registryDependencies": [
+    "https://mcpcn.dev/r/apps-sdk-theme.json"
+  ],
   "files": [
     {
       "path": "registry/selection/quick-reply.tsx",

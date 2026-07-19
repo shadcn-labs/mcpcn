@@ -64,6 +64,7 @@ const PaymentConfirmedIcon = ({
   ...props
 }: ComponentProps<"div">) => (
   <div
+    data-apps-sdk-status="success-solid"
     className={cn(
       "flex size-8 items-center justify-center rounded-full bg-foreground",
       className
@@ -319,7 +320,10 @@ const DefaultPaymentConfirmed = () => {
               </div>
             </div>
           </div>
-          <div className="mt-4 flex justify-end border-t pt-4">
+          <div
+            className="mt-4 flex justify-end border-t pt-4"
+            data-apps-sdk-actions=""
+          >
             <PaymentConfirmedAction />
           </div>
         </div>
@@ -359,6 +363,7 @@ const PaymentConfirmedRoot = ({
   return (
     <PaymentConfirmedContext.Provider value={context}>
       <div
+        data-apps-sdk-surface="card"
         className={cn(
           "w-full overflow-hidden rounded-lg border bg-card",
           className
