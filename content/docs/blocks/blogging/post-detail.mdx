@@ -74,9 +74,18 @@ PostDetail
 
 ## OpenUI Integration
 
-Register `PostDetail` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+Install the OpenUI React packages.
+
+```bash
+pnpm add @openuidev/react-lang zod
+```
+
+Add `PostDetail` to a component library and map it to the installed component.
 
 ```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
 import { PostDetail, PostDetailContent } from "@/components/ui/post-detail";
 
 const OpenUIPostDetail = defineComponent({
@@ -98,6 +107,47 @@ export const post_detailLibrary = createLibrary({
 ```
 
 For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## json-render Integration
+
+Install the json-render React packages.
+
+```bash
+pnpm add @json-render/core @json-render/react zod
+```
+
+Add `PostDetail` to a component catalog and map it to the installed component.
+
+```tsx
+import { defineCatalog } from "@json-render/core";
+import { defineRegistry } from "@json-render/react";
+import { schema } from "@json-render/react/schema";
+import { z } from "zod";
+
+import { PostDetail, PostDetailContent } from "@/components/ui/post-detail";
+
+export const catalog = defineCatalog(schema, {
+  components: {
+    PostDetail: {
+      props: z.object({}),
+      description:
+        "Full post view with cover image, author info, content, tags and related posts section.",
+    },
+  },
+});
+
+export const { registry } = defineRegistry(catalog, {
+  components: {
+    PostDetail: () => (
+      <PostDetail>
+        <PostDetailContent />
+      </PostDetail>
+    ),
+  },
+});
+```
+
+Use `catalog.prompt()` to constrain model output, then render the generated spec with the json-render React `Renderer`. See the [json-render Quick Start](https://json-render.dev/docs/quick-start) for the provider and streaming setup.
 
 ## API Reference
 

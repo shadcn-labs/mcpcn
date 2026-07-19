@@ -109,9 +109,18 @@ PostCard
 
 ## OpenUI Integration
 
-Register `PostCard` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+Install the OpenUI React packages.
+
+```bash
+pnpm add @openuidev/react-lang zod
+```
+
+Add `PostCard` to a component library and map it to the installed component.
 
 ```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
 import { PostCard, PostCardContent } from "@/components/ui/post-card";
 
 const OpenUIPostCard = defineComponent({
@@ -133,6 +142,47 @@ export const post_cardLibrary = createLibrary({
 ```
 
 For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## json-render Integration
+
+Install the json-render React packages.
+
+```bash
+pnpm add @json-render/core @json-render/react zod
+```
+
+Add `PostCard` to a component catalog and map it to the installed component.
+
+```tsx
+import { defineCatalog } from "@json-render/core";
+import { defineRegistry } from "@json-render/react";
+import { schema } from "@json-render/react/schema";
+import { z } from "zod";
+
+import { PostCard, PostCardContent } from "@/components/ui/post-card";
+
+export const catalog = defineCatalog(schema, {
+  components: {
+    PostCard: {
+      props: z.object({}),
+      description:
+        "Post card with image, title, excerpt, author info and read more button. Supports default, compact, horizontal, and covered variants. Includes post-detail for fullscreen view.",
+    },
+  },
+});
+
+export const { registry } = defineRegistry(catalog, {
+  components: {
+    PostCard: () => (
+      <PostCard>
+        <PostCardContent />
+      </PostCard>
+    ),
+  },
+});
+```
+
+Use `catalog.prompt()` to constrain model output, then render the generated spec with the json-render React `Renderer`. See the [json-render Quick Start](https://json-render.dev/docs/quick-start) for the provider and streaming setup.
 
 ## API Reference
 

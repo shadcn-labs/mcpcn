@@ -87,9 +87,18 @@ EventList
 
 ## OpenUI Integration
 
-Register `EventList` with `defineComponent`, describe its model-generated props with Zod, and include it in a library.
+Install the OpenUI React packages.
+
+```bash
+pnpm add @openuidev/react-lang zod
+```
+
+Add `EventList` to a component library and map it to the installed component.
 
 ```tsx showLineNumbers
+import { createLibrary, defineComponent } from "@openuidev/react-lang";
+import { z } from "zod/v4";
+
 import { EventList, EventListContent } from "@/components/ui/event-list";
 
 const OpenUIEventList = defineComponent({
@@ -111,6 +120,47 @@ export const event_listLibrary = createLibrary({
 ```
 
 For richer generated compositions, define the child primitives separately and connect them with `.ref` fields. See [Defining Components](https://www.openui.com/docs/openui-lang/defining-components) in the OpenUI documentation.
+
+## json-render Integration
+
+Install the json-render React packages.
+
+```bash
+pnpm add @json-render/core @json-render/react zod
+```
+
+Add `EventList` to a component catalog and map it to the installed component.
+
+```tsx
+import { defineCatalog } from "@json-render/core";
+import { defineRegistry } from "@json-render/react";
+import { schema } from "@json-render/react/schema";
+import { z } from "zod";
+
+import { EventList, EventListContent } from "@/components/ui/event-list";
+
+export const catalog = defineCatalog(schema, {
+  components: {
+    EventList: {
+      props: z.object({}),
+      description:
+        "Display events in grid, list, or carousel layouts. Fullscreen mode shows interactive split-screen map with Leaflet and animated filter panel.",
+    },
+  },
+});
+
+export const { registry } = defineRegistry(catalog, {
+  components: {
+    EventList: () => (
+      <EventList>
+        <EventListContent />
+      </EventList>
+    ),
+  },
+});
+```
+
+Use `catalog.prompt()` to constrain model output, then render the generated spec with the json-render React `Renderer`. See the [json-render Quick Start](https://json-render.dev/docs/quick-start) for the provider and streaming setup.
 
 ## API Reference
 
