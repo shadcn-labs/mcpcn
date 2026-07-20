@@ -35,10 +35,8 @@ import { useFeedback } from "@/hooks/use-feedback";
 import { useIsMac } from "@/hooks/use-is-mac";
 import { useMutationObserver } from "@/hooks/use-mutation-observer";
 import { usePackageManager } from "@/hooks/use-package-manager";
-import { EXCLUDED_SECTIONS, isBlocksFolder } from "@/lib/docs";
 import { trackEvent } from "@/lib/events";
-import type { PageTreeFolder } from "@/lib/page-tree";
-import { getPagesFromFolder } from "@/lib/page-tree";
+import { buildTreeGroups } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";
 
 type DocUrlKind =
@@ -161,54 +159,17 @@ export const CommandMenu = ({
     },
   });
 
-  const treeGroups = useMemo(() => {
-    const groups: { label: string; pages: { url: string; name: string }[] }[] =
-      [];
-    for (const item of tree.children) {
-      if (item.type !== "folder") {
-        continue;
-      }
-      if (EXCLUDED_SECTIONS.has(item.$id ?? "")) {
-        continue;
-      }
-
-      if (isBlocksFolder(item)) {
-        const categories = item.children.filter(
-          (child): child is PageTreeFolder => child.type === "folder"
-        );
-        for (const category of categories) {
-          const pages = getPagesFromFolder(category)
-            .filter((page) => String(page.name) !== String(category.name))
-            .map((p) => ({
-              name: typeof p.name === "string" ? p.name : String(p.name),
-              url: p.url,
-            }));
-          if (pages.length > 0) {
-            groups.push({
-              label:
-                typeof category.name === "string"
-                  ? category.name
-                  : String(category.name),
-              pages,
-            });
-          }
-        }
-        continue;
-      }
-
-      const pages = getPagesFromFolder(item).map((p) => ({
-        name: typeof p.name === "string" ? p.name : String(p.name),
-        url: p.url,
-      }));
-      if (pages.length > 0) {
-        groups.push({
-          label: typeof item.name === "string" ? item.name : String(item.name),
-          pages,
-        });
-      }
-    }
-    return groups;
-  }, [tree]);
+  const treeGroups = useMemo(
+    () =>
+      buildTreeGroups(tree).map((group) => ({
+        label: String(group.label),
+        pages: group.pages.map((p) => ({
+          name: String(p.name),
+          url: p.url,
+        })),
+      })),
+    [tree]
+  );
 
   const handleDocPageHighlight = useCallback(
     (item: { url: string; name?: string }) => {

@@ -15,9 +15,8 @@ import {
 } from "@/components/ui/sidebar";
 import { ROUTES } from "@/constants/routes";
 import { TOP_LEVEL_SECTIONS } from "@/constants/site";
-import { EXCLUDED_SECTIONS, isBlocksFolder, PAGES_NEW } from "@/lib/docs";
-import { getPagesFromFolder } from "@/lib/page-tree";
-import type { PageTreeFolder } from "@/lib/page-tree";
+import { PAGES_NEW } from "@/lib/docs";
+import { buildTreeGroups } from "@/lib/page-tree";
 import type { source } from "@/lib/source";
 
 const SidebarMenuItemLink = ({
@@ -84,6 +83,7 @@ export const DocsSidebar = ({
   ...props
 }: React.ComponentProps<typeof Sidebar> & { tree: typeof source.pageTree }) => {
   const pathname = usePathname();
+  const treeGroups = buildTreeGroups(tree);
 
   return (
     <Sidebar
@@ -117,44 +117,18 @@ export const DocsSidebar = ({
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        {tree.children.map((item) => {
-          if (item.type !== "folder") {
-            return null;
-          }
-          if (EXCLUDED_SECTIONS.has(item.$id ?? "")) {
-            return null;
-          }
-
-          if (isBlocksFolder(item)) {
-            const categories = item.children.filter(
-              (child): child is PageTreeFolder => child.type === "folder"
-            );
-            return categories.map((category) => {
-              const pages = getPagesFromFolder(category).filter(
-                (page) => String(page.name) !== String(category.name)
-              );
-              return (
-                <SidebarPageGroup
-                  key={category.$id}
-                  label={category.name}
-                  pages={pages}
-                  pathname={pathname}
-                />
-              );
-            });
-          }
-
-          const pages = getPagesFromFolder(item);
-
-          return (
-            <SidebarPageGroup
-              key={item.$id}
-              label={item.name}
-              pages={pages}
-              pathname={pathname}
-            />
-          );
-        })}
+        {treeGroups.map((group) => (
+          <SidebarPageGroup
+            key={
+              typeof group.label === "string"
+                ? group.label
+                : group.label?.toString()
+            }
+            label={group.label}
+            pages={group.pages}
+            pathname={pathname}
+          />
+        ))}
         <div className="from-background via-background/80 to-background/50 sticky -bottom-1 z-10 h-16 shrink-0 bg-linear-to-t blur-xs" />
       </SidebarContent>
     </Sidebar>

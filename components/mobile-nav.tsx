@@ -15,8 +15,7 @@ import {
 import { ROUTES } from "@/constants/routes";
 import { TOP_LEVEL_SECTIONS } from "@/constants/site";
 import { useFeedback } from "@/hooks/use-feedback";
-import { EXCLUDED_SECTIONS, isBlocksFolder } from "@/lib/docs";
-import { getAllPagesFromFolder, getPagesFromFolder } from "@/lib/page-tree";
+import { buildTreeGroups } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";
 
 const MobileLink = ({
@@ -87,6 +86,7 @@ export const MobileNav = ({
   className?: string;
 }) => {
   const [open, setOpen] = useState(false);
+  const treeGroups = buildTreeGroups(tree);
 
   return (
     <Popover sounds open={open} onOpenChange={setOpen}>
@@ -123,7 +123,7 @@ export const MobileNav = ({
         </span>
       </PopoverTrigger>
       <PopoverContent
-        className="bg-background/90 no-scrollbar h-(--radix-popper-available-height) w-(--radix-popper-available-width) overflow-y-auto rounded-none border-none p-0 shadow-none backdrop-blur duration-100"
+        className="bg-background/90 no-scrollbar h-(--available-height) w-(--available-width) overflow-y-auto rounded-none border-none p-0 shadow-none backdrop-blur duration-100"
         align="start"
         side="bottom"
         alignOffset={-16}
@@ -161,29 +161,18 @@ export const MobileNav = ({
               ))}
             </div>
           </div>
-          {tree.children.map((item) => {
-            if (item.type !== "folder") {
-              return null;
-            }
-            if (EXCLUDED_SECTIONS.has(item.$id ?? "")) {
-              return null;
-            }
-
-            const pages = isBlocksFolder(item)
-              ? getAllPagesFromFolder(item).filter(
-                  (page) => page.url !== ROUTES.DOCS_BLOCKS
-                )
-              : getPagesFromFolder(item);
-
-            return (
-              <MobileNavGroup
-                key={item.$id}
-                label={item.name}
-                pages={pages}
-                setOpen={setOpen}
-              />
-            );
-          })}
+          {treeGroups.map((group) => (
+            <MobileNavGroup
+              key={
+                typeof group.label === "string"
+                  ? group.label
+                  : group.label?.toString()
+              }
+              label={group.label}
+              pages={group.pages}
+              setOpen={setOpen}
+            />
+          ))}
         </div>
       </PopoverContent>
     </Popover>

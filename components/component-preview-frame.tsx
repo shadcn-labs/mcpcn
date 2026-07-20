@@ -13,10 +13,16 @@ type PreviewMode = "inline" | "pip" | "full-width";
 const modes: {
   icon: typeof MessageSquare;
   label: string;
+  shortLabel?: string;
   value: PreviewMode;
 }[] = [
   { icon: MessageSquare, label: "Inline", value: "inline" },
-  { icon: PictureInPicture2, label: "Picture in picture", value: "pip" },
+  {
+    icon: PictureInPicture2,
+    label: "Picture in picture",
+    shortLabel: "PiP",
+    value: "pip",
+  },
   { icon: Maximize2, label: "Full-width", value: "full-width" },
 ];
 
@@ -81,7 +87,7 @@ export const ComponentPreviewFrame = ({
         onValueChange={(value) => setMode(value as PreviewMode)}
       >
         <TabsList aria-label="Preview layout" className="mb-2">
-          {modes.map(({ icon: Icon, label, value }) => (
+          {modes.map(({ icon: Icon, label, shortLabel, value }) => (
             <TabsTrigger
               key={value}
               aria-label={label}
@@ -89,14 +95,21 @@ export const ComponentPreviewFrame = ({
               value={value}
             >
               <Icon />
-              {label}
+              {shortLabel ? (
+                <>
+                  <span className="sm:hidden">{shortLabel}</span>
+                  <span className="hidden sm:inline">{label}</span>
+                </>
+              ) : (
+                label
+              )}
             </TabsTrigger>
           ))}
         </TabsList>
 
         <div
           data-apps-sdk-ui=""
-          className="flex min-h-[360px] items-center justify-center overflow-hidden rounded-xl border bg-background p-4 sm:p-8"
+          className="flex min-h-90 items-center justify-center overflow-hidden rounded-xl border bg-background p-4 sm:p-8"
         >
           <TabsContent className="w-full" value="inline">
             <div className="mx-auto w-full max-w-3xl">{children}</div>
