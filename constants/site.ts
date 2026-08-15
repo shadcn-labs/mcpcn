@@ -19,6 +19,10 @@ export const SITE = {
     NAME: "Aniket Pawar",
     TWITTER: "@alaymanguy",
   },
+  DESCRIPTION: {
+    LONG: "A collection of beautifully designed, accessible, and customizable MCP App UI components. Built with Base UI. Works with shadcn/ui.",
+    SHORT: "Beautiful MCP UIs, made simple",
+  },
   KEYWORDS: [
     "shadcn",
     "shadcn registry",
@@ -41,11 +45,11 @@ export const SITE = {
     "tailwindcss",
     "npx shadcn add",
   ] as const,
-  LONG: "A collection of beautifully designed, accessible, and customizable MCP App UI components. Built with Base UI. Works with shadcn/ui.",
+
   NAME: "mcpcn",
   OG_IMAGE: `${baseUrl}/og.png`,
   REGISTRY: "@mcpcn",
-  SHORT: "Beautiful MCP UIs, made simple",
+
   URL: baseUrl,
 };
 
