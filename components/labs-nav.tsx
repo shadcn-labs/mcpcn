@@ -266,80 +266,48 @@ const LabsNavMobile = () => {
 };
 
 const LabsNavDesktop = () => {
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string | null>(null);
 
   return (
-    <>
-      {value ? (
-        <button
-          type="button"
-          aria-label="Close menu"
-          className="fixed inset-x-0 top-(--header-height) bottom-0 z-20 cursor-default bg-background/60"
-          onClick={() => setValue("")}
-        />
-      ) : null}
-      <NavigationMenu
-        value={value}
-        onValueChange={(val) => setValue(val as string)}
-        viewport={false}
-        delay={0}
-        className="z-50 max-w-none justify-start"
-      >
-        <NavigationMenuList className="justify-start">
-          <NavigationMenuItem value="labs">
-            <NavigationMenuTrigger
-              className={cn(
-                "h-auto gap-1 bg-transparent px-3 py-1.5 text-base font-medium",
-                "hover:bg-transparent hover:text-foreground focus:bg-transparent focus:text-foreground",
-                "data-[state=open]:bg-transparent data-[state=open]:text-foreground",
-                "data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent"
-              )}
-            >
-              {SITE.NAME}
-            </NavigationMenuTrigger>
-            <NavigationMenuContent
-              className={cn(
-                "fixed inset-x-0 top-(--header-height) z-30 w-screen bg-background p-0",
-                "shadow-[0_1px_0_0_var(--border)]",
-                "before:absolute before:inset-x-0 before:-top-3 before:h-3 before:content-['']",
-                "data-[motion^=from-]:animate-none data-[motion^=to-]:animate-none",
-                "data-[state=closed]:hidden md:fixed md:w-screen dark:bg-black"
-              )}
-            >
-              <div className="container-wrapper px-6">
-                <div className="flex gap-8 py-4 pl-3">
-                  <div className="flex w-64 flex-col gap-3">
-                    <SectionTitle>Latest</SectionTitle>
-                    <LatestCard item={LABS_LATEST} nameClassName="min-h-13">
-                      {({ content, onMouseEnter, onMouseLeave }) => (
-                        <NavigationMenuLink
-                          href={addQueryParams(LABS_LATEST.href, UTM_PARAMS)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={cn(latestCardClassName, "w-60 gap-2 p-3")}
-                          onMouseEnter={onMouseEnter}
-                          onMouseLeave={onMouseLeave}
-                        >
-                          {content}
-                        </NavigationMenuLink>
-                      )}
-                    </LatestCard>
-                  </div>
-                  {LABS_NAV_SECTIONS.map((section) => (
-                    <DesktopSection
-                      key={section.id}
-                      title={section.title}
-                      items={section.items}
-                      className={SECTION_WIDTH[section.id] ?? "w-44"}
-                    />
-                  ))}
-                </div>
+    <NavigationMenu
+      value={value}
+      onValueChange={setValue}
+      delay={0}
+      closeDelay={0}
+      backdrop
+      backdropClassName="!top-(--header-height) z-20"
+      positionerClassName="!fixed !inset-x-0 !left-0 !top-(--header-height) !h-auto !w-screen !max-w-none !translate-x-0 z-30 before:absolute before:inset-x-0 before:-top-3 before:h-3 before:content-['']"
+      popupClassName="!mt-0 !h-auto !w-screen rounded-none border-0 shadow-[0_1px_0_0_var(--border)] dark:bg-black"
+      className="z-50 max-w-none justify-start"
+    >
+      <NavigationMenuList className="justify-start">
+        <NavigationMenuItem value="labs">
+          <NavigationMenuTrigger
+            className={cn(
+              "h-auto gap-1 bg-transparent px-3 py-1.5 text-base font-medium",
+              "hover:bg-transparent hover:text-foreground focus:bg-transparent focus:text-foreground",
+              "data-[popup-open]:bg-transparent data-[popup-open]:text-foreground"
+            )}
+          >
+            {SITE.NAME}
+          </NavigationMenuTrigger>
+          <NavigationMenuContent className="p-0">
+            <div className="container-wrapper px-6">
+              <div className="flex gap-8 py-4 pl-3">
+                {LABS_NAV_SECTIONS.map((section) => (
+                  <DesktopSection
+                    key={section.id}
+                    title={section.title}
+                    items={section.items}
+                    className={SECTION_WIDTH[section.id] ?? "w-44"}
+                  />
+                ))}
               </div>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-    </>
+            </div>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 };
 

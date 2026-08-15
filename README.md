@@ -53,8 +53,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 <a href="https://www.star-history.com/?repos=shadcn-labs%2Fmcpcn&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=shadcn-labs/mcpcn&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=shadcn-labs/mcpcn&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=shadcn-labs/mcpcn&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=shadcn-labs/mcpcn&type=date&theme=dark&legend=top-left&sealed_token=OWqnbEg5fyl_ad4v9ojvufYbTu5epWkgAlH_d76eq2B5nzAp53QUoYy0-Fo9M-q7ltROzfI_uLMpc3rgMHbPQ4Yu6dSpOJ3cp1ZSu8V-U_WYnUfU9n8VESj2HZ4KQOPbo1zEn6NbltASUQObWxFAaCNFuIHYKIvZI_35-BzF-3rz8Of52i5Jt2SJw-1x" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=shadcn-labs/mcpcn&type=date&legend=top-left&sealed_token=OWqnbEg5fyl_ad4v9ojvufYbTu5epWkgAlH_d76eq2B5nzAp53QUoYy0-Fo9M-q7ltROzfI_uLMpc3rgMHbPQ4Yu6dSpOJ3cp1ZSu8V-U_WYnUfU9n8VESj2HZ4KQOPbo1zEn6NbltASUQObWxFAaCNFuIHYKIvZI_35-BzF-3rz8Of52i5Jt2SJw-1x" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=shadcn-labs/mcpcn&type=date&legend=top-left&sealed_token=OWqnbEg5fyl_ad4v9ojvufYbTu5epWkgAlH_d76eq2B5nzAp53QUoYy0-Fo9M-q7ltROzfI_uLMpc3rgMHbPQ4Yu6dSpOJ3cp1ZSu8V-U_WYnUfU9n8VESj2HZ4KQOPbo1zEn6NbltASUQObWxFAaCNFuIHYKIvZI_35-BzF-3rz8Of52i5Jt2SJw-1x" />
  </picture>
 </a>

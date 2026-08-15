@@ -38,7 +38,7 @@ export const SiteHeader = () => (
               nativeButton={false}
               render={
                 <a
-                  href={ROUTES.HOME}
+                  href="https://shadcn-labs.com"
                   aria-label="Go to Shadcn Labs"
                   target="_blank"
                   rel="noopener noreferrer"
