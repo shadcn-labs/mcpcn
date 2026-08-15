@@ -1,5 +1,3 @@
-import { ROUTES } from "./routes";
-
 export const FALLBACK_SITE_ORIGIN = "https://mcpcn.dev" as const;
 
 const getBaseUrl = () => {
@@ -22,34 +20,23 @@ export const SITE = {
     TWITTER: "@alaymanguy",
   },
   DESCRIPTION: {
-    LONG: "A collection of beautifully designed, accessible, and customizable MCP App UI components. Built with Base UI. Works with shadcn/ui.",
-    SHORT: "Beautiful MCP UIs, made simple",
+    LONG: "A collection of beautifully designed and customizable Open Graph image components. Built on Satori. Works with shadcn/ui.",
+    SHORT: "Beautiful OG images, made simple",
   },
   KEYWORDS: [
-    "shadcn",
+    "og image",
+    "open graph",
+    "satori",
+    "next/og",
     "shadcn registry",
-    "component registry",
-    "MCP Apps",
-    "mcp ui",
-    "mcp app ui",
-    "mcp app components",
-    "mcp app blocks",
-    "mcp app registry",
-    "chatgpt app ui",
-    "chatgpt app components",
-    "chatgpt app blocks",
-    "chatgpt app registry",
-    "claude app ui",
-    "claude app components",
-    "claude app blocks",
-    "claude app registry",
+    "social card",
     "next.js",
     "tailwindcss",
     "npx shadcn add",
   ] as const,
-  NAME: "mcpcn",
+  NAME: "ogimagecn",
   OG_IMAGE: `${baseUrl}/og.png`,
-  REGISTRY: "@mcpcn",
+  REGISTRY: "@ogimagecn",
   URL: baseUrl,
 };
 
@@ -61,14 +48,3 @@ export const META_THEME_COLORS = {
 export const UTM_PARAMS = {
   utm_source: new URL(baseUrl).hostname,
 };
-
-export const TOP_LEVEL_SECTIONS = [
-  { href: ROUTES.DOCS, name: "Introduction" },
-  { href: ROUTES.DOCS_INSTALLATION, name: "Installation" },
-  { href: ROUTES.DOCS_BLOCKS, name: "Blocks" },
-  { href: ROUTES.DOCS_APPS_SDK_UI, name: "Apps SDK UI" },
-  { href: ROUTES.DOCS_MCP, name: "MCP" },
-  { href: ROUTES.DOCS_REGISTRY, name: "Registry" },
-  { href: ROUTES.LLMS, name: "llms.txt" },
-  // { href: ROUTES.DOCS_CHANGELOG, name: "Changelog" },
-];

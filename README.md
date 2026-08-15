@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/og.png" alt="mcpcn banner" />
+  <img src="./.github/assets/gh.png" alt="mcpcn banner" />
 </p>
 
 <h1 align="center">mcpcn</h1>

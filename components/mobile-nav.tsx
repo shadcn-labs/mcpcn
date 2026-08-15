@@ -12,8 +12,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { TOP_LEVEL_SECTIONS } from "@/constants/nav";
 import { ROUTES } from "@/constants/routes";
-import { TOP_LEVEL_SECTIONS } from "@/constants/site";
 import { useFeedback } from "@/hooks/use-feedback";
 import { buildTreeGroups } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";

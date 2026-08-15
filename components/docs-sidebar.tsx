@@ -13,8 +13,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { TOP_LEVEL_SECTIONS } from "@/constants/nav";
 import { ROUTES } from "@/constants/routes";
-import { TOP_LEVEL_SECTIONS } from "@/constants/site";
 import { PAGES_NEW } from "@/lib/docs";
 import { buildTreeGroups } from "@/lib/page-tree";
 import type { source } from "@/lib/source";
