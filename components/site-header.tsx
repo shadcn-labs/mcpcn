@@ -21,8 +21,8 @@ export const SiteHeader = () => (
     className="bg-background sticky top-0 z-50 w-full"
     style={{ viewTransitionName: "site-header" }}
   >
-    <div className="container-wrapper 3xl:fixed:px-0 relative px-6">
-      <div className="3xl:fixed:container relative flex h-(--header-height) items-center">
+    <div className="container-wrapper 3xl:fixed:px-0 px-6">
+      <div className="3xl:fixed:container flex h-(--header-height) items-center">
         <MobileNav
           items={navItems}
           tree={source.pageTree}
