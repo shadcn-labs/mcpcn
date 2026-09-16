@@ -8,10 +8,14 @@ import { ArrowUpRightIcon } from "@/components/animated-icons/arrow-up-right";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
+  NavigationMenuBackdrop,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuPopup,
+  NavigationMenuPortal,
+  NavigationMenuPositioner,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import {
@@ -29,12 +33,16 @@ import { cn } from "@/lib/utils";
 type SectionId = (typeof LABS_NAV_SECTIONS)[number]["id"];
 
 const SECTION_WIDTH: Partial<Record<SectionId, string>> = {
-  registries: "w-40",
+  registries: "w-72",
   skills: "w-72",
 };
 
+const SECTION_LIST: Partial<Record<SectionId, string>> = {
+  registries: "columns-2 gap-x-6 space-y-1",
+};
+
 const latestCardClassName = cn(
-  "flex flex-col gap-4 rounded-lg border border-border bg-background p-4",
+  "flex flex-col rounded-lg border border-border bg-background p-4",
   "text-base font-normal no-underline transition-colors",
   "hover:border-foreground/25 hover:bg-background focus:bg-background"
 );
@@ -145,19 +153,22 @@ const DesktopSection = ({
   title,
   items,
   className,
+  listClassName,
 }: {
   title: string;
   items: readonly LabsNavLinkItem[];
   className?: string;
+  listClassName?: string;
 }) => (
-  <div className={cn("flex flex-col gap-3", className)}>
+  <div className={cn("flex flex-col gap-3 w-44", className)}>
     <SectionTitle>{title}</SectionTitle>
-    <ul className="flex flex-col gap-1">
+    <ul className={cn("columns-1 gap-1", listClassName)}>
       {items.map((item) => (
-        <li key={item.href} className="w-full">
+        <li key={item.href} className="w-full break-inside-avoid">
           <LabsNavLink item={item}>
             {({ label, onMouseEnter, onMouseLeave }) => (
               <NavigationMenuLink
+                closeOnClick
                 href={addQueryParams(item.href, UTM_PARAMS)}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -166,7 +177,7 @@ const DesktopSection = ({
                   "bg-transparent p-0 text-base font-normal leading-normal",
                   "underline-offset-4 decoration-muted-foreground/50 decoration-1",
                   "hover:bg-transparent hover:underline focus:bg-transparent focus:underline",
-                  "data-[active=true]:bg-transparent"
+                  "data-[active]:bg-transparent"
                 )}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
@@ -192,7 +203,7 @@ const LabsNavMobile = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="gap-1 text-base hover:bg-transparent focus-visible:bg-transparent data-[state=open]:bg-transparent dark:hover:bg-transparent"
+            className="gap-1 text-base hover:bg-transparent focus-visible:bg-transparent data-[popup-open]:bg-transparent dark:hover:bg-transparent"
           />
         }
       >
@@ -206,7 +217,7 @@ const LabsNavMobile = () => {
         />
       </PopoverTrigger>
       <PopoverContent
-        className="bg-background/90 no-scrollbar h-(--radix-popper-available-height) w-(--radix-popper-available-width) overflow-y-auto rounded-none border-none p-0 shadow-none backdrop-blur duration-100"
+        className="bg-background/90 no-scrollbar h-(--available-height) w-(--available-width) overflow-y-auto rounded-none border-none p-0 shadow-none backdrop-blur duration-100"
         align="start"
         side="bottom"
         alignOffset={-16}
@@ -274,10 +285,6 @@ const LabsNavDesktop = () => {
       onValueChange={setValue}
       delay={0}
       closeDelay={0}
-      backdrop
-      backdropClassName="!top-(--header-height) z-20"
-      positionerClassName="!fixed !inset-x-0 !left-0 !top-(--header-height) !h-auto !w-screen !max-w-none !translate-x-0 z-30 before:absolute before:inset-x-0 before:-top-3 before:h-3 before:content-['']"
-      popupClassName="!mt-0 !h-auto !w-screen rounded-none border-0 shadow-[0_1px_0_0_var(--border)] dark:bg-black"
       className="z-50 max-w-none justify-start"
     >
       <NavigationMenuList className="justify-start">
@@ -286,7 +293,8 @@ const LabsNavDesktop = () => {
             className={cn(
               "h-auto gap-1 bg-transparent px-3 py-1.5 text-base font-medium",
               "hover:bg-transparent hover:text-foreground focus:bg-transparent focus:text-foreground",
-              "data-[popup-open]:bg-transparent data-[popup-open]:text-foreground"
+              "data-[popup-open]:bg-transparent data-[popup-open]:text-foreground",
+              "data-[popup-open]:hover:bg-transparent data-[popup-open]:focus:bg-transparent"
             )}
           >
             {SITE.NAME}
@@ -294,12 +302,31 @@ const LabsNavDesktop = () => {
           <NavigationMenuContent className="p-0">
             <div className="container-wrapper px-6">
               <div className="flex gap-8 py-4 pl-3">
+                <div className="flex w-64 flex-col gap-3">
+                  <SectionTitle>Latest</SectionTitle>
+                  <LatestCard item={LABS_LATEST} nameClassName="min-h-8">
+                    {({ content, onMouseEnter, onMouseLeave }) => (
+                      <NavigationMenuLink
+                        closeOnClick
+                        href={addQueryParams(LABS_LATEST.href, UTM_PARAMS)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(latestCardClassName, "w-60 gap-2 p-3")}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                      >
+                        {content}
+                      </NavigationMenuLink>
+                    )}
+                  </LatestCard>
+                </div>
                 {LABS_NAV_SECTIONS.map((section) => (
                   <DesktopSection
                     key={section.id}
                     title={section.title}
                     items={section.items}
-                    className={SECTION_WIDTH[section.id] ?? "w-44"}
+                    className={SECTION_WIDTH[section.id]}
+                    listClassName={SECTION_LIST[section.id]}
                   />
                 ))}
               </div>
@@ -307,6 +334,15 @@ const LabsNavDesktop = () => {
           </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
+      <NavigationMenuPortal>
+        <NavigationMenuBackdrop className="top-(--header-height)" />
+        <NavigationMenuPositioner
+          className="h-auto w-screen max-w-none before:absolute before:inset-x-0 before:-top-3 before:h-3 before:content-['']"
+          style={{ left: 0, position: "fixed", top: "var(--header-height)" }}
+        >
+          <NavigationMenuPopup className="w-screen rounded-none border-0 bg-background shadow-[0_1px_0_0_var(--border)] dark:bg-black" />
+        </NavigationMenuPositioner>
+      </NavigationMenuPortal>
     </NavigationMenu>
   );
 };

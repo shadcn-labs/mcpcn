@@ -127,19 +127,24 @@ export const MobileNav = ({
         sideOffset={14}
       >
         <div className="flex flex-col gap-12 overflow-auto px-6 py-6">
-          <div className="flex flex-col gap-3">
-            <MobileLink href={ROUTES.HOME} onOpenChange={setOpen}>
-              Home
-            </MobileLink>
-            {items.map((item) => (
-              <MobileLink
-                key={item.href}
-                href={item.href}
-                onOpenChange={setOpen}
-              >
-                {item.label}
+          <div className="flex flex-col gap-4">
+            <div className="text-sm font-medium text-muted-foreground">
+              Menu
+            </div>
+            <div className="flex flex-col gap-3">
+              <MobileLink href={ROUTES.HOME} onOpenChange={setOpen}>
+                Home
               </MobileLink>
-            ))}
+              {items.map((item) => (
+                <MobileLink
+                  key={item.href}
+                  href={item.href}
+                  onOpenChange={setOpen}
+                >
+                  {item.label}
+                </MobileLink>
+              ))}
+            </div>
           </div>
           <div className="flex flex-col gap-4">
             <div className="text-sm font-medium text-muted-foreground">

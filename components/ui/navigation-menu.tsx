@@ -10,19 +10,8 @@ const navigationMenuTriggerStyle = cva(
 
 const NavigationMenu = ({
   className,
-  children,
-  backdrop = false,
-  backdropClassName,
-  positionerClassName,
-  popupClassName,
   ...props
-}: NavigationMenuPrimitive.Root.Props & {
-  /** Renders a dimming, click-to-dismiss backdrop behind the popup. Off by default to match plain Radix dropdowns. */
-  backdrop?: boolean;
-  backdropClassName?: string;
-  positionerClassName?: string;
-  popupClassName?: string;
-}) => (
+}: NavigationMenuPrimitive.Root.Props) => (
   <NavigationMenuPrimitive.Root
     data-slot="navigation-menu"
     className={cn(
@@ -30,45 +19,54 @@ const NavigationMenu = ({
       className
     )}
     {...props}
+  />
+);
+
+const NavigationMenuPortal = NavigationMenuPrimitive.Portal;
+
+const NavigationMenuBackdrop = ({
+  className,
+  ...props
+}: NavigationMenuPrimitive.Backdrop.Props) => (
+  <NavigationMenuPrimitive.Backdrop
+    data-slot="navigation-menu-backdrop"
+    className={cn("fixed inset-0 z-40 bg-background/60", className)}
+    {...props}
+  />
+);
+
+const NavigationMenuPositioner = ({
+  className,
+  ...props
+}: NavigationMenuPrimitive.Positioner.Props) => (
+  <NavigationMenuPrimitive.Positioner
+    data-slot="navigation-menu-positioner"
+    className={cn(
+      "isolate z-50 h-(--positioner-height) w-(--positioner-width) max-w-(--available-width)",
+      className
+    )}
+    {...props}
+  />
+);
+
+const NavigationMenuPopup = ({
+  className,
+  ...props
+}: Omit<NavigationMenuPrimitive.Popup.Props, "children">) => (
+  <NavigationMenuPrimitive.Popup
+    data-slot="navigation-menu-popup"
+    className={cn(
+      "relative h-(--popup-height) w-(--popup-width) origin-top overflow-hidden rounded-md border bg-popover text-popover-foreground shadow duration-200",
+      "data-[starting-style]:animate-in data-[starting-style]:fade-in-0 data-[starting-style]:slide-in-from-top-2",
+      className
+    )}
+    {...props}
   >
-    {children}
-
-    <NavigationMenuPrimitive.Portal>
-      {backdrop ? (
-        <NavigationMenuPrimitive.Backdrop
-          data-slot="navigation-menu-backdrop"
-          className={cn(
-            "fixed inset-0 z-40 bg-background/60 transition-opacity duration-200 data-[starting-style]:opacity-0 data-[ending-style]:opacity-0",
-            backdropClassName
-          )}
-        />
-      ) : null}
-
-      <NavigationMenuPrimitive.Positioner
-        data-slot="navigation-menu-positioner"
-        className={cn(
-          "absolute top-full left-1/2 isolate z-50 w-screen -translate-x-1/2",
-          positionerClassName
-        )}
-      >
-        <NavigationMenuPrimitive.Popup
-          data-slot="navigation-menu-popup"
-          className={cn(
-            "relative mt-1.5 h-[var(--popup-height)] w-full origin-top overflow-hidden rounded-md border bg-popover text-popover-foreground shadow duration-200",
-            "data-[ending-style]:animate-out data-[ending-style]:fade-out-0 data-[ending-style]:slide-out-to-top-2",
-            "data-[starting-style]:animate-in data-[starting-style]:fade-in-0 data-[starting-style]:slide-in-from-top-2",
-            "md:w-[var(--popup-width)]",
-            popupClassName
-          )}
-        >
-          <NavigationMenuPrimitive.Viewport
-            data-slot="navigation-menu-viewport"
-            className="relative h-full w-full overflow-hidden"
-          />
-        </NavigationMenuPrimitive.Popup>
-      </NavigationMenuPrimitive.Positioner>
-    </NavigationMenuPrimitive.Portal>
-  </NavigationMenuPrimitive.Root>
+    <NavigationMenuPrimitive.Viewport
+      data-slot="navigation-menu-viewport"
+      className="relative size-full overflow-hidden"
+    />
+  </NavigationMenuPrimitive.Popup>
 );
 
 const NavigationMenuList = ({
@@ -122,7 +120,7 @@ const NavigationMenuContent = ({
   <NavigationMenuPrimitive.Content
     data-slot="navigation-menu-content"
     className={cn(
-      "top-0 left-0 w-full p-2 pr-2.5 md:absolute md:w-auto",
+      "h-full w-auto p-2",
       "data-[starting-style]:animate-in data-[starting-style]:fade-in",
       "data-[ending-style]:animate-out data-[ending-style]:fade-out",
       "data-[starting-style]:data-[activation-direction=left]:slide-in-from-left-52",
@@ -152,10 +150,14 @@ const NavigationMenuLink = ({
 
 export {
   NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
+  NavigationMenuBackdrop,
   NavigationMenuContent,
-  NavigationMenuTrigger,
+  NavigationMenuItem,
   NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuPopup,
+  NavigationMenuPortal,
+  NavigationMenuPositioner,
+  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 };
